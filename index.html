@@ -74,7 +74,7 @@
 
     function buscarAutor() {
       const nomeAutor = document.getElementById("author-name").value.toLowerCase();
-      const resultados = livros.filter(livro => livro.Author && livro.Author.toLowerCase().includes(nomeAutor));
+      const resultados = livros.filter(livro => livro["Author"] && livro["Author"].toLowerCase().includes(nomeAutor));
 
       // Limpar a lista de resultados
       const lista = document.getElementById("book-list");
@@ -84,7 +84,7 @@
       if (resultados.length > 0) {
         resultados.forEach(livro => {
           const li = document.createElement("li");
-          li.textContent = `Autor: ${livro.Author}, Livro: ${livro.Title}, Status: ${livro["Exclusive Shelf"]}`;
+          li.textContent = `Autor: ${livro["Author"]}, Livro: ${livro["Title"]}, Status: ${livro["Exclusive Shelf"]}`;
           lista.appendChild(li);
         });
       } else {
