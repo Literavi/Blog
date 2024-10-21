@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -18,10 +17,6 @@
       padding: 10px;
       width: 300px;
     }
-    .dropdown {
-      padding: 10px;
-      margin-left: 10px;
-    }
     .button {
       margin-left: 10px;
       padding: 10px;
@@ -40,37 +35,53 @@
 </head>
 <body>
 
-  <h2>Pesquisar Autor e Gerenciar Livros</h2>
+  <h2>Pesquisar Autor e Livros</h2>
 
   <div class="search-container">
     <input type="text" id="author-name" class="search-box" placeholder="Pesquisar por autor">
-    <select id="book-status" class="dropdown">
-      <option value="tenho">Tenho</option>
-      <option value="desejado">Desejado</option>
-      <option value="outro">Outro</option>
-    </select>
-    <button class="button" onclick="adicionarLivro()">Adicionar</button>
+    <button class="button" onclick="buscarAutor()">Buscar</button>
   </div>
 
-  <h3>Lista de Livros</h3>
+  <h3>Resultados da Pesquisa</h3>
   <ul id="book-list"></ul>
 
+  <!-- Carregar PapaParse para trabalhar com CSV -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+
+  <!-- Script de busca e manipulação de CSV -->
   <script>
-    function adicionarLivro() {
-      var autor = document.getElementById("author-name").value;
-      var status = document.getElementById("book-status").value;
+    let livros = [];
 
-      if (autor === "") {
-        alert("Por favor, insira o nome do autor.");
-        return;
+    // Carregar o arquivo CSV usando Papa Parse
+    Papa.parse("goodreads_library_export.csv", {
+      download: true,
+      header: true,
+      complete: function(results) {
+        livros = results.data; // Guardar os dados CSV na variável 'livros'
       }
+    });
 
-      var li = document.createElement("li");
-      li.textContent = "Autor: " + autor + " - Status: " + status;
+    function buscarAutor() {
+      const nomeAutor = document.getElementById("author-name").value.toLowerCase();
+      const resultados = livros.filter(livro => livro.Author.toLowerCase().includes(nomeAutor));
 
-      document.getElementById("book-list").appendChild(li);
+      // Limpar a lista de resultados
+      const lista = document.getElementById("book-list");
+      lista.innerHTML = '';
 
-      document.getElementById("author-name").value = "";
+      // Adicionar resultados à lista
+      resultados.forEach(livro => {
+        const li = document.createElement("li");
+        li.textContent = `Autor: ${livro.Author}, Livro: ${livro.Title}, Status: ${livro["Exclusive Shelf"]}`;
+        lista.appendChild(li);
+      });
+
+      // Caso não encontre resultados
+      if (resultados.length === 0) {
+        const li = document.createElement("li");
+        li.textContent = "Nenhum autor encontrado.";
+        lista.appendChild(li);
+      }
     }
   </script>
 
