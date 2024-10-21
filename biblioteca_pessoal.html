@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca Pessoal</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .search-container {
+      display: flex;
+      align-items: center;
+    }
+    .search-box {
+      padding: 10px;
+      width: 300px;
+    }
+    .dropdown {
+      padding: 10px;
+      margin-left: 10px;
+    }
+    .button {
+      margin-left: 10px;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: #45a049;
+    }
+    #book-list {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Pesquisar Autor e Gerenciar Livros</h2>
+
+  <div class="search-container">
+    <input type="text" id="author-name" class="search-box" placeholder="Pesquisar por autor">
+    <select id="book-status" class="dropdown">
+      <option value="tenho">Tenho</option>
+      <option value="desejado">Desejado</option>
+      <option value="outro">Outro</option>
+    </select>
+    <button class="button" onclick="adicionarLivro()">Adicionar</button>
+  </div>
+
+  <h3>Lista de Livros</h3>
+  <ul id="book-list"></ul>
+
+  <script>
+    function adicionarLivro() {
+      var autor = document.getElementById("author-name").value;
+      var status = document.getElementById("book-status").value;
+
+      if (autor === "") {
+        alert("Por favor, insira o nome do autor.");
+        return;
+      }
+
+      var li = document.createElement("li");
+      li.textContent = "Autor: " + autor + " - Status: " + status;
+
+      document.getElementById("book-list").appendChild(li);
+
+      document.getElementById("author-name").value = "";
+    }
+  </script>
+
+</body>
+</html>
