@@ -31,6 +31,10 @@
     #book-list {
       margin-top: 20px;
     }
+    #error-message {
+      color: red;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -45,12 +49,15 @@
   <h3>Resultados da Pesquisa</h3>
   <ul id="book-list"></ul>
 
+  <p id="error-message"></p>
+
   <!-- Carregar PapaParse para trabalhar com CSV -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 
   <!-- Script de busca e manipulação de CSV -->
   <script>
     let livros = [];
+    const errorMessage = document.getElementById("error-message");
 
     // Carregar o arquivo CSV usando Papa Parse
     Papa.parse("goodreads_library_export.csv", {
@@ -58,26 +65,29 @@
       header: true,
       complete: function(results) {
         livros = results.data; // Guardar os dados CSV na variável 'livros'
+        errorMessage.textContent = ""; // Limpar mensagem de erro
+      },
+      error: function() {
+        errorMessage.textContent = "Erro ao carregar o arquivo CSV. Verifique se ele está no local correto.";
       }
     });
 
     function buscarAutor() {
       const nomeAutor = document.getElementById("author-name").value.toLowerCase();
-      const resultados = livros.filter(livro => livro.Author.toLowerCase().includes(nomeAutor));
+      const resultados = livros.filter(livro => livro.Author && livro.Author.toLowerCase().includes(nomeAutor));
 
       // Limpar a lista de resultados
       const lista = document.getElementById("book-list");
       lista.innerHTML = '';
 
       // Adicionar resultados à lista
-      resultados.forEach(livro => {
-        const li = document.createElement("li");
-        li.textContent = `Autor: ${livro.Author}, Livro: ${livro.Title}, Status: ${livro["Exclusive Shelf"]}`;
-        lista.appendChild(li);
-      });
-
-      // Caso não encontre resultados
-      if (resultados.length === 0) {
+      if (resultados.length > 0) {
+        resultados.forEach(livro => {
+          const li = document.createElement("li");
+          li.textContent = `Autor: ${livro.Author}, Livro: ${livro.Title}, Status: ${livro["Exclusive Shelf"]}`;
+          lista.appendChild(li);
+        });
+      } else {
         const li = document.createElement("li");
         li.textContent = "Nenhum autor encontrado.";
         lista.appendChild(li);
