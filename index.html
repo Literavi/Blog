@@ -16,17 +16,23 @@
     .search-box {
       padding: 10px;
       width: 300px;
+      border: 2px solid gray;
+    }
+    .dropdown {
+      padding: 10px;
+      margin-left: 10px;
+      border: 2px solid gray;
     }
     .button {
       margin-left: 10px;
       padding: 10px;
-      background-color: #4CAF50;
+      background-color: #9370DB; /* Cor lilás */
       color: white;
       border: none;
       cursor: pointer;
     }
     .button:hover {
-      background-color: #45a049;
+      background-color: #7b5fa5;
     }
     #book-list {
       margin-top: 20px;
@@ -39,11 +45,19 @@
 </head>
 <body>
 
-  <h2>Pesquisar por Autor</h2>
+  <h2>Pesquisar por Autor e Status</h2>
 
   <div class="search-container">
     <input type="text" id="author-name" class="search-box" placeholder="Digite o nome do autor">
-    <button class="button" onclick="buscarAutor()">Buscar</button>
+    
+    <select id="status" class="dropdown">
+      <option value="">Selecione o status</option>
+      <option value="currently-reading">Lendo</option>
+      <option value="to-read">Para Ler</option>
+      <option value="read">Lido</option>
+    </select>
+
+    <button class="button" onclick="buscarAutor()">Pesquisar</button>
   </div>
 
   <h3>Resultados da Pesquisa</h3>
@@ -74,7 +88,14 @@
 
     function buscarAutor() {
       const nomeAutor = document.getElementById("author-name").value.toLowerCase();
-      const resultados = livros.filter(livro => livro["Author"] && livro["Author"].toLowerCase().includes(nomeAutor));
+      const statusSelecionado = document.getElementById("status").value;
+      
+      // Filtrar resultados por autor e status
+      const resultados = livros.filter(livro => {
+        const autorMatch = livro["Author"] && livro["Author"].toLowerCase().includes(nomeAutor);
+        const statusMatch = livro["Exclusive Shelf"] && livro["Exclusive Shelf"] === statusSelecionado;
+        return autorMatch && (statusSelecionado === "" || statusMatch); // Se status estiver em branco, apenas busca por autor
+      });
 
       // Limpar a lista de resultados
       const lista = document.getElementById("book-list");
@@ -89,7 +110,7 @@
         });
       } else {
         const li = document.createElement("li");
-        li.textContent = "Nenhum autor encontrado.";
+        li.textContent = "Nenhum autor encontrado com o status selecionado.";
         lista.appendChild(li);
       }
     }
