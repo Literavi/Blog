@@ -4,40 +4,50 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Biblioteca Pessoal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    /* Estilo geral */
     body {
-      font-family: 'Arial', sans-serif;
+      font-family: 'Roboto', sans-serif;
       margin: 0;
       padding: 0;
       background-color: #f4f4f9;
+      color: #444;
     }
 
-    /* Menu de navegação */
-    .navbar {
+    /* Cabeçalho */
+    .header {
+      background-color: #9370DB;
+      color: white;
+      padding: 15px 0;
+    }
+
+    .header .container {
       display: flex;
-      justify-content: center;
-      background-color: #9370DB; /* Cor lilás */
-      padding: 15px;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .header .logo {
+      font-size: 24px;
+      font-weight: bold;
     }
 
     .navbar a {
       color: white;
       text-decoration: none;
-      padding: 10px 20px;
-      font-size: 16px;
+      margin: 0 15px;
       font-weight: bold;
-      transition: background-color 0.3s;
+      transition: color 0.3s;
     }
 
     .navbar a:hover {
-      background-color: #7b5fa5;
-      border-radius: 5px;
+      color: #d1c4e9;
     }
 
+    /* Container principal */
     .container {
       max-width: 800px;
       margin: 20px auto;
@@ -73,32 +83,59 @@
       border: none;
       border-radius: 4px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.3s ease;
       font-size: 16px;
     }
 
     .button:hover {
       background-color: #7b5fa5;
+      transform: scale(1.05);
     }
 
     #book-list {
       margin-top: 20px;
-      list-style-type: none;
-      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
     }
 
-    #book-list li {
-      background: #f9f9f9;
-      padding: 10px;
-      border-bottom: 1px solid #ddd;
-      border-radius: 4px;
+    #book-list div {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      width: calc(33.333% - 20px);
+    }
+
+    #book-list div h4 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      color: #444;
+    }
+
+    #book-list div p {
+      margin: 5px 0;
+      color: #777;
     }
 
     #error-message {
       color: red;
       margin-top: 10px;
+      display: none;
     }
 
+    /* Rodapé */
+    .footer {
+      background-color: #f4f4f9;
+      color: #777;
+      text-align: center;
+      padding: 10px 0;
+      font-size: 14px;
+      margin-top: 20px;
+    }
+
+    /* Responsividade */
     @media (min-width: 600px) {
       .search-container, .form-container {
         flex-direction: row;
@@ -114,16 +151,27 @@
         max-width: 150px;
       }
     }
+
+    @media (max-width: 600px) {
+      #book-list div {
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Menu de Navegação -->
-  <div class="navbar">
-    <a href="index.html">Home</a>
-    <a href="pesquisar.html">Pesquisar Livros</a>
-    <a href="adicionar_livro.html">Adicionar Livro</a>
-  </div>
+  <!-- Cabeçalho -->
+  <header class="header">
+    <div class="container">
+      <h1 class="logo">Biblioteca Pessoal</h1>
+      <nav class="navbar">
+        <a href="index.html">Home</a>
+        <a href="pesquisar.html">Pesquisar Livros</a>
+        <a href="adicionar_livro.html">Adicionar Livro</a>
+      </nav>
+    </div>
+  </header>
 
   <!-- Conteúdo Principal -->
   <div class="container">
@@ -140,13 +188,70 @@
     </div>
 
     <h3>Resultados da Pesquisa</h3>
-    <ul id="book-list"></ul>
+    <div id="book-list"></div>
     <p id="error-message"></p>
   </div>
 
+  <!-- Rodapé -->
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2024 Biblioteca Pessoal. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Carregar PapaParse para trabalhar com CSV -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+
   <!-- Script de busca e manipulação de CSV -->
   <script>
-    // Insira o código JavaScript de busca e manipulação do CSV aqui
+    let livros = [];
+
+    Papa.parse("goodreads_library_export.csv", {
+      download: true,
+      header: true,
+      complete: function(results) {
+        livros = results.data;
+      }
+    });
+
+    function buscarAutor() {
+      const nomeAutor = document.getElementById("author-name").value.toLowerCase();
+      const statusSelecionado = document.getElementById("status").value;
+
+      const resultados = livros.filter(livro => {
+        const autorMatch = livro["Author"] && livro["Author"].toLowerCase().includes(nomeAutor);
+        const statusMatch = livro["Exclusive Shelf"] && livro["Exclusive Shelf"] === statusSelecionado;
+        return autorMatch && (statusSelecionado === "" || statusMatch);
+      });
+
+      const lista = document.getElementById("book-list");
+      lista.innerHTML = '';
+
+      if (resultados.length > 0) {
+        resultados.forEach(livro => {
+          const card = document.createElement("div");
+          card.innerHTML = `
+            <h4>${livro["Title"]}</h4>
+            <p><strong>Autor:</strong> ${livro["Author"]}</p>
+            <p><strong>Status:</strong> ${livro["Exclusive Shelf"]}</p>
+          `;
+          lista.appendChild(card);
+        });
+      } else {
+        lista.innerHTML = '<p>Nenhum autor encontrado com o status selecionado.</p>';
+      }
+    }
+
+    function mostrarMensagem(tipo, mensagem) {
+      const errorMessage = document.getElementById("error-message");
+      errorMessage.textContent = mensagem;
+      errorMessage.style.color = tipo === "sucesso" ? "green" : "red";
+      errorMessage.style.display = "block";
+
+      setTimeout(() => {
+        errorMessage.style.display = "none";
+      }, 3000);
+    }
   </script>
 
 </body>
