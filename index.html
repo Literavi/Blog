@@ -210,7 +210,16 @@
       download: true,
       header: true,
       complete: function(results) {
-        livros = results.data;
+        if (results.data && results.data.length > 0) {
+          livros = results.data;
+          console.log("CSV carregado com sucesso:", livros); // Log para verificação
+        } else {
+          mostrarMensagem("erro", "Erro: O arquivo CSV está vazio ou não foi carregado corretamente.");
+        }
+      },
+      error: function(err) {
+        console.error("Erro ao carregar CSV:", err);
+        mostrarMensagem("erro", "Erro ao carregar o arquivo CSV.");
       }
     });
 
@@ -250,7 +259,7 @@
 
       setTimeout(() => {
         errorMessage.style.display = "none";
-      }, 3000);
+      }, 5000);
     }
   </script>
 
