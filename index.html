@@ -13,6 +13,8 @@
       padding: 0;
       background-color: #f4f4f9;
       color: #444;
+      display: flex;
+      justify-content: center;
     }
 
     /* Cabeçalho */
@@ -20,6 +22,7 @@
       background-color: #9370DB;
       color: white;
       padding: 15px 0;
+      width: 100%;
     }
 
     .header .container {
@@ -49,7 +52,7 @@
 
     /* Container principal */
     .container {
-      max-width: 800px;
+      max-width: 900px;
       margin: 20px auto;
       background: #fff;
       padding: 20px;
@@ -59,6 +62,7 @@
 
     h2 {
       color: #444;
+      text-align: center;
     }
 
     /* Estilo da barra de pesquisa */
@@ -66,13 +70,24 @@
       display: flex;
       gap: 10px;
       margin-bottom: 20px;
+      justify-content: center;
+      align-items: center;
     }
 
-    .search-box, .dropdown {
+    .search-box {
       padding: 10px;
       border: 2px solid #ddd;
       border-radius: 4px;
       font-size: 16px;
+      flex: 2;
+    }
+
+    .dropdown {
+      padding: 10px;
+      border: 2px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+      flex: 1;
     }
 
     .button {
@@ -96,6 +111,7 @@
       flex-wrap: wrap;
       gap: 20px;
       margin-top: 20px;
+      justify-content: center;
     }
 
     #book-list div {
@@ -139,6 +155,7 @@
       padding: 10px 0;
       font-size: 14px;
       margin-top: 20px;
+      width: 100%;
     }
   </style>
 </head>
@@ -209,11 +226,13 @@
       const nomeAutor = document.getElementById("author-name").value.toLowerCase();
       const statusSelecionado = document.getElementById("status").value;
 
-      const resultados = livros.filter(livro => {
-        const autorMatch = livro["Author"] && livro["Author"].toLowerCase().includes(nomeAutor);
-        const statusMatch = livro["Exclusive Shelf"] && livro["Exclusive Shelf"] === statusSelecionado;
-        return autorMatch && (statusSelecionado === "" || statusMatch);
-      });
+      const resultados = livros
+        .filter(livro => {
+          const autorMatch = livro["Author"] && livro["Author"].toLowerCase().includes(nomeAutor);
+          const statusMatch = livro["Exclusive Shelf"] && livro["Exclusive Shelf"] === statusSelecionado;
+          return autorMatch && (statusSelecionado === "" || statusMatch);
+        })
+        .sort((a, b) => a["Title"].localeCompare(b["Title"])); // Ordena os resultados alfabeticamente
 
       const lista = document.getElementById("book-list");
       lista.innerHTML = '';
@@ -222,10 +241,9 @@
         resultados.forEach(livro => {
           const card = document.createElement("div");
 
-          // Constrói o caminho completo da imagem no GitHub
           const imagePath = livro["ImageFile"]
             ? `https://github.com/Literavi/Blog/raw/main/imagens/${livro["ImageFile"]}`
-            : "https://via.placeholder.com/150"; // Imagem padrão caso não haja imagem
+            : "https://via.placeholder.com/150"; 
 
           card.innerHTML = `
             <img src="${imagePath}" alt="${livro["Title"]}" style="width:100%; border-radius: 8px;">
