@@ -224,32 +224,39 @@
     });
 
     function buscarAutor() {
-      const nomeAutor = document.getElementById("author-name").value.toLowerCase();
-      const statusSelecionado = document.getElementById("status").value;
+  const nomeAutor = document.getElementById("author-name").value.toLowerCase();
+  const statusSelecionado = document.getElementById("status").value;
 
-      const resultados = livros.filter(livro => {
-        const autorMatch = livro["Author"] && livro["Author"].toLowerCase().includes(nomeAutor);
-        const statusMatch = livro["Exclusive Shelf"] && livro["Exclusive Shelf"] === statusSelecionado;
-        return autorMatch && (statusSelecionado === "" || statusMatch);
-      });
+  const resultados = livros.filter(livro => {
+    const autorMatch = livro["Author"] && livro["Author"].toLowerCase().includes(nomeAutor);
+    const statusMatch = livro["Exclusive Shelf"] && livro["Exclusive Shelf"] === statusSelecionado;
+    return autorMatch && (statusSelecionado === "" || statusMatch);
+  });
 
-      const lista = document.getElementById("book-list");
-      lista.innerHTML = '';
+  const lista = document.getElementById("book-list");
+  lista.innerHTML = '';
 
-      if (resultados.length > 0) {
-        resultados.forEach(livro => {
-          const card = document.createElement("div");
-          card.innerHTML = `
-            <h4>${livro["Title"]}</h4>
-            <p><strong>Autor:</strong> ${livro["Author"]}</p>
-            <p><strong>Status:</strong> ${livro["Exclusive Shelf"]}</p>
-          `;
-          lista.appendChild(card);
-        });
-      } else {
-        lista.innerHTML = '<p>Nenhum autor encontrado com o status selecionado.</p>';
-      }
-    }
+  if (resultados.length > 0) {
+    resultados.forEach(livro => {
+      const card = document.createElement("div");
+
+      // Constrói o caminho completo da imagem no GitHub
+      const imagePath = livro["ImageFile"]
+        ? `https://github.com/Literavi/Blog/raw/main/imagens/${livro["ImageFile"]}`
+        : "https://via.placeholder.com/150"; // Imagem padrão caso não haja imagem
+
+      card.innerHTML = `
+        <img src="${imagePath}" alt="${livro["Title"]}" style="width:100%; border-radius: 8px;">
+        <h4>${livro["Title"]}</h4>
+        <p><strong>Autor:</strong> ${livro["Author"]}</p>
+        <p><strong>Status:</strong> ${livro["Exclusive Shelf"]}</p>
+      `;
+      lista.appendChild(card);
+    });
+  } else {
+    lista.innerHTML = '<p>Nenhum autor encontrado com o status selecionado.</p>';
+  }
+}
 
     function mostrarMensagem(tipo, mensagem) {
       const errorMessage = document.getElementById("error-message");
