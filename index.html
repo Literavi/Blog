@@ -6,121 +6,151 @@
   <title>Biblioteca Pessoal</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    /* Estilo geral */
-    body {
-      font-family: 'Roboto', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f9;
-      color: #444;
-    }
+  /* Estilo geral */
+  body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #444;
+  }
 
-    /* Cabeçalho */
-    .header {
-      background-color: #9370DB;
-      color: white;
-      padding: 15px 0;
-    }
+  /* Cabeçalho */
+  .header {
+    background-color: #9370DB;
+    color: white;
+    padding: 15px 0;
+  }
 
-    .header .container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+  .header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1000px; /* Ajuste de largura */
+    margin: 0 auto;
+  }
 
-    .header .logo {
-      font-size: 24px;
-      font-weight: bold;
-    }
+  .header .logo {
+    font-size: 24px;
+    font-weight: bold;
+  }
 
-    .navbar a {
-      color: white;
-      text-decoration: none;
-      margin: 0 15px;
-      font-weight: bold;
-      transition: color 0.3s;
-    }
+  .navbar a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: bold;
+    transition: color 0.3s;
+  }
 
-    .navbar a:hover {
-      color: #d1c4e9;
-    }
+  .navbar a:hover {
+    color: #d1c4e9;
+  }
 
-    /* Container principal */
-    .container {
-  max-width: 900px; /* Aumenta a largura máxima para alinhar com os livros */
-  margin: 20px auto;
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
+  /* Container principal */
+  .container {
+    max-width: 1000px; /* Aumenta a largura máxima para alinhar com os livros */
+    margin: 20px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
 
-/* Alinhamento dos elementos de pesquisa */
-.search-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  justify-content: center; /* Centraliza os elementos */
-}
+  /* Alinhamento dos elementos de pesquisa */
+  .search-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+  }
 
-.search-box, .dropdown, .button {
-  padding: 10px;
-  font-size: 16px;
-}
+  .search-box {
+    flex: 2; /* Faz o campo de texto ocupar mais espaço */
+    padding: 12px;
+    border: 2px solid #ddd;
+    font-size: 16px;
+    height: 44px; /* Deixa na mesma altura do dropdown e botão */
+  }
 
-/* Estilo dos cartões dos livros */
-#book-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-  justify-content: center; /* Centraliza os cartões */
-}
+  .dropdown {
+    flex: 1; /* Ajusta o tamanho do dropdown */
+    padding: 12px;
+    border: 2px solid #ddd;
+    font-size: 16px;
+    height: 44px; /* Deixa na mesma altura do campo de texto */
+  }
 
-#book-list div {
-  width: 180px; /* Define uma largura fixa para cada cartão */
-  padding: 10px;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
+  .button {
+    padding: 10px 20px;
+    background-color: #9370DB; /* Cor lilás para o botão */
+    color: white;
+    border: none;
+    height: 44px; /* Mesma altura dos outros */
+    cursor: pointer;
+    font-size: 16px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Suaviza o efeito */
+    border-radius: 4px; /* Arredondamento leve, remova se quiser reto */
+  }
 
-#book-list div img {
-  width: 100%;
-  height: 220px; /* Ajusta a altura da imagem */
-  border-radius: 8px;
-  object-fit: cover;
-  margin-bottom: 8px;
-}
+  /* Efeito de destaque ao passar o mouse */
+  .button:hover {
+    background-color: #7b5fa5; /* Tom mais escuro de lilás */
+    transform: translateY(-3px); /* Move o botão ligeiramente para cima */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adiciona uma sombra */
+  }
 
-    #book-list div h4 {
-      font-size: 16px;
-      color: #444;
-      margin: 5px 0;
-    }
+  /* Estilo dos cartões dos livros */
+  #book-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center; /* Centraliza os cartões */
+  }
 
-    #book-list div p {
-      margin: 5px 0;
-      color: #777;
-      font-size: 14px;
-    }
+  #book-list div {
+    width: 180px; /* Define uma largura fixa para cada cartão */
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
 
-    /* Rodapé */
-    .footer {
-      background-color: #f4f4f9;
-      color: #777;
-      text-align: center;
-      padding: 10px 0;
-      font-size: 14px;
-      margin-top: 20px;
-    }
-  </style>
+  #book-list div img {
+    width: 100%;
+    height: 200px; /* Aumenta a altura da imagem para mais destaque */
+    border-radius: 8px;
+    object-fit: cover; /* Garante que a imagem cubra o espaço sem distorção */
+    margin-bottom: 8px;
+  }
+
+  #book-list div h4 {
+    font-size: 16px;
+    color: #444;
+    margin: 5px 0;
+  }
+
+  #book-list div p {
+    margin: 5px 0;
+    color: #777;
+    font-size: 14px;
+  }
+
+  /* Rodapé */
+  .footer {
+    background-color: #f4f4f9;
+    color: #777;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 14px;
+    margin-top: 20px;
+  }
+</style>
 </head>
 <body>
 
