@@ -26,7 +26,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      max-width: 800px;
+      max-width: 1200px; /* Ajustado para largura maior */
       margin: 0 auto;
     }
 
@@ -49,25 +49,30 @@
 
     /* Container principal */
     .container {
-      max-width: 800px;
+      max-width: 1200px;
       margin: 20px auto;
       background: #fff;
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      gap: 20px;
+    }
+
+    /* Seção de pesquisa e resultados lado a lado */
+    .search-container {
+      flex: 1;
+    }
+
+    .results-container {
+      flex: 3;
     }
 
     h2, h3 {
       color: #444;
     }
 
-    .search-container, .form-container {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 20px;
-    }
-
-    .search-box, .input-field, .dropdown {
+    .search-box, .dropdown {
       padding: 12px;
       margin: 8px 0;
       border: 2px solid #ddd;
@@ -85,6 +90,7 @@
       cursor: pointer;
       transition: background-color 0.3s ease;
       font-size: 16px;
+      width: 100%;
     }
 
     .button:hover {
@@ -104,7 +110,7 @@
       border-radius: 8px;
       padding: 15px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      width: calc(33.333% - 20px); /* Três colunas */
+      width: calc(25% - 20px); /* Quatro colunas */
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -113,9 +119,9 @@
 
     #book-list div img {
       width: 100%;
-      height: 200px; /* Define uma altura fixa para as imagens */
+      height: 150px; /* Ajusta a altura das imagens */
       border-radius: 8px;
-      object-fit: cover; /* Corta a imagem para caber na proporção definida */
+      object-fit: cover;
       margin-bottom: 10px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
@@ -143,6 +149,9 @@
 
     /* Responsividade para telas menores */
     @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
       #book-list div {
         width: 100%; /* Exibe uma coluna única em dispositivos menores */
       }
@@ -165,8 +174,9 @@
 
   <!-- Conteúdo Principal -->
   <div class="container">
-    <h2>Pesquisar por Autor e Status</h2>
+    <!-- Seção de Pesquisa -->
     <div class="search-container">
+      <h2>Pesquisar por Autor e Status</h2>
       <input type="text" id="author-name" class="search-box" placeholder="Digite o nome do autor">
       <select id="status" class="dropdown">
         <option value="">Selecione o status</option>
@@ -177,9 +187,12 @@
       <button class="button" onclick="buscarAutor()">Pesquisar</button>
     </div>
 
-    <h3>Resultados da Pesquisa</h3>
-    <div id="book-list"></div>
-    <p id="error-message"></p>
+    <!-- Resultados da Pesquisa -->
+    <div class="results-container">
+      <h3>Resultados da Pesquisa</h3>
+      <div id="book-list"></div>
+      <p id="error-message"></p>
+    </div>
   </div>
 
   <!-- Rodapé -->
@@ -254,10 +267,4 @@
       errorMessage.style.display = "block";
 
       setTimeout(() => {
-        errorMessage.style.display = "none";
-      }, 5000);
-    }
-  </script>
-
-</body>
-</html>
+        errorMessage.style.display =
