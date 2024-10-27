@@ -26,7 +26,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      max-width: 1200px; /* Ajustado para largura maior */
+      max-width: 1200px;
       margin: 0 auto;
     }
 
@@ -49,40 +49,34 @@
 
     /* Container principal */
     .container {
-      max-width: 1200px;
+      max-width: 800px;
       margin: 20px auto;
       background: #fff;
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      display: flex;
-      gap: 20px;
     }
 
-    /* Seção de pesquisa e resultados lado a lado */
-    .search-container {
-      flex: 1;
-    }
-
-    .results-container {
-      flex: 3;
-    }
-
-    h2, h3 {
+    h2 {
       color: #444;
     }
 
+    /* Estilo da barra de pesquisa */
+    .search-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
     .search-box, .dropdown {
-      padding: 12px;
-      margin: 8px 0;
+      padding: 10px;
       border: 2px solid #ddd;
       border-radius: 4px;
       font-size: 16px;
-      width: 100%;
     }
 
     .button {
-      padding: 12px;
+      padding: 10px 20px;
       background-color: #9370DB;
       color: white;
       border: none;
@@ -90,18 +84,18 @@
       cursor: pointer;
       transition: background-color 0.3s ease;
       font-size: 16px;
-      width: 100%;
     }
 
     .button:hover {
       background-color: #7b5fa5;
     }
 
-    /* Estilo dos cartões e imagens */
+    /* Estilo dos cartões de livros */
     #book-list {
       display: flex;
       flex-wrap: wrap;
       gap: 20px;
+      margin-top: 20px;
     }
 
     #book-list div {
@@ -119,22 +113,22 @@
 
     #book-list div img {
       width: 100%;
-      height: 150px; /* Ajusta a altura das imagens */
+      height: 150px;
       border-radius: 8px;
       object-fit: cover;
       margin-bottom: 10px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 
     #book-list div h4 {
-      margin: 10px 0 5px;
-      font-size: 18px;
+      font-size: 16px;
       color: #444;
+      margin: 5px 0;
     }
 
     #book-list div p {
       margin: 5px 0;
       color: #777;
+      font-size: 14px;
     }
 
     /* Rodapé */
@@ -145,16 +139,6 @@
       padding: 10px 0;
       font-size: 14px;
       margin-top: 20px;
-    }
-
-    /* Responsividade para telas menores */
-    @media (max-width: 768px) {
-      .container {
-        flex-direction: column;
-      }
-      #book-list div {
-        width: 100%; /* Exibe uma coluna única em dispositivos menores */
-      }
     }
   </style>
 </head>
@@ -174,9 +158,8 @@
 
   <!-- Conteúdo Principal -->
   <div class="container">
-    <!-- Seção de Pesquisa -->
+    <h2>Pesquisar por Autor e Status</h2>
     <div class="search-container">
-      <h2>Pesquisar por Autor e Status</h2>
       <input type="text" id="author-name" class="search-box" placeholder="Digite o nome do autor">
       <select id="status" class="dropdown">
         <option value="">Selecione o status</option>
@@ -187,12 +170,9 @@
       <button class="button" onclick="buscarAutor()">Pesquisar</button>
     </div>
 
-    <!-- Resultados da Pesquisa -->
-    <div class="results-container">
-      <h3>Resultados da Pesquisa</h3>
-      <div id="book-list"></div>
-      <p id="error-message"></p>
-    </div>
+    <h3>Resultados da Pesquisa</h3>
+    <div id="book-list"></div>
+    <p id="error-message"></p>
   </div>
 
   <!-- Rodapé -->
@@ -267,4 +247,10 @@
       errorMessage.style.display = "block";
 
       setTimeout(() => {
-        errorMessage.style.display =
+        errorMessage.style.display = "none";
+      }, 5000);
+    }
+  </script>
+
+</body>
+</html>
