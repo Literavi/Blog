@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Biblioteca Pessoal - Home</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css"> <!-- Link para o CSS -->
+  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Biblioteca para gráficos -->
 </head>
 <body>
@@ -24,54 +24,81 @@
   <!-- Conteúdo Principal -->
   <div class="container">
     <h2>Quantidade de Livros Lidos por Mês em 2024</h2>
-    <canvas id="livrosLidosChart" width="400" height="200"></canvas> <!-- Gráfico será exibido aqui -->
+    <canvas id="livrosLidosChart" width="400" height="200"></canvas>
   </div>
 
-  <!-- Script para gerar o gráfico -->
+  <!-- Script para carregar dados do Google Sheets e gerar o gráfico -->
   <script>
-    const ctx = document.getElementById('livrosLidosChart').getContext('2d');
+    const spreadsheetId = "1ud0Iw7WLjPTRLyiJYdO3rFR0adt619fC"; // ID da sua planilha
+    const apiKey = "SUA_CHAVE_DE_API"; // Substitua pela sua chave de API
 
-    // Dados de exemplo - quantidade de livros lidos por mês
-    const dadosLivrosLidos = {
-      labels: [
-        'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
-      ],
-      datasets: [{
-        label: 'Livros Lidos',
-        data: [2, 5, 3, 4, 6, 7, 3, 8, 5, 9, 4, 6], // Quantidade de livros lidos por mês
-        borderColor: 'rgba(75, 192, 192, 1)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderWidth: 1
-      }]
-    };
+    // URL da API do Google Sheets para obter os dados
+    const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Biblioteca_Pessoal?key=${apiKey}`;
 
-    // Configuração do gráfico
-    const config = {
-      type: 'bar',
-      data: dadosLivrosLidos,
-      options: {
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true,
-            title: {
-              display: true,
-              text: 'Quantidade de Livros'
+    // Função para carregar dados da planilha e inicializar o gráfico
+    function carregarDadosEExibirGrafico() {
+      fetch(googleSheetsApiUrl)
+        .then(response => response.json())
+        .then(data => {
+          const rows = data.values;
+          const meses = [
+            'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+            'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+          ];
+          const livrosLidosPorMes = Array(12).fill(0); // Inicializa os contadores para cada mês
+
+          // Processa os dados da planilha
+          rows.slice(1).forEach(row => { // Ignora o cabeçalho
+            const date = row[2]; // Coluna da data no formato "YYYY-MM"
+            const [year, month] = date.split("-").map(Number);
+
+            // Verifica se é o ano de 2024 e atualiza o contador para o mês
+            if (year === 2024 && month >= 1 && month <= 12) {
+              livrosLidosPorMes[month - 1]++;
             }
-          },
-          x: {
-            title: {
-              display: true,
-              text: 'Mês'
-            }
-          }
-        }
-      }
-    };
+          });
 
-    // Inicialização do gráfico
-    new Chart(ctx, config);
+          // Inicializa o gráfico com os dados carregados
+          const ctx = document.getElementById('livrosLidosChart').getContext('2d');
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: meses,
+              datasets: [{
+                label: 'Livros Lidos',
+                data: livrosLidosPorMes,
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderWidth: 1
+              }]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  title: {
+                    display: true,
+                    text: 'Quantidade de Livros'
+                  }
+                },
+                x: {
+                  title: {
+                    display: true,
+                    text: 'Mês'
+                  }
+                }
+              }
+            }
+          });
+        })
+        .catch(error => {
+          console.error("Erro ao carregar dados do Google Sheets:", error);
+        });
+    }
+
+    // Carrega os dados e exibe o gráfico ao carregar a página
+    carregarDadosEExibirGrafico();
   </script>
 
 </body>
