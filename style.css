@@ -58,29 +58,26 @@ body {
   gap: 12px;
   justify-content: center;
   margin-bottom: 20px;
-  width: 100%;               /* Usa toda a largura disponível */
-  max-width: 900px;          /* Alinha a largura máxima com os livros */
-  box-sizing: border-box;
 }
 
 .search-box {
-  flex: 1;
-  padding: 10px 16px;        /* Ajusta o padding interno */
+  flex: 2;
+  padding: 12px;
   border: 2px solid #ddd;
   font-size: 16px;
-  height: 44px;              /* Mesma altura do botão */
+  height: 44px;
   border-radius: 8px;
-  box-sizing: border-box;    /* Garante que o padding não aumente a altura */
+  box-sizing: border-box;
 }
 
 .dropdown {
-  flex: 0.5;
+  flex: 1;
   padding: 10px;
   border: 2px solid #ddd;
   font-size: 16px;
-  height: 44px;              /* Mesma altura do botão */
+  height: 44px;
   border-radius: 8px;
-  max-width: 150px;
+  max-width: 200px; /* Aumenta a largura máxima para caber o texto */
   box-sizing: border-box;
 }
 
@@ -89,13 +86,13 @@ body {
   background-color: #9370DB;
   color: white;
   border: none;
-  height: 44px;              /* Define a altura */
+  height: 44px;
   cursor: pointer;
   font-size: 16px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   border-radius: 8px;
-  box-sizing: border-box;
 }
+
 
 
 .button:hover {
