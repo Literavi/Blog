@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca Pessoal - Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"> <!-- Link para o CSS -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Biblioteca para gráficos -->
+</head>
+<body>
+
+  <!-- Cabeçalho -->
+  <header class="header">
+    <div class="container">
+      <h1 class="logo">Biblioteca Pessoal - Home</h1>
+      <nav class="navbar">
+        <a href="index.html">Home</a>
+        <a href="pesquisa.html">Pesquisar Livros</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <div class="container">
+    <h2>Quantidade de Livros Lidos por Mês em 2024</h2>
+    <canvas id="livrosLidosChart" width="400" height="200"></canvas> <!-- Gráfico será exibido aqui -->
+  </div>
+
+  <!-- Script para gerar o gráfico -->
+  <script>
+    const ctx = document.getElementById('livrosLidosChart').getContext('2d');
+
+    // Dados de exemplo - quantidade de livros lidos por mês
+    const dadosLivrosLidos = {
+      labels: [
+        'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+      ],
+      datasets: [{
+        label: 'Livros Lidos',
+        data: [2, 5, 3, 4, 6, 7, 3, 8, 5, 9, 4, 6], // Quantidade de livros lidos por mês
+        borderColor: 'rgba(75, 192, 192, 1)',
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderWidth: 1
+      }]
+    };
+
+    // Configuração do gráfico
+    const config = {
+      type: 'bar',
+      data: dadosLivrosLidos,
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: {
+              display: true,
+              text: 'Quantidade de Livros'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Mês'
+            }
+          }
+        }
+      }
+    };
+
+    // Inicialização do gráfico
+    new Chart(ctx, config);
+  </script>
+
+</body>
+</html>
