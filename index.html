@@ -24,22 +24,25 @@
   <!-- Conteúdo Principal -->
   <div class="container">
     <h2>Quantidade de Livros Lidos por Mês em 2024</h2>
-    <canvas id="livrosLidosChart" width="400" height="200"></canvas>
+    <canvas id="livrosLidosChart" width="400" height="200"></canvas> <!-- Gráfico será exibido aqui -->
   </div>
 
   <!-- Script para carregar dados do Google Sheets e gerar o gráfico -->
   <script>
-    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc"; // ID da sua planilha
-    const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs"; // Substitua pela sua chave de API
-    const sheetName = "Biblioteca_Pessoal"; // Nome da aba da planilha
+    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc"; // Seu Spreadsheet ID
+    const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs"; // Sua chave de API
+    const sheetName = "Biblioteca_Pessoal"; // Nome da aba na planilha
 
-    // URL da API do Google Sheets para obter os dados
-    const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Biblioteca_Pessoal?key=${apiKey}`;
+    const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
 
-    // Função para carregar dados da planilha e inicializar o gráfico
     function carregarDadosEExibirGrafico() {
       fetch(googleSheetsApiUrl)
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Erro ao carregar dados da API do Google Sheets");
+          }
+          return response.json();
+        })
         .then(data => {
           const rows = data.values;
           const meses = [
@@ -48,14 +51,20 @@
           ];
           const livrosLidosPorMes = Array(12).fill(0); // Inicializa os contadores para cada mês
 
+          // Identifica o índice da coluna "Date Lido"
+          const headerRow = rows[0];
+          const dateLidoIndex = headerRow.indexOf("Date Lido");
+
           // Processa os dados da planilha
           rows.slice(1).forEach(row => { // Ignora o cabeçalho
-            const date = row[2]; // Coluna da data no formato "YYYY-MM"
-            const [year, month] = date.split("-").map(Number);
+            const date = row[dateLidoIndex]; // Usa o índice da coluna "Date Lido"
+            if (date) {
+              const [year, month] = date.split("-").map(Number);
 
-            // Verifica se é o ano de 2024 e atualiza o contador para o mês
-            if (year === 2024 && month >= 1 && month <= 12) {
-              livrosLidosPorMes[month - 1]++;
+              // Verifica se é o ano de 2024 e atualiza o contador para o mês
+              if (year === 2024 && month >= 1 && month <= 12) {
+                livrosLidosPorMes[month - 1]++;
+              }
             }
           });
 
@@ -94,7 +103,7 @@
           });
         })
         .catch(error => {
-          console.error("Erro ao carregar dados do Google Sheets:", error);
+          console.error("Erro ao carregar dados da API do Google Sheets:", error);
         });
     }
 
