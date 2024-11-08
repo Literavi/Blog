@@ -59,7 +59,7 @@
           rows.slice(1).forEach(row => { // Ignora o cabeçalho
             const date = row[dateLidoIndex]; // Usa o índice da coluna "Date Lido"
             if (date) {
-              const [year, month] = date.split("-").map(Number);
+              const [day, month, year] = date.split("/").map(Number);
 
               // Verifica se é o ano de 2024 e atualiza o contador para o mês
               if (year === 2024 && month >= 1 && month <= 12) {
