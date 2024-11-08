@@ -1,0 +1,178 @@
+/* Estilo geral */
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f9;
+  color: #444;
+}
+
+/* Cabeçalho */
+.header {
+  background-color: #9370DB;
+  color: white;
+  padding: 15px 0;
+}
+
+.header .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.header .logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  margin: 0 15px;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.navbar a:hover {
+  color: #d1c4e9;
+}
+
+/* Container principal */
+.container {
+  max-width: 900px;
+  margin: 20px auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Alinhamento dos elementos de pesquisa */
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.search-box {
+  flex: 2;
+  padding: 12px;
+  border: 2px solid #ddd;
+  font-size: 16px;
+  height: 44px;
+  border-radius: 8px;
+}
+
+.dropdown {
+  flex: 1;
+  padding: 10px;
+  border: 2px solid #ddd;
+  font-size: 16px;
+  height: 44px;
+  border-radius: 8px;
+  max-width: 150px;
+}
+
+.button {
+  padding: 10px 20px;
+  background-color: #9370DB;
+  color: white;
+  border: none;
+  height: 44px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 8px;
+}
+
+.button:hover {
+  background-color: #7b5fa5;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo dos cartões dos livros */
+#book-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+#book-list div {
+  width: 160px;
+  padding: 8px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+#book-list div img {
+  width: 100%;
+  height: 180px;
+  border-radius: 8px;
+  object-fit: cover;
+  cursor: pointer;
+}
+
+#book-list div h4 {
+  font-size: 16px;
+  color: #444;
+  margin: 5px 0;
+}
+
+#book-list div p {
+  margin: 5px 0;
+  color: #777;
+  font-size: 14px;
+}
+
+/* Modal para sinopse */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 600px;
+  border-radius: 8px;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
