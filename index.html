@@ -165,7 +165,7 @@
                 const tooltip = document.getElementById("tooltip");
                 const capaLivroContainer = document.getElementById("capaLivroContainer");
 
-                if (elements.length) {
+                if (elements.length && mesSelecionado === null) { // Verifica se não há um mês selecionado
                   const element = elements[0];
                   const datasetIndex = element.datasetIndex; // 0 para Físico, 1 para eBook
                   const elementIndex = element.index; // Índice do mês
@@ -227,9 +227,6 @@
                       capaLivroContainer.style.display = "none";
                     }
                   }
-                } else {
-                  capaLivroContainer.style.display = "none";
-                  mesSelecionado = null; // Nenhum mês selecionado
                 }
               }
             }
