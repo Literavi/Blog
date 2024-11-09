@@ -134,6 +134,11 @@
                   }
                 }
               },
+              plugins: {
+                tooltip: {
+                  enabled: false // Desativa o tooltip padrão
+                }
+              },
               onHover: (event, elements) => {
                 const capaLivro = document.getElementById("capaLivro");
                 if (elements.length) {
