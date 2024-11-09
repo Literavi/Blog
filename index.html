@@ -67,8 +67,7 @@
           ];
           const livrosFisicosPorMes = Array(12).fill(0); // Contadores para livros Físicos
           const livrosEbooksPorMes = Array(12).fill(0); // Contadores para eBooks
-          const capasFisico = Array(12).fill().map(() => []); // Capas para livros Físicos
-          const capasEbook = Array(12).fill().map(() => []); // Capas para eBooks
+          const capasPorMes = Array(12).fill().map(() => []); // Array para armazenar todas as capas dos livros por mês
 
           // Identifica o índice das colunas
           const headerRow = rows[0];
@@ -85,24 +84,23 @@
               const [day, month, year] = date.split("/").map(Number);
 
               if (year === 2024 && month >= 1 && month <= 12) {
+                // Atualiza a contagem de livros lidos por formato e mês
                 if (formato === "Físico") {
                   livrosFisicosPorMes[month - 1]++;
-                  if (imageFile) {
-                    const imageUrl = `https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${imageFile}`;
-                    capasFisico[month - 1].push(imageUrl);
-                  }
                 } else if (formato === "eBook") {
                   livrosEbooksPorMes[month - 1]++;
-                  if (imageFile) {
-                    const imageUrl = `https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${imageFile}`;
-                    capasEbook[month - 1].push(imageUrl);
-                  }
+                }
+
+                // Armazena a capa do livro no array correspondente ao mês
+                if (imageFile) {
+                  const imageUrl = `https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${imageFile}`;
+                  capasPorMes[month - 1].push(imageUrl);
                 }
               }
             }
           });
 
-          // Inicializa o gráfico
+          // Inicializa o gráfico com os dados carregados
           const ctx = document.getElementById('livrosLidosChart').getContext('2d');
           const chart = new Chart(ctx, {
             type: 'bar',
@@ -150,15 +148,13 @@
               onHover: (event, elements) => {
                 const capaLivroContainer = document.getElementById("capaLivroContainer");
                 if (elements.length) {
-                  const element = elements[0];
-                  const datasetIndex = element.datasetIndex; // 0 para Físico, 1 para eBook
-                  const elementIndex = element.index; // Índice do mês
+                  const elementIndex = elements[0].index; // Índice do mês
 
                   // Limpa o conteúdo anterior
                   capaLivroContainer.innerHTML = '';
 
-                  // Determina qual array de capas usar
-                  const capas = datasetIndex === 0 ? capasFisico[elementIndex] : capasEbook[elementIndex];
+                  // Obtem todas as capas do mês
+                  const capas = capasPorMes[elementIndex];
 
                   if (capas && capas.length > 0) {
                     capas.forEach(url => {
