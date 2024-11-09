@@ -4,7 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Biblioteca Pessoal</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  
+  <!-- Importação da Fonte Sour Gummy do Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  
   <style>
     /* Estilo geral */
     * {
@@ -14,14 +19,15 @@
     }
     body {
       font-family: 'Roboto', sans-serif;
-      background-color: #f4f4f9;
+      background: linear-gradient(180deg, #CEBCE8, #F3E8FF); /* Degradê sutil de #CEBCE8 para #F3E8FF */
       color: #444;
+      padding-top: 80px; /* Para compensar o cabeçalho fixo */
     }
 
     /* Cabeçalho */
     .header {
       width: 100%;
-      background: linear-gradient(90deg, #9370DB, #7B68EE); /* Degradê no fundo do cabeçalho */
+      background: linear-gradient(90deg, #0f0, #33cc33); /* Fundo em verde neon */
       color: white;
       padding: 10px 0;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -38,8 +44,10 @@
       padding: 0 20px;
     }
     .logo {
+      font-family: "Sour Gummy", sans-serif;
+      font-weight: 700;
       font-size: 24px;
-      font-weight: bold;
+      color: #0f0; /* Verde neon */
       text-transform: uppercase;
     }
 
@@ -49,9 +57,10 @@
       gap: 20px;
     }
     .navbar a {
-      color: white;
+      font-family: "Sour Gummy", sans-serif;
+      color: #0f0; /* Verde neon */
       text-decoration: none;
-      font-weight: bold;
+      font-weight: 400;
       font-size: 16px;
       position: relative;
       transition: color 0.3s ease;
@@ -61,7 +70,7 @@
       position: absolute;
       width: 0;
       height: 2px;
-      background: #d1c4e9;
+      background: #0f0;
       left: 0;
       bottom: -4px;
       transition: width 0.3s ease;
@@ -70,12 +79,35 @@
       width: 100%;
     }
     .navbar a:hover {
-      color: #d1c4e9;
+      color: #33ff33;
     }
 
-    /* Espaçamento para o conteúdo abaixo do cabeçalho fixo */
-    .content {
-      padding-top: 80px;
+    /* Estilos específicos para diferentes pesos e estilos da fonte */
+    .sour-gummy-bold {
+      font-family: "Sour Gummy", sans-serif;
+      font-weight: 900; /* Peso máximo */
+      color: #0f0;
+      font-size: 28px;
+    }
+    .sour-gummy-light {
+      font-family: "Sour Gummy", sans-serif;
+      font-weight: 300; /* Peso leve */
+      color: #0f0;
+      font-size: 20px;
+    }
+    .sour-gummy-italic {
+      font-family: "Sour Gummy", sans-serif;
+      font-weight: 400;
+      font-style: italic;
+      color: #0f0;
+      font-size: 20px;
+    }
+    .sour-gummy-wide {
+      font-family: "Sour Gummy", sans-serif;
+      font-weight: 500;
+      font-variation-settings: "wdth" 125; /* Largura ajustada */
+      color: #0f0;
+      font-size: 24px;
     }
   </style>
 </head>
@@ -94,9 +126,11 @@
   </header>
 
   <!-- Conteúdo Principal -->
-  <div class="content">
-    <h2>Bem-vindo à sua Biblioteca Pessoal!</h2>
-    <p>Explore sua coleção de livros, adicione novos títulos e organize sua leitura de forma fácil e prática.</p>
+  <div class="content container">
+    <h2 class="sour-gummy-bold">Bem-vindo à sua Biblioteca Pessoal!</h2>
+    <p class="sour-gummy-light">Explore sua coleção de livros e organize sua leitura de forma prática e divertida.</p>
+    <p class="sour-gummy-italic">Adicione novos títulos para melhorar a organização.</p>
+    <p class="sour-gummy-wide">Esta fonte verde neon dá um toque de estilo e modernidade.</p>
   </div>
 
 </body>
