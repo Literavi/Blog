@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Biblioteca Pessoal - Home</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Biblioteca para gráficos -->
   <style>
     /* Estilo para a imagem de capa */
@@ -62,26 +61,37 @@
           ];
           const livrosLidosPorMes = Array(12).fill(0); // Inicializa os contadores para cada mês
           const capasLivros = Array(12).fill(null); // Array para armazenar as capas dos livros
+          const coresBarras = Array(12).fill('rgba(75, 192, 192, 0.2)'); // Cores padrão para as barras
 
-          // Identifica o índice das colunas "Date Lido" e "ImageFile"
+          // Identifica o índice das colunas "Date Lido", "ImageFile" e "Formato"
           const headerRow = rows[0];
           const dateLidoIndex = headerRow.indexOf("Date Lido");
           const imageFileIndex = headerRow.indexOf("ImageFile");
+          const formatoIndex = headerRow.indexOf("Formato");
 
           // Processa os dados da planilha
           rows.slice(1).forEach(row => { // Ignora o cabeçalho
-            const date = row[dateLidoIndex]; // Usa o índice da coluna "Date Lido"
-            const imageFile = row[imageFileIndex]; // Usa o índice da coluna "ImageFile"
+            const date = row[dateLidoIndex];
+            const imageFile = row[imageFileIndex];
+            const formato = row[formatoIndex];
+
             if (date) {
               const [day, month, year] = date.split("/").map(Number);
 
               // Verifica se é o ano de 2024 e atualiza o contador para o mês
               if (year === 2024 && month >= 1 && month <= 12) {
                 livrosLidosPorMes[month - 1]++;
-                
+
                 // Armazena a capa do livro para o mês, se houver
                 if (imageFile) {
                   capasLivros[month - 1] = `https://github.com/Literavi/Blog/raw/main/imagens/${imageFile}`;
+                }
+
+                // Define a cor com base no formato
+                if (formato === "eBook") {
+                  coresBarras[month - 1] = 'rgba(54, 162, 235, 0.5)'; // Cor para eBook
+                } else if (formato === "Físico") {
+                  coresBarras[month - 1] = 'rgba(255, 99, 132, 0.5)'; // Cor para Físico
                 }
               }
             }
@@ -96,8 +106,8 @@
               datasets: [{
                 label: 'Livros Lidos',
                 data: livrosLidosPorMes,
+                backgroundColor: coresBarras, // Usa as cores definidas para cada mês
                 borderColor: 'rgba(75, 192, 192, 1)',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
                 borderWidth: 1
               }]
             },
