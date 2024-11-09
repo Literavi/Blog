@@ -8,27 +8,45 @@
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    /* Estilo para as imagens de capa */
-    #capaLivroContainer {
+    /* Estilo para o modal de capas */
+    #capaLivroModal {
       display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    #capaLivroContainer {
+      display: flex;
       flex-wrap: wrap;
-      margin-top: 10px;
+      max-width: 90%;
+      max-height: 80%;
+      overflow-y: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
     #capaLivroContainer img {
-      width: 80px; /* Tamanho ajustado para mobile */
+      width: 80px; /* Ajuste do tamanho da capa */
       height: auto;
       margin: 5px;
       border-radius: 8px;
     }
-    /* Tooltip personalizado */
-    #tooltip {
-      display: none;
+    /* Botão de Fechar Modal */
+    .close-modal {
       position: absolute;
-      background-color: rgba(0, 0, 0, 0.7);
+      top: 10px;
+      right: 20px;
       color: white;
-      padding: 8px;
-      border-radius: 5px;
-      font-size: 14px;
+      font-size: 24px;
+      font-weight: bold;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -49,10 +67,12 @@
   <div class="container">
     <h2>Quantidade de Livros Lidos por Mês em 2024</h2>
     <canvas id="livrosLidosChart" width="400" height="200"></canvas>
-    <!-- Container para as imagens das capas -->
+  </div>
+
+  <!-- Modal para exibir as capas -->
+  <div id="capaLivroModal">
+    <div class="close-modal" onclick="fecharModal()">&times;</div>
     <div id="capaLivroContainer"></div>
-    <!-- Tooltip personalizado -->
-    <div id="tooltip"></div>
   </div>
 
   <!-- Script para carregar dados do Google Sheets e gerar o gráfico -->
@@ -159,47 +179,10 @@
                   enabled: false // Desativa o tooltip padrão
                 }
               },
-              onHover: (event, elements) => {
-                const tooltip = document.getElementById("tooltip");
-                const capaLivroContainer = document.getElementById("capaLivroContainer");
-
-                if (elements.length) {
-                  const element = elements[0];
-                  const datasetIndex = element.datasetIndex; // 0 para Físico, 1 para eBook
-                  const elementIndex = element.index; // Índice do mês
-
-                  // Limpa o conteúdo anterior
-                  capaLivroContainer.innerHTML = '';
-
-                  // Obtem as capas correspondentes ao formato (Físico ou eBook) e mês
-                  const capas = datasetIndex === 0 ? capasFisico[elementIndex] : capasEbook[elementIndex];
-
-                  if (capas && capas.length > 0) {
-                    capas.forEach(url => {
-                      const img = document.createElement('img');
-                      img.src = url;
-                      img.alt = 'Capa do Livro';
-                      capaLivroContainer.appendChild(img);
-                    });
-                    capaLivroContainer.style.display = "flex";
-                  } else {
-                    capaLivroContainer.style.display = "none";
-                  }
-
-                  // Exibe o número de livros lidos para o formato específico
-                  const quantidade = datasetIndex === 0 ? livrosFisicosPorMes[elementIndex] : livrosEbooksPorMes[elementIndex];
-                  const formato = datasetIndex === 0 ? "Físico" : "eBook";
-                  tooltip.textContent = `${formato}: ${quantidade} livro(s) lido(s)`;
-                  tooltip.style.left = event.native.clientX + 'px';
-                  tooltip.style.top = event.native.clientY + 'px';
-                  tooltip.style.display = 'block';
-                } else {
-                  capaLivroContainer.style.display = "none";
-                  tooltip.style.display = "none";
-                }
-              },
               onClick: (event, elements) => {
                 const capaLivroContainer = document.getElementById("capaLivroContainer");
+                const capaLivroModal = document.getElementById("capaLivroModal");
+
                 if (elements.length) {
                   const elementIndex = elements[0].index; // Índice do mês
 
@@ -216,12 +199,8 @@
                       img.alt = 'Capa do Livro';
                       capaLivroContainer.appendChild(img);
                     });
-                    capaLivroContainer.style.display = "flex";
-                  } else {
-                    capaLivroContainer.style.display = "none";
+                    capaLivroModal.style.display = "flex"; // Exibe o modal
                   }
-                } else {
-                  capaLivroContainer.style.display = "none";
                 }
               }
             }
@@ -231,6 +210,11 @@
         .catch(error => {
           console.error("Erro ao carregar dados da API do Google Sheets:", error);
         });
+    }
+
+    // Função para fechar o modal
+    function fecharModal() {
+      document.getElementById("capaLivroModal").style.display = "none";
     }
 
     // Carrega os dados e exibe o gráfico ao carregar a página
