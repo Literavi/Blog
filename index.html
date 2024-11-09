@@ -63,6 +63,8 @@
 
     const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
 
+    let mesSelecionado = null; // Variável de estado para armazenar o índice do mês selecionado
+
     function carregarDadosEExibirGrafico() {
       fetch(googleSheetsApiUrl)
         .then(response => {
@@ -194,7 +196,6 @@
                   tooltip.style.top = event.native.clientY + 'px';
                   tooltip.style.display = 'block';
                 } else {
-                  capaLivroContainer.style.display = "none";
                   tooltip.style.display = "none";
                 }
               },
@@ -203,25 +204,32 @@
                 if (elements.length) {
                   const elementIndex = elements[0].index; // Índice do mês
 
-                  // Limpa o conteúdo anterior
-                  capaLivroContainer.innerHTML = '';
-
-                  // Obtem todas as capas do mês (tanto de Físico quanto de eBook)
-                  const capasDoMes = [...capasFisico[elementIndex], ...capasEbook[elementIndex]];
-
-                  if (capasDoMes.length > 0) {
-                    capasDoMes.forEach(url => {
-                      const img = document.createElement('img');
-                      img.src = url;
-                      img.alt = 'Capa do Livro';
-                      capaLivroContainer.appendChild(img);
-                    });
-                    capaLivroContainer.style.display = "flex";
-                  } else {
+                  // Alterna a exibição das capas
+                  if (mesSelecionado === elementIndex) {
                     capaLivroContainer.style.display = "none";
+                    mesSelecionado = null; // Deseleciona o mês
+                  } else {
+                    mesSelecionado = elementIndex; // Atualiza para o mês selecionado
+                    capaLivroContainer.innerHTML = ''; // Limpa o conteúdo anterior
+                    
+                    // Combina todas as capas (Físico e eBook) para o mês
+                    const capasDoMes = [...capasFisico[elementIndex], ...capasEbook[elementIndex]];
+
+                    if (capasDoMes.length > 0) {
+                      capasDoMes.forEach(url => {
+                        const img = document.createElement('img');
+                        img.src = url;
+                        img.alt = 'Capa do Livro';
+                        capaLivroContainer.appendChild(img);
+                      });
+                      capaLivroContainer.style.display = "flex";
+                    } else {
+                      capaLivroContainer.style.display = "none";
+                    }
                   }
                 } else {
                   capaLivroContainer.style.display = "none";
+                  mesSelecionado = null; // Nenhum mês selecionado
                 }
               }
             }
