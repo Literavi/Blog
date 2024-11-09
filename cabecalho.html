@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca Pessoal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    /* Estilo geral */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f4f4f9;
+      color: #444;
+    }
+
+    /* Cabeçalho */
+    .header {
+      width: 100%;
+      background: linear-gradient(90deg, #9370DB, #7B68EE); /* Degradê no fundo do cabeçalho */
+      color: white;
+      padding: 10px 0;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: fixed; /* Fixa o cabeçalho no topo */
+      top: 0;
+      z-index: 1000;
+    }
+    .header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    /* Estilo do menu */
+    .navbar {
+      display: flex;
+      gap: 20px;
+    }
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+    .navbar a::after {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 2px;
+      background: #d1c4e9;
+      left: 0;
+      bottom: -4px;
+      transition: width 0.3s ease;
+    }
+    .navbar a:hover::after {
+      width: 100%;
+    }
+    .navbar a:hover {
+      color: #d1c4e9;
+    }
+
+    /* Espaçamento para o conteúdo abaixo do cabeçalho fixo */
+    .content {
+      padding-top: 80px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cabeçalho -->
+  <header class="header">
+    <div class="container">
+      <h1 class="logo">Biblioteca Pessoal</h1>
+      <nav class="navbar">
+        <a href="index.html">Home</a>
+        <a href="pesquisa.html">Pesquisar Livros</a>
+        <a href="adicionar_livro.html">Adicionar Livro</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal -->
+  <div class="content">
+    <h2>Bem-vindo à sua Biblioteca Pessoal!</h2>
+    <p>Explore sua coleção de livros, adicione novos títulos e organize sua leitura de forma fácil e prática.</p>
+  </div>
+
+</body>
+</html>
