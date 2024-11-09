@@ -15,7 +15,7 @@
       margin-top: 10px;
     }
     #capaLivroContainer img {
-      width: 100px;
+      width: 80px; /* Tamanho ajustado para mobile */
       height: auto;
       margin: 5px;
       border-radius: 8px;
@@ -160,8 +160,9 @@
                 }
               },
               onHover: (event, elements) => {
-                const capaLivroContainer = document.getElementById("capaLivroContainer");
                 const tooltip = document.getElementById("tooltip");
+                const capaLivroContainer = document.getElementById("capaLivroContainer");
+
                 if (elements.length) {
                   const element = elements[0];
                   const datasetIndex = element.datasetIndex; // 0 para Físico, 1 para eBook
@@ -195,6 +196,32 @@
                 } else {
                   capaLivroContainer.style.display = "none";
                   tooltip.style.display = "none";
+                }
+              },
+              onClick: (event, elements) => {
+                const capaLivroContainer = document.getElementById("capaLivroContainer");
+                if (elements.length) {
+                  const elementIndex = elements[0].index; // Índice do mês
+
+                  // Limpa o conteúdo anterior
+                  capaLivroContainer.innerHTML = '';
+
+                  // Obtem todas as capas do mês (tanto de Físico quanto de eBook)
+                  const capasDoMes = [...capasFisico[elementIndex], ...capasEbook[elementIndex]];
+
+                  if (capasDoMes.length > 0) {
+                    capasDoMes.forEach(url => {
+                      const img = document.createElement('img');
+                      img.src = url;
+                      img.alt = 'Capa do Livro';
+                      capaLivroContainer.appendChild(img);
+                    });
+                    capaLivroContainer.style.display = "flex";
+                  } else {
+                    capaLivroContainer.style.display = "none";
+                  }
+                } else {
+                  capaLivroContainer.style.display = "none";
                 }
               }
             }
