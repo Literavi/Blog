@@ -20,6 +20,16 @@
       margin: 5px;
       border-radius: 8px;
     }
+    /* Tooltip personalizado */
+    #tooltip {
+      display: none;
+      position: absolute;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 8px;
+      border-radius: 5px;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
@@ -41,6 +51,8 @@
     <canvas id="livrosLidosChart" width="400" height="200"></canvas>
     <!-- Container para as imagens das capas -->
     <div id="capaLivroContainer"></div>
+    <!-- Tooltip personalizado -->
+    <div id="tooltip"></div>
   </div>
 
   <!-- Script para carregar dados do Google Sheets e gerar o gráfico -->
@@ -67,7 +79,8 @@
           ];
           const livrosFisicosPorMes = Array(12).fill(0); // Contadores para livros Físicos
           const livrosEbooksPorMes = Array(12).fill(0); // Contadores para eBooks
-          const capasPorMes = Array(12).fill().map(() => []); // Array para armazenar todas as capas dos livros por mês
+          const capasFisico = Array(12).fill().map(() => []); // Capas para livros Físicos
+          const capasEbook = Array(12).fill().map(() => []); // Capas para eBooks
 
           // Identifica o índice das colunas
           const headerRow = rows[0];
@@ -84,17 +97,18 @@
               const [day, month, year] = date.split("/").map(Number);
 
               if (year === 2024 && month >= 1 && month <= 12) {
-                // Atualiza a contagem de livros lidos por formato e mês
                 if (formato === "Físico") {
                   livrosFisicosPorMes[month - 1]++;
+                  if (imageFile) {
+                    const imageUrl = `https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${imageFile}`;
+                    capasFisico[month - 1].push(imageUrl);
+                  }
                 } else if (formato === "eBook") {
                   livrosEbooksPorMes[month - 1]++;
-                }
-
-                // Armazena a capa do livro no array correspondente ao mês
-                if (imageFile) {
-                  const imageUrl = `https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${imageFile}`;
-                  capasPorMes[month - 1].push(imageUrl);
+                  if (imageFile) {
+                    const imageUrl = `https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${imageFile}`;
+                    capasEbook[month - 1].push(imageUrl);
+                  }
                 }
               }
             }
@@ -147,14 +161,17 @@
               },
               onHover: (event, elements) => {
                 const capaLivroContainer = document.getElementById("capaLivroContainer");
+                const tooltip = document.getElementById("tooltip");
                 if (elements.length) {
-                  const elementIndex = elements[0].index; // Índice do mês
+                  const element = elements[0];
+                  const datasetIndex = element.datasetIndex; // 0 para Físico, 1 para eBook
+                  const elementIndex = element.index; // Índice do mês
 
                   // Limpa o conteúdo anterior
                   capaLivroContainer.innerHTML = '';
 
-                  // Obtem todas as capas do mês
-                  const capas = capasPorMes[elementIndex];
+                  // Obtem as capas correspondentes ao formato (Físico ou eBook) e mês
+                  const capas = datasetIndex === 0 ? capasFisico[elementIndex] : capasEbook[elementIndex];
 
                   if (capas && capas.length > 0) {
                     capas.forEach(url => {
@@ -167,8 +184,17 @@
                   } else {
                     capaLivroContainer.style.display = "none";
                   }
+
+                  // Exibe o número de livros lidos para o formato específico
+                  const quantidade = datasetIndex === 0 ? livrosFisicosPorMes[elementIndex] : livrosEbooksPorMes[elementIndex];
+                  const formato = datasetIndex === 0 ? "Físico" : "eBook";
+                  tooltip.textContent = `${formato}: ${quantidade} livro(s) lido(s)`;
+                  tooltip.style.left = event.native.clientX + 'px';
+                  tooltip.style.top = event.native.clientY + 'px';
+                  tooltip.style.display = 'block';
                 } else {
                   capaLivroContainer.style.display = "none";
+                  tooltip.style.display = "none";
                 }
               }
             }
