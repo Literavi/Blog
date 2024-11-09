@@ -7,6 +7,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Biblioteca para gráficos -->
+  <style>
+    /* Estilo para a imagem de capa */
+    #capaLivro {
+      width: 150px;
+      height: 220px;
+      margin-top: 10px;
+      display: none; /* Oculta a imagem inicialmente */
+      border-radius: 8px;
+    }
+  </style>
 </head>
 <body>
 
@@ -25,6 +35,7 @@
   <div class="container">
     <h2>Quantidade de Livros Lidos por Mês em 2024</h2>
     <canvas id="livrosLidosChart" width="400" height="200"></canvas> <!-- Gráfico será exibido aqui -->
+    <img id="capaLivro" alt="Capa do Livro"> <!-- Imagem da capa do livro -->
   </div>
 
   <!-- Script para carregar dados do Google Sheets e gerar o gráfico -->
@@ -50,27 +61,35 @@
             'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
           ];
           const livrosLidosPorMes = Array(12).fill(0); // Inicializa os contadores para cada mês
+          const capasLivros = Array(12).fill(null); // Array para armazenar as capas dos livros
 
-          // Identifica o índice da coluna "Date Lido"
+          // Identifica o índice das colunas "Date Lido" e "ImageFile"
           const headerRow = rows[0];
           const dateLidoIndex = headerRow.indexOf("Date Lido");
+          const imageFileIndex = headerRow.indexOf("ImageFile");
 
           // Processa os dados da planilha
           rows.slice(1).forEach(row => { // Ignora o cabeçalho
             const date = row[dateLidoIndex]; // Usa o índice da coluna "Date Lido"
+            const imageFile = row[imageFileIndex]; // Usa o índice da coluna "ImageFile"
             if (date) {
               const [day, month, year] = date.split("/").map(Number);
 
               // Verifica se é o ano de 2024 e atualiza o contador para o mês
               if (year === 2024 && month >= 1 && month <= 12) {
                 livrosLidosPorMes[month - 1]++;
+                
+                // Armazena a capa do livro para o mês, se houver
+                if (imageFile) {
+                  capasLivros[month - 1] = `https://github.com/Literavi/Blog/raw/main/imagens/${imageFile}`;
+                }
               }
             }
           });
 
           // Inicializa o gráfico com os dados carregados
           const ctx = document.getElementById('livrosLidosChart').getContext('2d');
-          new Chart(ctx, {
+          const chart = new Chart(ctx, {
             type: 'bar',
             data: {
               labels: meses,
@@ -97,6 +116,22 @@
                     display: true,
                     text: 'Mês'
                   }
+                }
+              },
+              onHover: (event, elements) => {
+                const capaLivro = document.getElementById("capaLivro");
+                if (elements.length) {
+                  const elementIndex = elements[0].index;
+                  const capaUrl = capasLivros[elementIndex];
+                  
+                  if (capaUrl) {
+                    capaLivro.src = capaUrl;
+                    capaLivro.style.display = "block";
+                  } else {
+                    capaLivro.style.display = "none";
+                  }
+                } else {
+                  capaLivro.style.display = "none";
                 }
               }
             }
