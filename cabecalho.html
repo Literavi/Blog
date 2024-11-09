@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Biblioteca Pessoal</title>
-  
-  <!-- Importação da Fonte Sour Gummy do Google Fonts -->
+
+  <!-- Link para a fonte Sour Gummy do Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-  
+
   <style>
     /* Estilo geral */
     * {
@@ -18,20 +18,19 @@
       box-sizing: border-box;
     }
     body {
-      font-family: 'Roboto', sans-serif;
+      font-family: 'Sour Gummy', sans-serif;
       background-color: #f4f4f9;
       color: #444;
-      padding-top: 80px; /* Para compensar o cabeçalho fixo */
     }
 
-    /* Cabeçalho */
+    /* Cabeçalho com degradê */
     .header {
       width: 100%;
-      background: linear-gradient(90deg, #CEBCE8, #F3E8FF); /* Degradê sutil no cabeçalho */
+      background: linear-gradient(90deg, #CEBCE8, #E6D9F3); /* Degradê sutil */
       color: white;
-      padding: 10px 0;
+      padding: 15px 0;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      position: fixed; /* Fixa o cabeçalho no topo */
+      position: fixed;
       top: 0;
       z-index: 1000;
     }
@@ -44,10 +43,10 @@
       padding: 0 20px;
     }
     .logo {
-      font-family: "Sour Gummy", sans-serif;
+      font-size: 28px;
       font-weight: 700;
-      font-size: 24px;
-      color: #CAF75A; /* Verde para o título do site */
+      color: #333;
+      font-family: 'Sour Gummy', sans-serif;
       text-transform: uppercase;
     }
 
@@ -57,20 +56,20 @@
       gap: 20px;
     }
     .navbar a {
-      font-family: "Sour Gummy", sans-serif;
-      color: #444; /* Cor padrão para os links */
+      color: #333;
       text-decoration: none;
       font-weight: 400;
       font-size: 16px;
       position: relative;
       transition: color 0.3s ease;
+      font-family: 'Sour Gummy', sans-serif;
     }
     .navbar a::after {
       content: "";
       position: absolute;
       width: 0;
       height: 2px;
-      background: #CAF75A; /* Destaque verde neon no hover */
+      background: #d1c4e9;
       left: 0;
       bottom: -4px;
       transition: width 0.3s ease;
@@ -79,35 +78,44 @@
       width: 100%;
     }
     .navbar a:hover {
-      color: #CAF75A;
+      color: #7B68EE;
     }
 
-    /* Estilos específicos para diferentes pesos e estilos da fonte */
+    /* Espaçamento para o conteúdo abaixo do cabeçalho fixo */
+    .content {
+      padding-top: 100px;
+      text-align: center;
+    }
+
+    /* Classes específicas para a fonte com diferentes estilos */
     .sour-gummy-bold {
       font-family: "Sour Gummy", sans-serif;
-      font-weight: 900; /* Peso máximo */
-      color: #CAF75A;
-      font-size: 28px;
+      font-weight: 700;
+      font-style: normal;
     }
+
     .sour-gummy-light {
       font-family: "Sour Gummy", sans-serif;
-      font-weight: 300; /* Peso leve */
-      color: #CAF75A;
-      font-size: 20px;
+      font-weight: 300;
+      font-style: normal;
     }
+
     .sour-gummy-italic {
       font-family: "Sour Gummy", sans-serif;
       font-weight: 400;
       font-style: italic;
-      color: #CAF75A;
-      font-size: 20px;
     }
+
+    .sour-gummy-bold-italic {
+      font-family: "Sour Gummy", sans-serif;
+      font-weight: 700;
+      font-style: italic;
+    }
+
     .sour-gummy-wide {
       font-family: "Sour Gummy", sans-serif;
-      font-weight: 500;
-      font-variation-settings: "wdth" 125; /* Largura ajustada */
-      color: #CAF75A;
-      font-size: 24px;
+      font-weight: 400;
+      font-variation-settings: "wdth" 125;
     }
   </style>
 </head>
@@ -126,11 +134,11 @@
   </header>
 
   <!-- Conteúdo Principal -->
-  <div class="content container">
+  <div class="content">
     <h2 class="sour-gummy-bold">Bem-vindo à sua Biblioteca Pessoal!</h2>
-    <p class="sour-gummy-light">Explore sua coleção de livros e organize sua leitura de forma prática e divertida.</p>
-    <p class="sour-gummy-italic">Adicione novos títulos para melhorar a organização.</p>
-    <p class="sour-gummy-wide">Esta fonte verde neon dá um toque de estilo e modernidade.</p>
+    <p class="sour-gummy-light">Explore sua coleção de livros, adicione novos títulos e organize sua leitura de forma fácil e prática.</p>
+    <p class="sour-gummy-italic">Comece agora a sua jornada literária!</p>
+    <p class="sour-gummy-wide">Descubra mais sobre o que você já leu e o que ainda quer ler!</p>
   </div>
 
 </body>
