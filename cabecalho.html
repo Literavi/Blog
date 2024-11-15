@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Biblioteca Pessoal - Teste de Menus</title>
+  <title>Biblioteca Pessoal</title>
 
   <!-- Links para as fontes -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -50,27 +50,29 @@
       display: flex;
       align-items: center;
       gap: 5px;
-      text-transform: none;
+      text-transform: none; /* Impede a transformação automática de texto */
     }
 
+    /* Aplicação da fonte Reenie Beanie ao nome "literaVi" */
     .reenie-beanie-regular {
       font-family: "Reenie Beanie", sans-serif;
       font-weight: 400;
       font-style: normal;
-      font-size: 45px;
-      color: white;
-      text-transform: none;
+      font-size: 45px; /* Ajuste de tamanho para destacar */
+      color: white; /* Cor branca para combinar com o cabeçalho */
+      text-transform: none; /* Garante que o texto apareça exatamente como escrito */
     }
 
+    /* Estilo do menu */
     .navbar {
       display: flex;
       gap: 20px;
     }
     .navbar a {
-      color: white;
+      color: white; /* Cor branca para os links do menu */
       text-decoration: none;
       font-weight: 400;
-      font-size: 19px;
+      font-size: 18px;
       position: relative;
       transition: color 0.3s ease;
       font-family: "Sour Gummy", sans-serif;
@@ -92,151 +94,40 @@
       color: #d1c4e9;
     }
 
-    /* Estilo do conteúdo abaixo do cabeçalho */
+    /* Cor lilás para o link ativo */
+    .navbar a.active {
+      color: #D1C4E9;
+    }
+
+    /* Espaçamento para o conteúdo abaixo do cabeçalho fixo */
     .content {
-      padding-top: 120px;
+      padding-top: 100px;
       text-align: center;
     }
 
-    /* Modelos de menus de teste */
-
-    /* Menu 1 - Submenu com fundo escuro */
-    .menu1 {
-      background-color: #444;
-      padding: 10px 0;
+    /* Classes específicas para a fonte Sour Gummy com diferentes estilos */
+    .sour-gummy-bold {
+      font-family: "Sour Gummy", sans-serif;
+      font-weight: 700;
+      font-style: normal;
     }
-    .menu1 a {
-      color: #fff;
-      padding: 10px 15px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    .menu1 a:hover {
-      background-color: #8B6AB3;
-      color: #fff;
-    }
-
-    /* Menu 2 - Menu com sublinhado na parte inferior */
-    .menu2 {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      padding: 15px 0;
-      background-color: #f4f4f9;
-      border-bottom: 2px solid #CEBCE8;
-    }
-    .menu2 a {
-      color: #8B6AB3;
-      text-decoration: none;
-      font-size: 18px;
-      padding: 5px 0;
-      position: relative;
-    }
-    .menu2 a::after {
-      content: "";
-      width: 0;
-      height: 2px;
-      background: #8B6AB3;
-      position: absolute;
-      left: 0;
-      bottom: -2px;
-      transition: width 0.3s;
-    }
-    .menu2 a:hover::after {
-      width: 100%;
-    }
-
-    /* Menu 3 - Menu com efeito de botão */
-    .menu3 {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      padding: 10px 0;
-      background-color: #CEBCE8;
-    }
-    .menu3 a {
-      background-color: #8B6AB3;
-      color: #fff;
-      padding: 8px 20px;
-      text-decoration: none;
-      border-radius: 5px;
-      transition: background-color 0.3s ease;
-    }
-    .menu3 a:hover {
-      background-color: #7B68EE;
-    }
-
-    /* Menu 4 - Menu de navegação lateral */
-    .menu4 {
-      background-color: #8B6AB3;
-      width: 150px;
-      height: 100vh;
-      position: fixed;
-      top: 0;
-      left: 0;
-      padding-top: 120px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 15px;
-    }
-    .menu4 a {
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      padding: 10px;
-      width: 100%;
-      text-align: center;
-    }
-    .menu4 a:hover {
-      background-color: #CEBCE8;
-    }
-
   </style>
 </head>
 <body>
 
-  <!-- Cabeçalho original -->
+  <!-- Cabeçalho -->
   <header class="header">
     <div class="container">
       <h1 class="logo">
-        <span class="reenie-beanie-regular">literaVi</span>
+        <span class="reenie-beanie-regular">literaVi</span> <!-- Nome "literaVi" com a fonte Reenie Beanie -->
       </h1>
       <nav class="navbar">
-        <a href="#home">Home</a>
-        <a href="#pesquisa">Pesquisar Livros</a>
-        <a href="#adicionar">Adicionar Livro</a>
+        <a href="index.html" class="active">Home</a>
+        <a href="pesquisa.html">Pesquisar Livros</a>
+        <a href="adicionar_livro.html">Adicionar Livro</a>
       </nav>
     </div>
   </header>
-
-  <!-- Menu 1 - Fundo escuro com hover mais claro -->
-  <nav class="menu1">
-    <a href="#home">Home</a>
-    <a href="#pesquisa">Pesquisar</a>
-    <a href="#adicionar">Adicionar</a>
-  </nav>
-
-  <!-- Menu 2 - Estilo sublinhado na parte inferior -->
-  <nav class="menu2">
-    <a href="#home">Home</a>
-    <a href="#pesquisa">Pesquisar</a>
-    <a href="#adicionar">Adicionar</a>
-  </nav>
-
-  <!-- Menu 3 - Botões com efeito de hover -->
-  <nav class="menu3">
-    <a href="#home">Home</a>
-    <a href="#pesquisa">Pesquisar</a>
-    <a href="#adicionar">Adicionar</a>
-  </nav>
-
-  <!-- Menu 4 - Navegação lateral fixa -->
-  <nav class="menu4">
-    <a href="#home">Home</a>
-    <a href="#pesquisa">Pesquisar</a>
-    <a href="#adicionar">Adicionar</a>
-  </nav>
 
   <!-- Conteúdo Principal -->
   <div class="content">
