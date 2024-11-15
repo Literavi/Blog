@@ -3,23 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Meta Anual de Leitura</title>
-  
-  <!-- Link para Google Fonts -->
+  <title>Biblioteca Pessoal - Estatísticas</title>
+
+  <!-- Links para Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
-  <!-- Chart.js para o gráfico de progresso -->
+  <!-- Chart.js para gráficos -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
     /* Estilo geral */
     body {
       font-family: 'Sour Gummy', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       background-color: #f4f4f9;
       color: #444;
       margin: 0;
@@ -27,99 +24,194 @@
     }
 
     /* Cabeçalho */
-    h1 {
-      margin-top: 20px;
-      font-size: 24px;
+    .header {
+      width: 100%;
+      background: linear-gradient(90deg, #8B6AB3, #CEBCE8);
+      color: white;
+      padding: 15px 0;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 0;
+      z-index: 1000;
+    }
+    .header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    .logo {
+      font-size: 28px;
+      font-weight: 700;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      text-transform: none;
+    }
+    .navbar {
+      display: flex;
+      gap: 20px;
+    }
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-weight: 400;
+      font-size: 19px;
+      transition: color 0.3s ease;
+    }
+    .navbar a:hover {
+      color: #D1C4E9;
+    }
+
+    /* Container principal */
+    .content {
+      padding-top: 100px;
+      text-align: center;
+      margin: 20px auto;
+      max-width: 1200px;
+    }
+
+    .section {
+      background-color: #fff;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .section h2 {
+      margin-bottom: 15px;
       color: #8B6AB3;
     }
 
-    /* Container para o gráfico e progresso */
-    .progress-container {
-      width: 80%;
+    .chart-container {
+      width: 100%;
       max-width: 600px;
-      text-align: center;
-      margin-top: 20px;
-      padding: 20px;
-      background-color: #fff;
+      margin: 0 auto;
+    }
+
+    .achievement {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-top: 15px;
+    }
+    .achievement .badge {
+      background-color: #CEBCE8;
+      color: white;
+      border-radius: 50%;
+      width: 100px;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 16px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
-    }
-
-    .progress-container h2 {
-      font-size: 20px;
-      color: #333;
-      margin-bottom: 15px;
-    }
-
-    /* Meta e progresso */
-    .goal-info {
-      font-size: 18px;
-      color: #555;
-      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
 
-  <h1>Meta Anual de Leitura</h1>
+  <!-- Cabeçalho -->
+  <header class="header">
+    <div class="container">
+      <h1 class="logo">literaVi</h1>
+      <nav class="navbar">
+        <a href="index.html">Home</a>
+        <a href="pesquisa.html">Pesquisar Livros</a>
+        <a href="adicionar_livro.html">Adicionar Livro</a>
+        <a href="estatisticas.html" class="active">Estatísticas</a>
+      </nav>
+    </div>
+  </header>
 
-  <!-- Container para o gráfico e a meta de leitura -->
-  <div class="progress-container">
-    <h2>Progresso da Meta de Leitura de 2024</h2>
-    <p class="goal-info">Meta Anual: <strong><span id="goal-books">50</span> livros</strong></p>
-    <p class="goal-info">Livros Lidos: <strong><span id="read-books">20</span></strong></p>
-    <canvas id="progressChart" width="400" height="200"></canvas> <!-- Gráfico de Progresso -->
+  <!-- Conteúdo Principal -->
+  <div class="content">
+    <!-- Ranking de Autores Mais Lidos -->
+    <div class="section">
+      <h2>Autores Mais Lidos</h2>
+      <canvas id="authorsChart"></canvas>
+    </div>
+
+    <!-- Progressão Mensal de Leitura -->
+    <div class="section">
+      <h2>Livros Lidos por Mês</h2>
+      <canvas id="monthlyProgressChart"></canvas>
+    </div>
+
+    <!-- Lista de Livros Para Ler -->
+    <div class="section">
+      <h2>Livros que Deseja Ler</h2>
+      <ul id="toReadList"></ul>
+    </div>
+
+    <!-- Conquistas de Leitura -->
+    <div class="section">
+      <h2>Conquistas</h2>
+      <div class="achievement">
+        <div class="badge">Meta Anual</div>
+        <div class="badge">Primeiro Livro</div>
+        <div class="badge">Leitura Consistente</div>
+      </div>
+    </div>
+
+    <!-- Estatísticas Gerais -->
+    <div class="section">
+      <h2>Curiosidades</h2>
+      <p><strong>Maior Livro:</strong> "O Nome do Vento" (662 páginas)</p>
+      <p><strong>Gênero Mais Lido:</strong> Fantasia</p>
+      <p><strong>Total de Livros Lidos:</strong> 20</p>
+    </div>
   </div>
 
+  <!-- Script para Gráficos -->
   <script>
-    // Meta de leitura e livros lidos
-    const metaAnual = 50; // Meta de livros no ano
-    const livrosLidos = 20; // Quantidade atual de livros lidos
+    // Dados simulados para o gráfico de autores
+    const authorsData = {
+      labels: ['J.K. Rowling', 'Stephen King', 'Brandon Sanderson'],
+      datasets: [{
+        label: 'Livros Lidos',
+        data: [10, 5, 3],
+        backgroundColor: ['#8B6AB3', '#CEBCE8', '#B39DDB']
+      }]
+    };
 
-    // Atualiza os valores no HTML
-    document.getElementById("goal-books").textContent = metaAnual;
-    document.getElementById("read-books").textContent = livrosLidos;
-
-    // Cálculo do progresso em porcentagem
-    const progresso = (livrosLidos / metaAnual) * 100;
-
-    // Configuração do gráfico de barra de progresso usando Chart.js
-    const ctx = document.getElementById('progressChart').getContext('2d');
-    new Chart(ctx, {
+    // Gráfico de autores mais lidos
+    new Chart(document.getElementById('authorsChart'), {
       type: 'bar',
-      data: {
-        labels: ['Meta de Leitura'],
-        datasets: [{
-          label: 'Progresso (%)',
-          data: [progresso],
-          backgroundColor: ['#8B6AB3'],
-          borderColor: ['#CEBCE8'],
-          borderWidth: 1
-        }]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: {
-            beginAtZero: true,
-            max: 100,
-            ticks: {
-              callback: function(value) { return value + "%" } // Adiciona % ao valor
-            }
-          }
-        },
-        plugins: {
-          tooltip: {
-            callbacks: {
-              label: function(tooltipItem) {
-                return `Progresso: ${progresso.toFixed(1)}%`; // Mostra o progresso em % no tooltip
-              }
-            }
-          }
-        }
-      }
+      data: authorsData,
+      options: { responsive: true }
+    });
+
+    // Dados simulados para progresso mensal
+    const monthlyData = {
+      labels: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho'],
+      datasets: [{
+        label: 'Livros Lidos',
+        data: [2, 4, 3, 5, 6, 1],
+        backgroundColor: '#8B6AB3'
+      }]
+    };
+
+    // Gráfico de progresso mensal
+    new Chart(document.getElementById('monthlyProgressChart'), {
+      type: 'line',
+      data: monthlyData,
+      options: { responsive: true }
+    });
+
+    // Lista de livros para ler
+    const toReadBooks = ['Dom Casmurro', 'O Senhor dos Anéis', '1984'];
+    const toReadList = document.getElementById('toReadList');
+    toReadBooks.forEach(book => {
+      const listItem = document.createElement('li');
+      listItem.textContent = book;
+      toReadList.appendChild(listItem);
     });
   </script>
-
 </body>
 </html>
