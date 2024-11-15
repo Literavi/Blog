@@ -3,139 +3,123 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Biblioteca Pessoal</title>
-
-  <!-- Links para as fontes -->
+  <title>Meta Anual de Leitura</title>
+  
+  <!-- Link para Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap" rel="stylesheet">
+
+  <!-- Chart.js para o gráfico de progresso -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
     /* Estilo geral */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
     body {
       font-family: 'Sour Gummy', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       background-color: #f4f4f9;
       color: #444;
+      margin: 0;
+      padding: 0;
     }
 
-    /* Cabeçalho com degradê mais escuro */
-    .header {
-      width: 100%;
-      background: linear-gradient(90deg, #8B6AB3, #CEBCE8); /* Degradê mais escuro */
-      color: white;
-      padding: 15px 0;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      position: fixed;
-      top: 0;
-      z-index: 1000;
-    }
-    .header .container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-    .logo {
-      font-size: 28px;
-      font-weight: 700;
-      color: white;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      text-transform: none; /* Impede a transformação automática de texto */
+    /* Cabeçalho */
+    h1 {
+      margin-top: 20px;
+      font-size: 24px;
+      color: #8B6AB3;
     }
 
-    /* Aplicação da fonte Reenie Beanie ao nome "literaVi" */
-    .reenie-beanie-regular {
-      font-family: "Reenie Beanie", sans-serif;
-      font-weight: 400;
-      font-style: normal;
-      font-size: 45px; /* Ajuste de tamanho para destacar */
-      color: white; /* Cor branca para combinar com o cabeçalho */
-      text-transform: none; /* Garante que o texto apareça exatamente como escrito */
-    }
-
-    /* Estilo do menu */
-    .navbar {
-      display: flex;
-      gap: 20px;
-    }
-    .navbar a {
-      color: white; /* Cor branca para os links do menu */
-      text-decoration: none;
-      font-weight: 400;
-      font-size: 18px;
-      position: relative;
-      transition: color 0.3s ease;
-      font-family: "Sour Gummy", sans-serif;
-    }
-    .navbar a::after {
-      content: "";
-      position: absolute;
-      width: 0;
-      height: 2px;
-      background: #d1c4e9;
-      left: 0;
-      bottom: -4px;
-      transition: width 0.3s ease;
-    }
-    .navbar a:hover::after {
-      width: 100%;
-    }
-    .navbar a:hover {
-      color: #d1c4e9;
-    }
-
-    /* Cor lilás para o link ativo */
-    .navbar a.active {
-      color: #D1C4E9;
-    }
-
-    /* Espaçamento para o conteúdo abaixo do cabeçalho fixo */
-    .content {
-      padding-top: 100px;
+    /* Container para o gráfico e progresso */
+    .progress-container {
+      width: 80%;
+      max-width: 600px;
       text-align: center;
+      margin-top: 20px;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
     }
 
-    /* Classes específicas para a fonte Sour Gummy com diferentes estilos */
-    .sour-gummy-bold {
-      font-family: "Sour Gummy", sans-serif;
-      font-weight: 700;
-      font-style: normal;
+    .progress-container h2 {
+      font-size: 20px;
+      color: #333;
+      margin-bottom: 15px;
+    }
+
+    /* Meta e progresso */
+    .goal-info {
+      font-size: 18px;
+      color: #555;
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
 
-  <!-- Cabeçalho -->
-  <header class="header">
-    <div class="container">
-      <h1 class="logo">
-        <span class="reenie-beanie-regular">literaVi</span> <!-- Nome "literaVi" com a fonte Reenie Beanie -->
-      </h1>
-      <nav class="navbar">
-        <a href="index.html" class="active">Home</a>
-        <a href="pesquisa.html">Pesquisar Livros</a>
-        <a href="adicionar_livro.html">Adicionar Livro</a>
-      </nav>
-    </div>
-  </header>
+  <h1>Meta Anual de Leitura</h1>
 
-  <!-- Conteúdo Principal -->
-  <div class="content">
-    <h2 class="sour-gummy-bold">Bem-vindo à sua Biblioteca Pessoal!</h2>
-    <p class="sour-gummy-light">Explore sua coleção de livros, adicione novos títulos e organize sua leitura de forma fácil e prática.</p>
-    <p class="sour-gummy-italic">Comece agora a sua jornada literária!</p>
-    <p class="sour-gummy-wide">Descubra mais sobre o que você já leu e o que ainda quer ler!</p>
+  <!-- Container para o gráfico e a meta de leitura -->
+  <div class="progress-container">
+    <h2>Progresso da Meta de Leitura de 2024</h2>
+    <p class="goal-info">Meta Anual: <strong><span id="goal-books">50</span> livros</strong></p>
+    <p class="goal-info">Livros Lidos: <strong><span id="read-books">20</span></strong></p>
+    <canvas id="progressChart" width="400" height="200"></canvas> <!-- Gráfico de Progresso -->
   </div>
+
+  <script>
+    // Meta de leitura e livros lidos
+    const metaAnual = 50; // Meta de livros no ano
+    const livrosLidos = 20; // Quantidade atual de livros lidos
+
+    // Atualiza os valores no HTML
+    document.getElementById("goal-books").textContent = metaAnual;
+    document.getElementById("read-books").textContent = livrosLidos;
+
+    // Cálculo do progresso em porcentagem
+    const progresso = (livrosLidos / metaAnual) * 100;
+
+    // Configuração do gráfico de barra de progresso usando Chart.js
+    const ctx = document.getElementById('progressChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Meta de Leitura'],
+        datasets: [{
+          label: 'Progresso (%)',
+          data: [progresso],
+          backgroundColor: ['#8B6AB3'],
+          borderColor: ['#CEBCE8'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            ticks: {
+              callback: function(value) { return value + "%" } // Adiciona % ao valor
+            }
+          }
+        },
+        plugins: {
+          tooltip: {
+            callbacks: {
+              label: function(tooltipItem) {
+                return `Progresso: ${progresso.toFixed(1)}%`; // Mostra o progresso em % no tooltip
+              }
+            }
+          }
+        }
+      }
+    });
+  </script>
 
 </body>
 </html>
