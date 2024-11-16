@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sagas Literárias</title>
+  
+  <!-- Link para Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Estilo geral */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #f0f0f5;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    /* Título principal */
+    h1 {
+      font-size: 36px;
+      color: #8B6AB3;
+      margin-bottom: 20px;
+    }
+
+    /* Container de sagas */
+    .saga-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 1200px;
+      padding: 20px;
+    }
+
+    /* Card da saga */
+    .saga-card {
+      perspective: 1000px;
+    }
+    .saga-card-inner {
+      position: relative;
+      width: 100%;
+      height: 300px;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+    .saga-card:hover .saga-card-inner {
+      transform: rotateY(180deg);
+    }
+
+    /* Face da frente */
+    .saga-card-front, .saga-card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 10px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .saga-card-front {
+      background-image: linear-gradient(135deg, #8B6AB3, #CEBCE8);
+      color: white;
+    }
+
+    .saga-card-front h2 {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    /* Face de trás */
+    .saga-card-back {
+      transform: rotateY(180deg);
+      background-color: #fff;
+      color: #333;
+    }
+    .saga-card-back h3 {
+      font-size: 18px;
+      color: #8B6AB3;
+      margin-bottom: 10px;
+    }
+    .saga-card-back ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      font-size: 14px;
+      color: #666;
+    }
+    .saga-card-back ul li {
+      margin-bottom: 5px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <h1>Sagas Literárias</h1>
+
+  <div class="saga-container">
+    <!-- Saga 1 -->
+    <div class="saga-card">
+      <div class="saga-card-inner">
+        <!-- Frente do card -->
+        <div class="saga-card-front">
+          <h2>Harry Potter</h2>
+          <p>Uma saga mágica de aventuras no mundo dos bruxos.</p>
+        </div>
+        <!-- Verso do card -->
+        <div class="saga-card-back">
+          <h3>Livros da Série</h3>
+          <ul>
+            <li>Harry Potter e a Pedra Filosofal</li>
+            <li>Harry Potter e a Câmara Secreta</li>
+            <li>Harry Potter e o Prisioneiro de Azkaban</li>
+            <li>Harry Potter e o Cálice de Fogo</li>
+            <li>Harry Potter e a Ordem da Fênix</li>
+            <li>Harry Potter e o Enigma do Príncipe</li>
+            <li>Harry Potter e as Relíquias da Morte</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Saga 2 -->
+    <div class="saga-card">
+      <div class="saga-card-inner">
+        <div class="saga-card-front">
+          <h2>O Senhor dos Anéis</h2>
+          <p>Uma épica jornada pela Terra Média contra o Senhor do Escuro.</p>
+        </div>
+        <div class="saga-card-back">
+          <h3>Livros da Série</h3>
+          <ul>
+            <li>O Hobbit</li>
+            <li>A Sociedade do Anel</li>
+            <li>As Duas Torres</li>
+            <li>O Retorno do Rei</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Saga 3 -->
+    <div class="saga-card">
+      <div class="saga-card-inner">
+        <div class="saga-card-front">
+          <h2>As Crônicas de Nárnia</h2>
+          <p>Aventuras em um mundo encantado com animais falantes e batalhas épicas.</p>
+        </div>
+        <div class="saga-card-back">
+          <h3>Livros da Série</h3>
+          <ul>
+            <li>O Leão, a Feiticeira e o Guarda-Roupa</li>
+            <li>Príncipe Caspian</li>
+            <li>A Viagem do Peregrino da Alvorada</li>
+            <li>A Cadeira de Prata</li>
+            <li>O Cavalo e seu Menino</li>
+            <li>A Última Batalha</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
