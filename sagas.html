@@ -59,7 +59,7 @@
       transform: rotateY(180deg);
     }
 
-    /* Frente do card */
+    /* Frente do card com capa */
     .saga-card-front, .saga-card-back {
       position: absolute;
       width: 100%;
@@ -77,13 +77,18 @@
     }
 
     .saga-card-front {
-      background-image: linear-gradient(135deg, #8B6AB3, #CEBCE8);
-      color: white;
+      background-color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
     }
 
-    .saga-card-front h2 {
-      font-size: 20px;
-      font-weight: 700;
+    .saga-card-front img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 10px;
     }
 
     /* Verso do card */
@@ -157,23 +162,6 @@
       margin-top: 10px;
     }
 
-    /* Estilo das capas dos livros no modal */
-    .book-covers {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 15px;
-    }
-
-    .book-covers img {
-      width: 80px;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 5px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    }
-
     .modal button {
       background-color: #8B6AB3;
       color: #fff;
@@ -208,10 +196,9 @@
     <!-- Saga 1 -->
     <div class="saga-card">
       <div class="saga-card-inner">
-        <!-- Frente do card -->
+        <!-- Frente do card com capa -->
         <div class="saga-card-front">
-          <h2>Harry Potter</h2>
-          <p>Uma saga mágica de aventuras no mundo dos bruxos.</p>
+          <img src="https://via.placeholder.com/250x320?text=Harry+Potter" alt="Capa de Harry Potter">
         </div>
         <!-- Verso do card -->
         <div class="saga-card-back">
@@ -221,7 +208,7 @@
             <li>Harry Potter e a Câmara Secreta</li>
             <li>Harry Potter e o Prisioneiro de Azkaban</li>
           </ul>
-          <button onclick="openModal('Harry Potter', 'Uma saga mágica de aventuras no mundo dos bruxos.', '“Hogwarts sempre ajudará aqueles que pedirem.”', ['https://via.placeholder.com/80x120?text=HP1', 'https://via.placeholder.com/80x120?text=HP2', 'https://via.placeholder.com/80x120?text=HP3'])">Ver Mais</button>
+          <button onclick="openModal('Harry Potter', 'Uma saga mágica de aventuras no mundo dos bruxos.', '“Hogwarts sempre ajudará aqueles que pedirem.”')">Ver Mais</button>
         </div>
       </div>
     </div>
@@ -229,10 +216,11 @@
     <!-- Saga 2 -->
     <div class="saga-card">
       <div class="saga-card-inner">
+        <!-- Frente do card com capa -->
         <div class="saga-card-front">
-          <h2>O Senhor dos Anéis</h2>
-          <p>Uma épica jornada pela Terra Média contra o Senhor do Escuro.</p>
+          <img src="https://via.placeholder.com/250x320?text=O+Senhor+dos+Aneis" alt="Capa de O Senhor dos Anéis">
         </div>
+        <!-- Verso do card -->
         <div class="saga-card-back">
           <h3>Livros da Série</h3>
           <ul>
@@ -240,7 +228,7 @@
             <li>As Duas Torres</li>
             <li>O Retorno do Rei</li>
           </ul>
-          <button onclick="openModal('O Senhor dos Anéis', 'A missão de destruir o Um Anel e salvar a Terra Média.', '“Nem todos que vagam estão perdidos.”', ['https://via.placeholder.com/80x120?text=LotR1', 'https://via.placeholder.com/80x120?text=LotR2', 'https://via.placeholder.com/80x120?text=LotR3'])">Ver Mais</button>
+          <button onclick="openModal('O Senhor dos Anéis', 'A missão de destruir o Um Anel e salvar a Terra Média.', '“Nem todos que vagam estão perdidos.”')">Ver Mais</button>
         </div>
       </div>
     </div>
@@ -252,26 +240,15 @@
     <h3 id="modalTitle">Título da Saga</h3>
     <p id="modalDescription">Descrição da saga.</p>
     <p class="quote" id="modalQuote">Citação famosa.</p>
-    <div class="book-covers" id="modalCovers"></div>
     <button onclick="closeModal()">Fechar</button>
   </div>
 
   <script>
     // Funções para abrir e fechar o modal
-    function openModal(title, description, quote, covers) {
+    function openModal(title, description, quote) {
       document.getElementById('modalTitle').textContent = title;
       document.getElementById('modalDescription').textContent = description;
       document.getElementById('modalQuote').textContent = quote;
-
-      // Limpa as capas anteriores e adiciona as novas
-      const coversContainer = document.getElementById('modalCovers');
-      coversContainer.innerHTML = '';
-      covers.forEach(cover => {
-        const img = document.createElement('img');
-        img.src = cover;
-        coversContainer.appendChild(img);
-      });
-
       document.getElementById('modal').style.display = 'block';
       document.getElementById('overlay').style.display = 'block';
     }
