@@ -51,7 +51,7 @@
     .saga-card-inner {
       position: relative;
       width: 100%;
-      height: 300px;
+      height: 320px;
       transition: transform 0.6s;
       transform-style: preserve-3d;
     }
@@ -59,7 +59,7 @@
       transform: rotateY(180deg);
     }
 
-    /* Face da frente */
+    /* Frente do card */
     .saga-card-front, .saga-card-back {
       position: absolute;
       width: 100%;
@@ -86,7 +86,7 @@
       font-weight: 700;
     }
 
-    /* Face de trás */
+    /* Verso do card */
     .saga-card-back {
       transform: rotateY(180deg);
       background-color: #fff;
@@ -108,6 +108,79 @@
       margin-bottom: 5px;
     }
 
+    /* Botão Ver Mais */
+    .saga-card-back button {
+      margin-top: 15px;
+      padding: 10px 15px;
+      font-size: 14px;
+      color: #fff;
+      background-color: #8B6AB3;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .saga-card-back button:hover {
+      background-color: #6f519b;
+    }
+
+    /* Modal para mais detalhes */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 500px;
+      background: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
+      z-index: 1000;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .modal h3 {
+      color: #8B6AB3;
+      margin-bottom: 10px;
+    }
+
+    .modal p {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .modal .quote {
+      font-style: italic;
+      color: #8B6AB3;
+      margin-top: 10px;
+    }
+
+    .modal button {
+      background-color: #8B6AB3;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    .modal button:hover {
+      background-color: #6f519b;
+    }
+
+    /* Overlay para modal */
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
   </style>
 </head>
 <body>
@@ -131,10 +204,8 @@
             <li>Harry Potter e a Câmara Secreta</li>
             <li>Harry Potter e o Prisioneiro de Azkaban</li>
             <li>Harry Potter e o Cálice de Fogo</li>
-            <li>Harry Potter e a Ordem da Fênix</li>
-            <li>Harry Potter e o Enigma do Príncipe</li>
-            <li>Harry Potter e as Relíquias da Morte</li>
           </ul>
+          <button onclick="openModal('Harry Potter', 'Harry descobre ser um bruxo e embarca numa jornada inesquecível em Hogwarts.', '“Hogwarts, uma ajuda será sempre dada àqueles que a pedirem.”')">Ver Mais</button>
         </div>
       </div>
     </div>
@@ -149,36 +220,40 @@
         <div class="saga-card-back">
           <h3>Livros da Série</h3>
           <ul>
-            <li>O Hobbit</li>
             <li>A Sociedade do Anel</li>
             <li>As Duas Torres</li>
             <li>O Retorno do Rei</li>
           </ul>
-        </div>
-      </div>
-    </div>
-
-    <!-- Saga 3 -->
-    <div class="saga-card">
-      <div class="saga-card-inner">
-        <div class="saga-card-front">
-          <h2>As Crônicas de Nárnia</h2>
-          <p>Aventuras em um mundo encantado com animais falantes e batalhas épicas.</p>
-        </div>
-        <div class="saga-card-back">
-          <h3>Livros da Série</h3>
-          <ul>
-            <li>O Leão, a Feiticeira e o Guarda-Roupa</li>
-            <li>Príncipe Caspian</li>
-            <li>A Viagem do Peregrino da Alvorada</li>
-            <li>A Cadeira de Prata</li>
-            <li>O Cavalo e seu Menino</li>
-            <li>A Última Batalha</li>
-          </ul>
+          <button onclick="openModal('O Senhor dos Anéis', 'A missão de destruir o Um Anel e salvar a Terra Média do domínio de Sauron.', '“Não é nosso destino decidir quanto tempo viveremos.”')">Ver Mais</button>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Modal -->
+  <div class="overlay" id="overlay" onclick="closeModal()"></div>
+  <div class="modal" id="modal">
+    <h3 id="modalTitle">Título da Saga</h3>
+    <p id="modalDescription">Descrição da saga.</p>
+    <p class="quote" id="modalQuote">Citação famosa.</p>
+    <button onclick="closeModal()">Fechar</button>
+  </div>
+
+  <script>
+    // Funções para abrir e fechar o modal
+    function openModal(title, description, quote) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalDescription').textContent = description;
+      document.getElementById('modalQuote').textContent = quote;
+      document.getElementById('modal').style.display = 'block';
+      document.getElementById('overlay').style.display = 'block';
+    }
+
+    function closeModal() {
+      document.getElementById('modal').style.display = 'none';
+      document.getElementById('overlay').style.display = 'none';
+    }
+  </script>
 
 </body>
 </html>
