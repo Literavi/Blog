@@ -59,7 +59,7 @@
       transform: rotateY(180deg);
     }
 
-    /* Frente do card com capa */
+    /* Frente do card com mosaico de capas */
     .saga-card-front, .saga-card-back {
       position: absolute;
       width: 100%;
@@ -72,23 +72,25 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 10px;
       text-align: center;
     }
 
     .saga-card-front {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 5px;
       background-color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       overflow: hidden;
+      padding: 5px;
     }
 
     .saga-card-front img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-radius: 10px;
+      border-radius: 5px;
     }
 
     /* Verso do card */
@@ -156,12 +158,6 @@
       font-size: 14px;
     }
 
-    .modal .quote {
-      font-style: italic;
-      color: #8B6AB3;
-      margin-top: 10px;
-    }
-
     .modal button {
       background-color: #8B6AB3;
       color: #fff;
@@ -196,9 +192,12 @@
     <!-- Saga 1 -->
     <div class="saga-card">
       <div class="saga-card-inner">
-        <!-- Frente do card com capa -->
+        <!-- Frente do card com mosaico -->
         <div class="saga-card-front">
-          <img src="https://via.placeholder.com/250x320?text=Harry+Potter" alt="Capa de Harry Potter">
+          <img src="https://via.placeholder.com/100x150?text=HP1" alt="Capa 1">
+          <img src="https://via.placeholder.com/100x150?text=HP2" alt="Capa 2">
+          <img src="https://via.placeholder.com/100x150?text=HP3" alt="Capa 3">
+          <img src="https://via.placeholder.com/100x150?text=HP4" alt="Capa 4">
         </div>
         <!-- Verso do card -->
         <div class="saga-card-back">
@@ -208,7 +207,7 @@
             <li>Harry Potter e a Câmara Secreta</li>
             <li>Harry Potter e o Prisioneiro de Azkaban</li>
           </ul>
-          <button onclick="openModal('Harry Potter', 'Uma saga mágica de aventuras no mundo dos bruxos.', '“Hogwarts sempre ajudará aqueles que pedirem.”')">Ver Mais</button>
+          <button onclick="openModal('Harry Potter', 'Uma saga mágica de aventuras no mundo dos bruxos.')">Ver Mais</button>
         </div>
       </div>
     </div>
@@ -216,9 +215,12 @@
     <!-- Saga 2 -->
     <div class="saga-card">
       <div class="saga-card-inner">
-        <!-- Frente do card com capa -->
+        <!-- Frente do card com mosaico -->
         <div class="saga-card-front">
-          <img src="https://via.placeholder.com/250x320?text=O+Senhor+dos+Aneis" alt="Capa de O Senhor dos Anéis">
+          <img src="https://via.placeholder.com/100x150?text=LotR1" alt="Capa 1">
+          <img src="https://via.placeholder.com/100x150?text=LotR2" alt="Capa 2">
+          <img src="https://via.placeholder.com/100x150?text=LotR3" alt="Capa 3">
+          <img src="https://via.placeholder.com/100x150?text=LotR4" alt="Capa 4">
         </div>
         <!-- Verso do card -->
         <div class="saga-card-back">
@@ -228,7 +230,7 @@
             <li>As Duas Torres</li>
             <li>O Retorno do Rei</li>
           </ul>
-          <button onclick="openModal('O Senhor dos Anéis', 'A missão de destruir o Um Anel e salvar a Terra Média.', '“Nem todos que vagam estão perdidos.”')">Ver Mais</button>
+          <button onclick="openModal('O Senhor dos Anéis', 'Uma jornada épica pela Terra Média.')">Ver Mais</button>
         </div>
       </div>
     </div>
@@ -239,16 +241,14 @@
   <div class="modal" id="modal">
     <h3 id="modalTitle">Título da Saga</h3>
     <p id="modalDescription">Descrição da saga.</p>
-    <p class="quote" id="modalQuote">Citação famosa.</p>
     <button onclick="closeModal()">Fechar</button>
   </div>
 
   <script>
     // Funções para abrir e fechar o modal
-    function openModal(title, description, quote) {
+    function openModal(title, description) {
       document.getElementById('modalTitle').textContent = title;
       document.getElementById('modalDescription').textContent = description;
-      document.getElementById('modalQuote').textContent = quote;
       document.getElementById('modal').style.display = 'block';
       document.getElementById('overlay').style.display = 'block';
     }
