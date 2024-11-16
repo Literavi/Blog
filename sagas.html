@@ -132,7 +132,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       width: 90%;
-      max-width: 500px;
+      max-width: 600px;
       background: #fff;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       border-radius: 10px;
@@ -155,6 +155,23 @@
       font-style: italic;
       color: #8B6AB3;
       margin-top: 10px;
+    }
+
+    /* Estilo das capas dos livros no modal */
+    .book-covers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 15px;
+    }
+
+    .book-covers img {
+      width: 80px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 
     .modal button {
@@ -203,9 +220,8 @@
             <li>Harry Potter e a Pedra Filosofal</li>
             <li>Harry Potter e a Câmara Secreta</li>
             <li>Harry Potter e o Prisioneiro de Azkaban</li>
-            <li>Harry Potter e o Cálice de Fogo</li>
           </ul>
-          <button onclick="openModal('Harry Potter', 'Harry descobre ser um bruxo e embarca numa jornada inesquecível em Hogwarts.', '“Hogwarts, uma ajuda será sempre dada àqueles que a pedirem.”')">Ver Mais</button>
+          <button onclick="openModal('Harry Potter', 'Uma saga mágica de aventuras no mundo dos bruxos.', '“Hogwarts sempre ajudará aqueles que pedirem.”', ['https://via.placeholder.com/80x120?text=HP1', 'https://via.placeholder.com/80x120?text=HP2', 'https://via.placeholder.com/80x120?text=HP3'])">Ver Mais</button>
         </div>
       </div>
     </div>
@@ -224,7 +240,7 @@
             <li>As Duas Torres</li>
             <li>O Retorno do Rei</li>
           </ul>
-          <button onclick="openModal('O Senhor dos Anéis', 'A missão de destruir o Um Anel e salvar a Terra Média do domínio de Sauron.', '“Não é nosso destino decidir quanto tempo viveremos.”')">Ver Mais</button>
+          <button onclick="openModal('O Senhor dos Anéis', 'A missão de destruir o Um Anel e salvar a Terra Média.', '“Nem todos que vagam estão perdidos.”', ['https://via.placeholder.com/80x120?text=LotR1', 'https://via.placeholder.com/80x120?text=LotR2', 'https://via.placeholder.com/80x120?text=LotR3'])">Ver Mais</button>
         </div>
       </div>
     </div>
@@ -236,15 +252,26 @@
     <h3 id="modalTitle">Título da Saga</h3>
     <p id="modalDescription">Descrição da saga.</p>
     <p class="quote" id="modalQuote">Citação famosa.</p>
+    <div class="book-covers" id="modalCovers"></div>
     <button onclick="closeModal()">Fechar</button>
   </div>
 
   <script>
     // Funções para abrir e fechar o modal
-    function openModal(title, description, quote) {
+    function openModal(title, description, quote, covers) {
       document.getElementById('modalTitle').textContent = title;
       document.getElementById('modalDescription').textContent = description;
       document.getElementById('modalQuote').textContent = quote;
+
+      // Limpa as capas anteriores e adiciona as novas
+      const coversContainer = document.getElementById('modalCovers');
+      coversContainer.innerHTML = '';
+      covers.forEach(cover => {
+        const img = document.createElement('img');
+        img.src = cover;
+        coversContainer.appendChild(img);
+      });
+
       document.getElementById('modal').style.display = 'block';
       document.getElementById('overlay').style.display = 'block';
     }
