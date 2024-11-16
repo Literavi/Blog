@@ -5,39 +5,103 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Biblioteca Pessoal - Estatísticas</title>
 
-  <!-- Link para Chart.js -->
+  <!-- Links para Chart.js e Google Fonts -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Reenie+Beanie&display=swap" rel="stylesheet">
 
-  <!-- Estilos Básicos -->
   <style>
+    /* Estilo geral */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Sour Gummy', sans-serif;
       background-color: #f4f4f9;
       color: #333;
-      margin: 0;
-      padding: 20px;
     }
 
-    h2 {
-      color: #8B6AB3;
-      font-weight: bold;
+    /* Cabeçalho com degradê */
+    .header {
+      width: 100%;
+      background: linear-gradient(90deg, #8B6AB3, #CEBCE8);
+      color: white;
+      padding: 15px 0;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: fixed;
+      top: 0;
+      z-index: 1000;
+    }
+    .header .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    .logo {
+      font-size: 28px;
+      font-weight: 700;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      text-transform: none;
+    }
+    .reenie-beanie-regular {
+      font-family: "Reenie Beanie", sans-serif;
+      font-weight: 400;
+      font-style: normal;
+      font-size: 45px;
+      color: white;
+      text-transform: none;
     }
 
+    /* Estilo do menu */
+    .navbar {
+      display: flex;
+      gap: 20px;
+    }
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-weight: 400;
+      font-size: 19px;
+      position: relative;
+      transition: color 0.3s ease;
+      font-family: 'Sour Gummy', sans-serif;
+    }
+    .navbar a.active, .navbar a:hover {
+      color: #D1C4E9;
+    }
+    .navbar a::after {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 2px;
+      background: #d1c4e9;
+      left: 0;
+      bottom: -4px;
+      transition: width 0.3s ease;
+    }
+    .navbar a:hover::after {
+      width: 100%;
+    }
+
+    /* Conteúdo principal */
     .container {
       max-width: 900px;
-      margin: 0 auto;
-    }
-
-    .chart-container {
-      margin-top: 40px;
+      margin: 80px auto 0 auto; /* Espaço para o cabeçalho fixo */
       padding: 20px;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
-    .list-container {
-      margin-top: 20px;
+    .chart-container, .list-container, .stats-container {
+      margin-top: 40px;
       padding: 20px;
       background: #fff;
       border-radius: 8px;
@@ -49,7 +113,6 @@
       gap: 10px;
       margin-top: 20px;
     }
-
     .badge {
       background-color: #CEBCE8;
       padding: 10px 15px;
@@ -57,22 +120,26 @@
       color: #333;
       font-weight: bold;
     }
-
-    .stats-container {
-      margin-top: 20px;
-      padding: 20px;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .stats-container p {
-      font-size: 16px;
-    }
   </style>
 </head>
 <body>
 
+  <!-- Cabeçalho com o Menu -->
+  <header class="header">
+    <div class="container">
+      <h1 class="logo">
+        <span class="reenie-beanie-regular">literaVi</span>
+      </h1>
+      <nav class="navbar">
+        <a href="index.html">Home</a>
+        <a href="pesquisa.html">Pesquisar Livros</a>
+        <a href="adicionar_livro.html">Adicionar Livro</a>
+        <a href="estatisticas.html" class="active">Estatísticas</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Conteúdo Principal -->
   <div class="container">
     <!-- Autores Mais Lidos -->
     <div class="chart-container">
@@ -185,5 +252,4 @@
       }
     });
   </script>
-</body>
-</html>
+</body
