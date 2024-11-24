@@ -70,12 +70,12 @@
     .sidebar-header .heart-icon {
       color: white;
       font-size: 20px;
-      display: none;
+      display: none; /* Oculto inicialmente */
       transition: all 0.3s ease;
     }
 
     .sidebar.expanded .sidebar-header .heart-icon {
-      display: inline-block;
+      display: inline-block; /* Exibido apenas no menu expandido */
     }
 
     .sidebar-header .greeting {
@@ -92,18 +92,19 @@
     .search-bar {
       display: flex;
       align-items: center;
-      justify-content: flex-start;
+      justify-content: center;
       width: 100%;
       padding: 10px 0;
       position: relative;
     }
 
-    .search-icon {
+    .search-bar .search-icon {
       color: white;
       font-size: 20px;
       cursor: pointer;
-      margin-left: 20px;
-      transition: transform 0.3s ease;
+      position: relative;
+      z-index: 1;
+      margin-left: 10px;
     }
 
     .search-container {
@@ -111,7 +112,7 @@
       align-items: center;
       background-color: #ffffff;
       border-radius: 20px;
-      padding: 8px 12px;
+      padding: 8px;
       width: 0;
       opacity: 0;
       overflow: hidden;
@@ -119,7 +120,7 @@
     }
 
     .search-bar.active .search-container {
-      width: 160px;
+      width: 160px; /* Expande para um tamanho apropriado */
       opacity: 1;
     }
 
@@ -132,11 +133,6 @@
       background-color: transparent;
     }
 
-    .sidebar.expanded .search-container {
-      width: 100%;
-      opacity: 1;
-    }
-
     /* Itens do menu */
     .menu-item {
       width: 100%;
@@ -147,11 +143,11 @@
       transition: background-color 0.3s ease, color 0.3s ease;
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: center; /* Ícones centralizados */
     }
 
     .sidebar.expanded .menu-item {
-      justify-content: flex-start;
+      justify-content: flex-start; /* Alinhamento normal quando expandido */
     }
 
     .menu-item:hover {
@@ -241,7 +237,7 @@
     <!-- Cabeçalho do menu -->
     <div class="sidebar-header">
       <span class="hamburger" onclick="toggleSidebar()">☰</span>
-      <span class="heart-icon">❤️</span>
+      <span class="heart-icon">❤️</span> <!-- Aparece apenas no menu expandido -->
       <span class="greeting">Olá, Vitória</span>
     </div>
 
@@ -292,7 +288,7 @@
       const searchBar = document.getElementById('searchBar');
 
       sidebar.classList.toggle('expanded');
-      searchBar.classList.remove('active'); // Fecha pesquisa ao expandir
+      searchBar.classList.remove('active'); // Fechar a pesquisa quando o menu expandir
       content.classList.toggle('blurred');
     }
 
@@ -302,7 +298,7 @@
       searchBar.classList.toggle('active');
     }
 
-    // Alterar tema
+    // Alterar o tema (modo claro/escuro)
     function toggleTheme() {
       const body = document.body;
       const sidebar = document.getElementById('sidebar');
@@ -310,7 +306,7 @@
       sidebar.classList.toggle('dark-mode');
     }
 
-    // Alterar página ativa
+    // Alterar a página ativa
     function changePage(page) {
       document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
       document.querySelector(`.menu-item[onclick="changePage('${page}')"]`).classList.add('active');
