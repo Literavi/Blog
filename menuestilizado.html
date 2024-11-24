@@ -70,6 +70,12 @@
     .sidebar-header .heart-icon {
       color: white;
       font-size: 20px;
+      display: none; /* Oculto inicialmente */
+      transition: all 0.3s ease;
+    }
+
+    .sidebar.expanded .sidebar-header .heart-icon {
+      display: inline-block; /* Exibido apenas no menu expandido */
     }
 
     .sidebar-header .greeting {
@@ -212,7 +218,7 @@
     <!-- Cabeçalho do menu -->
     <div class="sidebar-header">
       <span class="hamburger" onclick="toggleSidebar()">☰</span>
-      <span class="heart-icon">❤️</span>
+      <span class="heart-icon">❤️</span> <!-- Aparece apenas no menu expandido -->
       <span class="greeting">Olá, Vitória</span>
     </div>
 
