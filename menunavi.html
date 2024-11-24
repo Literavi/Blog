@@ -34,6 +34,9 @@
       transition: width 0.3s ease-in-out, background-color 0.3s ease;
       position: relative;
       align-items: center; /* Centraliza os itens no menu reduzido */
+      height: 90%; /* Altura reduzida */
+      border-radius: 0 10px 10px 0; /* Deixa a borda arredondada */
+      margin-top: 10px; /* Centraliza no corpo */
     }
 
     .sidebar.expanded {
@@ -66,17 +69,6 @@
       transition: all 0.3s ease;
     }
 
-    .sidebar-header .heart-icon {
-      color: white;
-      font-size: 20px;
-      display: none; /* Oculto inicialmente */
-      transition: all 0.3s ease;
-    }
-
-    .sidebar.expanded .sidebar-header .heart-icon {
-      display: inline-block;
-    }
-
     .sidebar-header .greeting {
       font-size: 18px;
       color: white;
@@ -87,47 +79,11 @@
       display: inline-block;
     }
 
-    /* Barra de pesquisa */
-    .search-bar {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      padding: 10px 0;
-    }
-
-    .search-container {
-      display: flex;
-      align-items: center;
-      background-color: #ffffff;
-      border-radius: 20px;
-      padding: 8px;
-      width: 0;
-      opacity: 0;
-      overflow: hidden;
-      transition: width 0.3s ease, opacity 0.3s ease;
-    }
-
-    .sidebar.expanded .search-container {
-      width: 80%;
-      opacity: 1;
-      margin-left: 20px; /* Ajusta o alinhamento ao expandir */
-    }
-
-    .search-icon {
+    .sidebar-header .heart-icon {
       color: white;
       font-size: 20px;
-      cursor: pointer;
+      margin-left: auto; /* Move o coração para o lado direito */
       margin-right: 10px;
-    }
-
-    .search-container input {
-      border: none;
-      outline: none;
-      width: 100%;
-      font-size: 14px;
-      color: #444;
-      background-color: transparent;
     }
 
     /* Itens do menu */
@@ -220,16 +176,8 @@
     <!-- Cabeçalho do menu -->
     <div class="sidebar-header">
       <span class="hamburger" onclick="toggleSidebar()">☰</span>
-      <span class="heart-icon">❤️</span>
       <span class="greeting">Olá, Vitória</span>
-    </div>
-
-    <!-- Barra de pesquisa -->
-    <div class="search-bar">
-      <span class="search-icon">🔍</span>
-      <div class="search-container">
-        <input type="text" placeholder="Pesquisar...">
-      </div>
+      <span class="heart-icon">❤️</span>
     </div>
 
     <!-- Itens do menu -->
