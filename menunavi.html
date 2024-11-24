@@ -109,6 +109,15 @@
       transition: width 0.3s ease, opacity 0.3s ease;
     }
 
+    .search-icon {
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      position: absolute;
+      z-index: 10;
+      left: 20px; /* Mantém visível no estado reduzido */
+    }
+
     .sidebar.expanded .search-bar .search-container {
       width: 100%;
       opacity: 1;
@@ -117,14 +126,6 @@
     .search-bar.active .search-container {
       width: 160px; /* Tamanho para barra expandida com lupa */
       opacity: 1;
-    }
-
-    .search-icon {
-      color: white;
-      font-size: 20px;
-      cursor: pointer;
-      position: relative;
-      z-index: 1; /* Mantém a lupa visível mesmo no reduzido */
     }
 
     .search-container input {
@@ -246,8 +247,8 @@
 
     <!-- Barra de pesquisa -->
     <div class="search-bar" id="searchBar">
+      <span class="search-icon" onclick="toggleSearch()">🔍</span>
       <div class="search-container">
-        <span class="search-icon" onclick="toggleSearch()">🔍</span>
         <input type="text" placeholder="Pesquisar...">
       </div>
     </div>
