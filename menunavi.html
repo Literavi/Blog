@@ -27,20 +27,20 @@
 
     /* Menu lateral */
     .sidebar {
-      width: 80px;
+      width: 70px; /* Diminuída a largura */
       background-color: #4a90e2;
       display: flex;
       flex-direction: column;
       transition: width 0.3s ease-in-out, background-color 0.3s ease;
       position: relative;
-      align-items: center; /* Centraliza os itens no menu reduzido */
-      height: 90%; /* Altura reduzida */
+      align-items: center;
+      height: 95%; /* Aumentada a altura */
       border-radius: 0 10px 10px 0; /* Deixa a borda arredondada */
       margin-top: 10px; /* Centraliza no corpo */
     }
 
     .sidebar.expanded {
-      width: 240px;
+      width: 220px;
       align-items: flex-start; /* Alinha os itens à esquerda no menu expandido */
     }
 
@@ -56,7 +56,6 @@
       padding: 15px;
       gap: 10px;
       justify-content: center;
-      position: relative;
     }
 
     .sidebar.expanded .sidebar-header {
@@ -74,21 +73,18 @@
       font-size: 18px;
       color: white;
       display: none;
+      display: flex;
+      align-items: center; /* Alinha o coração e o texto juntos */
     }
 
     .sidebar.expanded .sidebar-header .greeting {
-      display: inline-block;
+      display: inline-flex; /* Exibe a saudação no modo expandido */
     }
 
     .sidebar-header .heart-icon {
       color: white;
       font-size: 20px;
-      display: none; /* Oculto por padrão */
-      margin-left: auto; /* Move o coração para o lado direito */
-    }
-
-    .sidebar.expanded .sidebar-header .heart-icon {
-      display: inline-block; /* Aparece apenas no menu expandido */
+      margin-left: 5px; /* Espaço entre o coração e o texto */
     }
 
     /* Itens do menu */
@@ -181,8 +177,10 @@
     <!-- Cabeçalho do menu -->
     <div class="sidebar-header">
       <span class="hamburger" onclick="toggleSidebar()">☰</span>
-      <span class="greeting">Olá, Vitória</span>
-      <span class="heart-icon">❤️</span>
+      <span class="greeting">
+        Olá, Vitória
+        <span class="heart-icon">❤️</span>
+      </span>
     </div>
 
     <!-- Itens do menu -->
