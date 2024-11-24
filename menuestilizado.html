@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teste de Menu Lateral</title>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+    }
+
+    /* Menu lateral */
+    .sidebar {
+      width: 80px;
+      background-color: #4a90e2; /* Azul para o menu */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0;
+      transition: width 0.3s ease;
+    }
+
+    .sidebar.expanded {
+      width: 200px; /* Expande o menu ao clicar */
+    }
+
+    /* Estilo de cada item do menu */
+    .menu-item {
+      width: 100%;
+      padding: 15px 0;
+      color: white;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      position: relative;
+    }
+
+    .menu-item:hover {
+      background-color: #357ab8; /* Efeito hover */
+    }
+
+    .menu-item.active {
+      background-color: white;
+      color: #4a90e2;
+      font-weight: bold;
+    }
+
+    /* Indicador branco */
+    .menu-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 8px;
+      background-color: white;
+      border-radius: 0 8px 8px 0;
+    }
+
+    /* Ícones dos itens */
+    .menu-item i {
+      font-size: 20px;
+      display: block;
+      margin-bottom: 5px;
+      transition: transform 0.3s;
+    }
+
+    /* Nome das páginas (mostrado apenas quando expandido) */
+    .menu-item span {
+      display: none;
+      transition: opacity 0.3s;
+    }
+
+    .sidebar.expanded .menu-item span {
+      display: inline-block;
+      opacity: 1;
+    }
+
+    .sidebar.expanded .menu-item i {
+      transform: translateX(-10px);
+    }
+
+    /* Área principal */
+    .main-content {
+      flex-grow: 1;
+      padding: 20px;
+    }
+
+    .main-content h1 {
+      font-size: 24px;
+      color: #4a90e2;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Menu lateral -->
+  <div class="sidebar">
+    <div class="menu-item active" onclick="changePage('home')">
+      <i>🏠</i>
+      <span>Home</span>
+    </div>
+    <div class="menu-item" onclick="changePage('profile')">
+      <i>👤</i>
+      <span>Perfil</span>
+    </div>
+    <div class="menu-item" onclick="changePage('settings')">
+      <i>⚙️</i>
+      <span>Configurações</span>
+    </div>
+    <div class="menu-item" onclick="changePage('about')">
+      <i>ℹ️</i>
+      <span>Sobre</span>
+    </div>
+  </div>
+
+  <!-- Conteúdo principal -->
+  <div class="main-content" id="main-content">
+    <h1>Página Home</h1>
+    <p>Bem-vindo à página principal.</p>
+  </div>
+
+  <script>
+    // Função para alternar a página ativa
+    function changePage(page) {
+      // Remove a classe "active" de todos os itens
+      document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+      
+      // Adiciona a classe "active" ao item clicado
+      const menuItem = document.querySelector(`.menu-item[onclick="changePage('${page}')"]`);
+      menuItem.classList.add('active');
+
+      // Altera o conteúdo principal com base na página selecionada
+      const mainContent = document.getElementById('main-content');
+      mainContent.innerHTML = `
+        <h1>Página ${page.charAt(0).toUpperCase() + page.slice(1)}</h1>
+        <p>Conteúdo da página ${page}.</p>
+      `;
+    }
+  </script>
+
+</body>
+</html>
