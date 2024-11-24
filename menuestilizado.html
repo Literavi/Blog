@@ -3,17 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Biblioteca Moderna</title>
-
-  <!-- Chart.js para gráficos -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <title>Menu Lateral Moderno</title>
 
   <style>
-    /* Estilo Geral */
     * {
       margin: 0;
       padding: 0;
@@ -21,19 +13,19 @@
     }
 
     body {
-      font-family: 'Montserrat', sans-serif;
-      background-color: #f4f4f9;
-      color: #333;
       display: flex;
       height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     body.dark-mode {
-      background-color: #333;
-      color: #fff;
+      background-color: #1c1c1c;
+      color: #eaeaea;
     }
 
-    /* Sidebar */
+    /* Menu lateral */
     .sidebar {
       width: 80px;
       background-color: #4a90e2;
@@ -41,29 +33,42 @@
       flex-direction: column;
       align-items: center;
       padding: 10px 0;
-      transition: width 0.3s;
+      transition: width 0.3s ease-in-out, background-color 0.3s ease;
+      position: relative;
     }
 
     .sidebar.expanded {
       width: 200px;
     }
 
-    .hamburger {
-      width: 100%;
-      text-align: center;
-      font-size: 24px;
-      color: white;
-      cursor: pointer;
-      margin-bottom: 20px;
+    .sidebar.dark-mode {
+      background-color: #333;
     }
 
+    /* Botão de hambúrguer */
+    .hamburger {
+      width: 100%;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      color: white;
+      font-size: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .hamburger:hover {
+      background-color: #357ab8;
+    }
+
+    /* Itens do menu */
     .menu-item {
       width: 100%;
-      text-align: center;
       padding: 15px 0;
       color: white;
+      text-align: center;
       cursor: pointer;
-      transition: background-color 0.3s;
+      position: relative;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     .menu-item:hover {
@@ -71,167 +76,175 @@
     }
 
     .menu-item.active {
+      background: linear-gradient(135deg, #4a90e2, #357ab8);
+      color: white;
+      font-weight: bold;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .menu-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 5px;
       background-color: white;
-      color: #4a90e2;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .menu-item i {
+      font-size: 20px;
+      display: block;
+      margin-bottom: 5px;
+      transition: transform 0.3s, font-size 0.3s;
     }
 
     .menu-item span {
       display: none;
+      transition: opacity 0.3s;
     }
 
     .sidebar.expanded .menu-item span {
       display: inline-block;
-      margin-left: 10px;
+      opacity: 1;
     }
 
     .sidebar.expanded .menu-item {
+      display: flex;
+      align-items: center;
       justify-content: flex-start;
       padding-left: 20px;
     }
 
-    /* Conteúdo Principal */
+    .sidebar.expanded .menu-item i {
+      transform: translateX(-10px);
+    }
+
+    /* Rodapé do menu */
+    .sidebar-footer {
+      margin-top: auto;
+      padding: 10px;
+      color: white;
+      font-size: 12px;
+      text-align: center;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .sidebar-footer a {
+      color: white;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .sidebar-footer a:hover {
+      color: #d1c4e9;
+    }
+
+    /* Botão de tema */
+    .toggle-theme {
+      margin-bottom: 10px;
+      cursor: pointer;
+      font-size: 18px;
+      color: white;
+      transition: color 0.3s ease;
+    }
+
+    .toggle-theme:hover {
+      color: #d1c4e9;
+    }
+
+    /* Conteúdo principal */
     .main-content {
       flex-grow: 1;
       padding: 20px;
-      overflow-y: auto;
+      transition: filter 0.3s ease;
     }
 
-    /* Meta de Leitura */
-    .progress-container {
-      margin: 20px 0;
-    }
-
-    .progress-bar {
-      background-color: #ddd;
-      border-radius: 5px;
-      overflow: hidden;
-      height: 30px;
-    }
-
-    .progress-bar .progress {
-      background-color: #4caf50;
-      height: 100%;
-      width: 50%; /* Progresso inicial */
-      transition: width 0.5s ease;
-    }
-
-    /* Gráficos */
-    canvas {
-      max-width: 600px;
-      margin: 20px auto;
-    }
-
-    /* Toast */
-    .toast {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: #4caf50;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 5px;
-      display: none;
-      animation: fadeOut 3s forwards;
-    }
-
-    @keyframes fadeOut {
-      0% { opacity: 1; }
-      100% { opacity: 0; }
+    .main-content.blurred {
+      filter: blur(4px);
     }
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
+
+  <!-- Menu lateral -->
   <div class="sidebar" id="sidebar">
-    <div class="hamburger" onclick="toggleSidebar()">☰</div>
+    <!-- Botão de hambúrguer -->
+    <div class="hamburger" onclick="toggleSidebar()">
+      ☰
+    </div>
+
+    <!-- Botão de tema -->
+    <div class="toggle-theme" onclick="toggleTheme()">
+      🌓 Modo Tema
+    </div>
+
+    <!-- Itens do menu -->
     <div class="menu-item active" onclick="changePage('home')">
-      <i>🏠</i> <span>Home</span>
+      <i>🏠</i>
+      <span>Home</span>
     </div>
-    <div class="menu-item" onclick="changePage('meta')">
-      <i>🎯</i> <span>Meta</span>
+    <div class="menu-item" onclick="changePage('profile')">
+      <i>👤</i>
+      <span>Perfil</span>
     </div>
-    <div class="menu-item" onclick="changePage('grafico')">
-      <i>📊</i> <span>Gráficos</span>
+    <div class="menu-item" onclick="changePage('settings')">
+      <i>⚙️</i>
+      <span>Configurações</span>
     </div>
-    <div class="menu-item" onclick="toggleDarkMode()">
-      <i>🌙</i> <span>Modo Escuro</span>
+    <div class="menu-item" onclick="changePage('about')">
+      <i>ℹ️</i>
+      <span>Sobre</span>
+    </div>
+
+    <!-- Rodapé do menu -->
+    <div class="sidebar-footer">
+      <p>Versão 1.0</p>
+      <a href="#">Ajuda</a>
     </div>
   </div>
 
-  <!-- Conteúdo Principal -->
+  <!-- Conteúdo principal -->
   <div class="main-content" id="main-content">
-    <h1>Bem-vindo à Biblioteca!</h1>
-    <p>Explore suas leituras, metas e estatísticas literárias.</p>
-
-    <!-- Meta de Leitura -->
-    <div class="progress-container">
-      <h2>Meta Anual de Leitura</h2>
-      <div class="progress-bar">
-        <div class="progress" id="progress-bar"></div>
-      </div>
-    </div>
-
-    <!-- Gráfico -->
-    <canvas id="readingChart"></canvas>
+    <h1>Página Home</h1>
+    <p>Bem-vindo à página principal.</p>
   </div>
-
-  <!-- Toast -->
-  <div class="toast" id="toast">Livro adicionado com sucesso!</div>
 
   <script>
-    // Função para alternar o menu lateral
+    // Alternar a expansão do menu
     function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('expanded');
+      const sidebar = document.getElementById('sidebar');
+      const content = document.querySelector('.main-content');
+      sidebar.classList.toggle('expanded');
+      content.classList.toggle('blurred');
     }
 
-    // Alterar página ativa
+    // Alterar o tema (modo claro/escuro)
+    function toggleTheme() {
+      const body = document.body;
+      const sidebar = document.getElementById('sidebar');
+      body.classList.toggle('dark-mode');
+      sidebar.classList.toggle('dark-mode');
+    }
+
+    // Alterar a página ativa
     function changePage(page) {
+      // Remove a classe "active" de todos os itens
       document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
-      document.querySelector(`.menu-item[onclick="changePage('${page}')"]`).classList.add('active');
-      document.getElementById('main-content').innerHTML = `<h1>Página ${page}</h1>`;
-    }
 
-    // Modo escuro
-    function toggleDarkMode() {
-      document.body.classList.toggle('dark-mode');
-    }
+      // Adiciona a classe "active" ao item clicado
+      const menuItem = document.querySelector(`.menu-item[onclick="changePage('${page}')"]`);
+      menuItem.classList.add('active');
 
-    // Progresso da Meta
-    const progress = document.getElementById('progress-bar');
-    let meta = 12; // Meta de livros
-    let lidos = 6; // Livros já lidos
-    progress.style.width = `${(lidos / meta) * 100}%`;
-
-    // Gráfico de Livros Lidos
-    const ctx = document.getElementById('readingChart').getContext('2d');
-    new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
-        datasets: [{
-          label: 'Livros Lidos',
-          data: [2, 3, 1, 4, 2, 6, 1, 3, 0, 4, 1, 2],
-          borderColor: 'rgba(75, 192, 192, 1)',
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          borderWidth: 2
-        }]
-      },
-      options: {
-        responsive: true,
-        scales: {
-          y: { beginAtZero: true },
-          x: {}
-        }
-      }
-    });
-
-    // Notificação Toast
-    function showToast(message) {
-      const toast = document.getElementById('toast');
-      toast.textContent = message;
-      toast.style.display = 'block';
-      setTimeout(() => toast.style.display = 'none', 3000);
+      // Atualiza o conteúdo principal com base na página selecionada
+      const mainContent = document.getElementById('main-content');
+      mainContent.innerHTML = `
+        <h1>Página ${page.charAt(0).toUpperCase() + page.slice(1)}</h1>
+        <p>Conteúdo da página ${page}.</p>
+      `;
     }
   </script>
+
 </body>
 </html>
