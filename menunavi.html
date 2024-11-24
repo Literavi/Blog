@@ -120,10 +120,11 @@
     }
 
     .search-icon {
-      color: #4a90e2;
+      color: white;
       font-size: 20px;
       cursor: pointer;
-      margin-right: 8px;
+      position: relative;
+      z-index: 1; /* Mantém a lupa visível mesmo no reduzido */
     }
 
     .search-container input {
@@ -246,7 +247,7 @@
     <!-- Barra de pesquisa -->
     <div class="search-bar" id="searchBar">
       <div class="search-container">
-        <span class="search-icon">🔍</span>
+        <span class="search-icon" onclick="toggleSearch()">🔍</span>
         <input type="text" placeholder="Pesquisar...">
       </div>
     </div>
