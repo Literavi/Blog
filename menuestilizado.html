@@ -49,15 +49,34 @@
     .sidebar-header {
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: space-between;
       width: 100%;
       padding: 15px;
       gap: 10px;
+      position: relative;
+    }
+
+    .sidebar-header .hamburger {
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .sidebar.expanded .sidebar-header .hamburger {
+      position: absolute;
+      right: 20px; /* Move o hambúrguer para o lado direito */
     }
 
     .sidebar-header .heart-icon {
       color: white;
       font-size: 20px;
+      display: none;
+      transition: all 0.3s ease;
+    }
+
+    .sidebar.expanded .sidebar-header .heart-icon {
+      display: inline-block; /* Exibe o coração somente após expandir */
     }
 
     .sidebar-header .greeting {
@@ -70,27 +89,24 @@
       display: block;
     }
 
-    /* Botão de hambúrguer */
-    .hamburger {
-      padding: 10px;
-      color: white;
-      font-size: 20px;
-      cursor: pointer;
-    }
-
-    .hamburger:hover {
-      background-color: #357ab8;
-    }
-
     /* Barra de pesquisa */
     .search-bar {
       display: none;
       width: 100%;
       padding: 10px;
+      justify-content: flex-start;
+      align-items: center;
     }
 
     .sidebar.expanded .search-bar {
-      display: block;
+      display: flex;
+    }
+
+    .search-bar .search-icon {
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      margin-right: 10px;
     }
 
     .search-bar input {
@@ -99,6 +115,12 @@
       border: none;
       border-radius: 4px;
       outline: none;
+      display: none;
+      transition: width 0.3s ease;
+    }
+
+    .sidebar.expanded .search-bar input {
+      display: block;
     }
 
     /* Itens do menu */
@@ -187,6 +209,7 @@
 
     <!-- Barra de pesquisa -->
     <div class="search-bar">
+      <span class="search-icon">🔍</span>
       <input type="text" placeholder="Pesquisar...">
     </div>
 
