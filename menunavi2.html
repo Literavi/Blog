@@ -34,16 +34,18 @@
       padding: 15px 20px;
       text-decoration: none;
       color: #fff;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, border-radius 0.3s ease;
     }
 
     .navigation ul li a:hover {
       background-color: #444;
     }
 
+    /* Item ativo com fundo arredondado e faixa lateral verde */
     .navigation ul li.active a {
-      background-color: #4CAF50; /* Fundo verde no item ativo */
+      background-color: #4CAF50; /* Fundo verde do item ativo */
       color: #fff;
+      border-radius: 8px; /* Cantos arredondados */
     }
 
     .navigation ul li.active a::before {
@@ -52,11 +54,12 @@
       left: 0;
       top: 0;
       bottom: 0;
-      width: 5px; /* Largura da barra verde */
-      background-color: #4CAF50; /* Barra verde */
+      width: 5px; /* Largura da faixa verde */
+      background-color: #4CAF50; /* Cor da faixa */
       border-radius: 0 8px 8px 0; /* Bordas arredondadas */
     }
 
+    /* Ícones e texto */
     .navigation ul li a .icon {
       font-size: 1.5rem;
       margin-right: 10px;
