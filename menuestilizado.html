@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Menu Lateral Moderno</title>
+  <title>Menu Lateral Personalizado</title>
 
   <style>
     * {
@@ -38,26 +38,67 @@
     }
 
     .sidebar.expanded {
-      width: 200px;
+      width: 240px;
     }
 
     .sidebar.dark-mode {
       background-color: #333;
     }
 
-    /* Botão de hambúrguer */
-    .hamburger {
+    /* Cabeçalho do menu */
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 100%;
-      padding: 10px;
-      text-align: center;
-      cursor: pointer;
+      padding: 15px;
+      gap: 10px;
+    }
+
+    .sidebar-header .heart-icon {
       color: white;
       font-size: 20px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .sidebar-header .greeting {
+      font-size: 18px;
+      color: white;
+      display: none;
+    }
+
+    .sidebar.expanded .sidebar-header .greeting {
+      display: block;
+    }
+
+    /* Botão de hambúrguer */
+    .hamburger {
+      padding: 10px;
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
     }
 
     .hamburger:hover {
       background-color: #357ab8;
+    }
+
+    /* Barra de pesquisa */
+    .search-bar {
+      display: none;
+      width: 100%;
+      padding: 10px;
+    }
+
+    .sidebar.expanded .search-bar {
+      display: block;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 8px;
+      border: none;
+      border-radius: 4px;
+      outline: none;
     }
 
     /* Itens do menu */
@@ -79,79 +120,46 @@
       background: linear-gradient(135deg, #4a90e2, #357ab8);
       color: white;
       font-weight: bold;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .menu-item.active::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 5px;
-      background-color: white;
-      border-radius: 0 8px 8px 0;
     }
 
     .menu-item i {
       font-size: 20px;
-      display: block;
       margin-bottom: 5px;
-      transition: transform 0.3s, font-size 0.3s;
     }
 
     .menu-item span {
       display: none;
-      transition: opacity 0.3s;
     }
 
     .sidebar.expanded .menu-item span {
       display: inline-block;
-      opacity: 1;
-    }
-
-    .sidebar.expanded .menu-item {
-      display: flex;
-      align-items: center;
-      justify-content: flex-start;
-      padding-left: 20px;
-    }
-
-    .sidebar.expanded .menu-item i {
-      transform: translateX(-10px);
-    }
-
-    /* Rodapé do menu */
-    .sidebar-footer {
-      margin-top: auto;
-      padding: 10px;
-      color: white;
-      font-size: 12px;
-      text-align: center;
-      border-top: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .sidebar-footer a {
-      color: white;
-      text-decoration: none;
-      transition: color 0.3s ease;
-    }
-
-    .sidebar-footer a:hover {
-      color: #d1c4e9;
+      margin-left: 10px;
     }
 
     /* Botão de tema */
-    .toggle-theme {
-      margin-bottom: 10px;
-      cursor: pointer;
-      font-size: 18px;
+    .theme-toggle {
+      margin-top: auto;
+      padding: 15px;
       color: white;
-      transition: color 0.3s ease;
+      cursor: pointer;
+      position: relative;
     }
 
-    .toggle-theme:hover {
-      color: #d1c4e9;
+    .theme-toggle i {
+      font-size: 20px;
+    }
+
+    .theme-toggle span {
+      display: none;
+    }
+
+    .sidebar.expanded .theme-toggle span {
+      display: inline-block;
+      margin-left: 10px;
+    }
+
+    .theme-toggle:hover {
+      background-color: #357ab8;
     }
 
     /* Conteúdo principal */
@@ -170,14 +178,16 @@
 
   <!-- Menu lateral -->
   <div class="sidebar" id="sidebar">
-    <!-- Botão de hambúrguer -->
-    <div class="hamburger" onclick="toggleSidebar()">
-      ☰
+    <!-- Cabeçalho do menu -->
+    <div class="sidebar-header">
+      <span class="hamburger" onclick="toggleSidebar()">☰</span>
+      <span class="heart-icon">❤️</span>
+      <span class="greeting">Olá, Vitória</span>
     </div>
 
-    <!-- Botão de tema -->
-    <div class="toggle-theme" onclick="toggleTheme()">
-      🌓 Modo Tema
+    <!-- Barra de pesquisa -->
+    <div class="search-bar">
+      <input type="text" placeholder="Pesquisar...">
     </div>
 
     <!-- Itens do menu -->
@@ -198,10 +208,10 @@
       <span>Sobre</span>
     </div>
 
-    <!-- Rodapé do menu -->
-    <div class="sidebar-footer">
-      <p>Versão 1.0</p>
-      <a href="#">Ajuda</a>
+    <!-- Botão de tema -->
+    <div class="theme-toggle" onclick="toggleTheme()">
+      <i>🌓</i>
+      <span>Tema Claro/Escuro</span>
     </div>
   </div>
 
@@ -230,14 +240,8 @@
 
     // Alterar a página ativa
     function changePage(page) {
-      // Remove a classe "active" de todos os itens
       document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
-
-      // Adiciona a classe "active" ao item clicado
-      const menuItem = document.querySelector(`.menu-item[onclick="changePage('${page}')"]`);
-      menuItem.classList.add('active');
-
-      // Atualiza o conteúdo principal com base na página selecionada
+      document.querySelector(`.menu-item[onclick="changePage('${page}')"]`).classList.add('active');
       const mainContent = document.getElementById('main-content');
       mainContent.innerHTML = `
         <h1>Página ${page.charAt(0).toUpperCase() + page.slice(1)}</h1>
