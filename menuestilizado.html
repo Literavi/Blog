@@ -51,11 +51,13 @@
       padding: 15px;
       gap: 10px;
       position: relative;
+      justify-content: flex-start;
+      padding-left: 20px;
     }
 
     .sidebar-header .hamburger {
       color: white;
-      font-size: 20px;
+      font-size: 28px; /* Aumentado o tamanho do hambúrguer */
       cursor: pointer;
       transition: all 0.3s ease;
     }
@@ -68,12 +70,6 @@
     .sidebar-header .heart-icon {
       color: white;
       font-size: 20px;
-      display: none;
-      transition: all 0.3s ease;
-    }
-
-    .sidebar.expanded .sidebar-header .heart-icon {
-      display: inline-block;
     }
 
     .sidebar-header .greeting {
@@ -86,34 +82,21 @@
       display: block;
     }
 
-    /* Alinhamento à esquerda no cabeçalho */
-    .sidebar-header {
-      justify-content: flex-start;
-      padding-left: 20px;
-    }
-
     /* Barra de pesquisa */
     .search-bar {
       display: flex;
-      width: 100%;
-      padding: 10px;
       align-items: center;
-      position: relative;
       justify-content: flex-start;
+      width: 100%;
+      padding: 10px 0;
       padding-left: 20px;
     }
 
     .search-icon {
-      background-color: #9370db;
       color: white;
       font-size: 20px;
-      padding: 8px;
-      border-radius: 50%;
       cursor: pointer;
       margin-right: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
     .search-bar input {
@@ -125,10 +108,12 @@
       background: #ffffff;
       color: #444;
       font-size: 14px;
+      display: none; /* Oculto inicialmente */
       transition: width 0.3s ease;
     }
 
     .sidebar.expanded .search-bar input {
+      display: block;
       width: 100%;
       margin-left: 10px;
     }
