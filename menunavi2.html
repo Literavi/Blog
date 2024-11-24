@@ -24,39 +24,44 @@
     .navigation ul li {
       position: relative;
       width: 100%;
+      padding: 5px 0; /* Ajuste de espaçamento entre itens */
     }
 
     .navigation ul li a {
       position: relative;
       display: flex;
       align-items: center;
-      width: 100%;
+      width: 90%; /* Ajuste para borda arredondada ficar visível */
       padding: 15px 20px;
+      margin: 0 auto; /* Centraliza os links */
       text-decoration: none;
       color: #fff;
-      transition: background-color 0.3s ease, border-radius 0.3s ease;
+      background-color: transparent;
+      border-radius: 10px; /* Bordas arredondadas */
+      transition: all 0.3s ease;
     }
 
     .navigation ul li a:hover {
       background-color: #444;
     }
 
-    /* Item ativo com fundo arredondado e faixa lateral verde */
+    /* Item ativo com fundo arredondado e faixa verde */
     .navigation ul li.active a {
       background-color: #4CAF50; /* Fundo verde do item ativo */
       color: #fff;
-      border-radius: 8px; /* Cantos arredondados */
+      border-radius: 10px; /* Cantos arredondados */
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Adiciona um leve efeito de sombra */
     }
 
     .navigation ul li.active a::before {
       content: '';
       position: absolute;
-      left: 0;
+      left: -10px; /* Ajusta a posição da faixa */
       top: 0;
       bottom: 0;
       width: 5px; /* Largura da faixa verde */
       background-color: #4CAF50; /* Cor da faixa */
-      border-radius: 0 8px 8px 0; /* Bordas arredondadas */
+      border-radius: 0 10px 10px 0; /* Bordas arredondadas da faixa */
     }
 
     /* Ícones e texto */
