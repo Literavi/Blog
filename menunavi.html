@@ -56,6 +56,7 @@
       padding: 15px;
       gap: 10px;
       justify-content: center;
+      position: relative;
     }
 
     .sidebar.expanded .sidebar-header {
@@ -82,8 +83,12 @@
     .sidebar-header .heart-icon {
       color: white;
       font-size: 20px;
+      display: none; /* Oculto por padrão */
       margin-left: auto; /* Move o coração para o lado direito */
-      margin-right: 10px;
+    }
+
+    .sidebar.expanded .sidebar-header .heart-icon {
+      display: inline-block; /* Aparece apenas no menu expandido */
     }
 
     /* Itens do menu */
