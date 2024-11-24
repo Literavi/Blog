@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Menu Lateral com Destaque Verde</title>
+  <title>Menu Lateral com Estilo Refinado</title>
   <style>
     /* Estilo geral do menu */
     .navigation {
@@ -24,55 +24,62 @@
     .navigation ul li {
       position: relative;
       width: 100%;
-      padding: 5px 0; /* Ajuste de espaçamento entre itens */
     }
 
+    /* Estilo dos links */
     .navigation ul li a {
       position: relative;
       display: flex;
-      align-items: center;
-      width: 90%; /* Ajuste para borda arredondada ficar visível */
-      padding: 15px 20px;
-      margin: 0 auto; /* Centraliza os links */
+      width: 100%;
       text-decoration: none;
       color: #fff;
-      background-color: transparent;
-      border-radius: 10px; /* Bordas arredondadas */
-      transition: all 0.3s ease;
+      padding: 10px 20px;
+      align-items: center;
+      transition: background-color 0.3s ease, border-radius 0.3s ease;
     }
 
     .navigation ul li a:hover {
       background-color: #444;
     }
 
-    /* Item ativo com fundo arredondado e faixa verde */
+    /* Ícone dentro dos links */
+    .navigation ul li a .icon {
+      position: relative;
+      display: block;
+      min-width: 60px;
+      height: 60px;
+      text-align: center;
+      line-height: 60px;
+      font-size: 1.5rem;
+    }
+
+    /* Título dos links */
+    .navigation ul li a .title {
+      position: relative;
+      display: block;
+      padding-left: 10px;
+      line-height: 60px;
+      white-space: nowrap;
+      font-size: 1rem;
+    }
+
+    /* Item ativo com destaque */
     .navigation ul li.active a {
-      background-color: #4CAF50; /* Fundo verde do item ativo */
+      background-color: #4CAF50; /* Fundo verde */
       color: #fff;
-      border-radius: 10px; /* Cantos arredondados */
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Adiciona um leve efeito de sombra */
+      border-radius: 10px; /* Borda arredondada */
+      margin: 0 10px; /* Margem para o efeito visual de destaque */
     }
 
     .navigation ul li.active a::before {
       content: '';
       position: absolute;
-      left: -10px; /* Ajusta a posição da faixa */
+      left: -10px; /* Ajuste da faixa */
       top: 0;
       bottom: 0;
       width: 5px; /* Largura da faixa verde */
       background-color: #4CAF50; /* Cor da faixa */
-      border-radius: 0 10px 10px 0; /* Bordas arredondadas da faixa */
-    }
-
-    /* Ícones e texto */
-    .navigation ul li a .icon {
-      font-size: 1.5rem;
-      margin-right: 10px;
-    }
-
-    .navigation ul li a .title {
-      font-size: 1rem;
-      white-space: nowrap;
+      border-radius: 0 10px 10px 0; /* Bordas arredondadas */
     }
   </style>
 </head>
