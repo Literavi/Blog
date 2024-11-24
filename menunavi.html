@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu Lateral Personalizado</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    body.dark-mode {
+      background-color: #1c1c1c;
+      color: #eaeaea;
+    }
+
+    /* Menu lateral */
+    .sidebar {
+      width: 80px;
+      background-color: #4a90e2;
+      display: flex;
+      flex-direction: column;
+      transition: width 0.3s ease-in-out, background-color 0.3s ease;
+      position: relative;
+    }
+
+    .sidebar.expanded {
+      width: 240px;
+    }
+
+    .sidebar.dark-mode {
+      background-color: #333;
+    }
+
+    /* Cabeçalho do menu */
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding: 15px;
+      gap: 10px;
+      position: relative;
+      justify-content: flex-start;
+      padding-left: 20px;
+    }
+
+    .sidebar-header .hamburger {
+      color: white;
+      font-size: 28px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .sidebar.expanded .sidebar-header .hamburger {
+      position: absolute;
+      right: 20px;
+    }
+
+    .sidebar-header .heart-icon {
+      color: white;
+      font-size: 20px;
+      display: none; /* Oculto inicialmente */
+      transition: all 0.3s ease;
+    }
+
+    .sidebar.expanded .sidebar-header .heart-icon {
+      display: inline-block;
+    }
+
+    .sidebar-header .greeting {
+      font-size: 18px;
+      color: white;
+      display: none;
+    }
+
+    .sidebar.expanded .sidebar-header .greeting {
+      display: block;
+    }
+
+    /* Barra de pesquisa */
+    .search-bar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 100%;
+      padding: 10px 0;
+      padding-left: 20px;
+    }
+
+    .search-icon {
+      color: white;
+      font-size: 20px;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    .search-bar input {
+      width: 0;
+      padding: 10px;
+      border: none;
+      border-radius: 20px;
+      outline: none;
+      background: #ffffff;
+      color: #444;
+      font-size: 14px;
+      display: none; /* Oculto inicialmente */
+      transition: width 0.3s ease;
+    }
+
+    .sidebar.expanded .search-bar input {
+      display: block;
+      width: 100%;
+      margin-left: 10px;
+    }
+
+    .search-bar.expanded input {
+      display: block;
+      width: 100%;
+      margin-left: 10px;
+    }
+
+    /* Itens do menu */
+    .menu-item {
+      width: 100%;
+      padding: 15px 20px;
+      color: white;
+      cursor: pointer;
+      position: relative;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center; /* Centraliza os ícones e textos */
+    }
+
+    .menu-item:hover {
+      background-color: #357ab8;
+    }
+
+    .menu-item.active {
+      background: linear-gradient(135deg, #4a90e2, #357ab8);
+      color: white;
+      font-weight: bold;
+    }
+
+    .menu-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 5px;
+      background-color: white;
+      border-radius: 0 8px 8px 0;
+      transition: top 0.3s ease-in-out;
+    }
+
+    .menu-item i {
+      font-size: 20px;
+      margin-right: 15px;
+    }
+
+    .menu-item span {
+      display: none;
+    }
+
+    .sidebar.expanded .menu-item span {
+      display: inline-block;
+    }
+
+    /* Botão de tema */
+    .theme-toggle {
+      margin-top: auto;
+      padding: 15px 20px;
+      color: white;
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center; /* Centraliza o ícone do botão de tema */
+    }
+
+    .theme-toggle i {
+      font-size: 20px;
+      margin-right: 15px;
+    }
+
+    .theme-toggle span {
+      display: none;
+    }
+
+    .sidebar.expanded .theme-toggle span {
+      display: inline-block;
+    }
+
+    .theme-toggle:hover {
+      background-color: #357ab8;
+    }
+
+    /* Conteúdo principal */
+    .main-content {
+      flex-grow: 1;
+      padding: 20px;
+      transition: filter 0.3s ease;
+    }
+
+    .main-content.blurred {
+      filter: blur(4px);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Menu lateral -->
+  <div class="sidebar" id="sidebar">
+    <!-- Cabeçalho do menu -->
+    <div class="sidebar-header">
+      <span class="hamburger" onclick="toggleSidebar()">☰</span>
+      <span class="heart-icon">❤️</span>
+      <span class="greeting">Olá, Vitória</span>
+    </div>
+
+    <!-- Barra de pesquisa -->
+    <div class="search-bar" id="search-bar">
+      <span class="search-icon" onclick="toggleSearch()">🔍</span>
+      <input type="text" placeholder="Pesquisar...">
+    </div>
+
+    <!-- Itens do menu -->
+    <div class="menu-item active" onclick="changePage('home')">
+      <i>🏠</i>
+      <span>Home</span>
+    </div>
+    <div class="menu-item" onclick="changePage('profile')">
+      <i>👤</i>
+      <span>Perfil</span>
+    </div>
+    <div class="menu-item" onclick="changePage('settings')">
+      <i>⚙️</i>
+      <span>Configurações</span>
+    </div>
+    <div class="menu-item" onclick="changePage('about')">
+      <i>ℹ️</i>
+      <span>Sobre</span>
+    </div>
+
+    <!-- Botão de tema -->
+    <div class="theme-toggle" onclick="toggleTheme()">
+      <i>🌓</i>
+      <span>Tema Claro/Escuro</span>
+    </div>
+  </div>
+
+  <!-- Conteúdo principal -->
+  <div class="main-content" id="main-content">
+    <h1>Página Home</h1>
+    <p>Bem-vindo à página principal.</p>
+  </div>
+
+  <script>
+    // Alternar a expansão do menu
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const content = document.querySelector('.main-content');
+      sidebar.classList.toggle('expanded');
+      content.classList.toggle('blurred');
+    }
+
+    // Alternar a expansão da barra de pesquisa
+    function toggleSearch() {
+      const searchBar = document.getElementById('search-bar');
+      searchBar.classList.toggle('expanded');
+    }
+
+    // Alterar o tema (modo claro/escuro)
+    function toggleTheme() {
+      const body = document.body;
+      const sidebar = document.getElementById('sidebar');
+      body.classList.toggle('dark-mode');
+      sidebar.classList.toggle('dark-mode');
+    }
+
+    // Alterar a página ativa
+    function changePage(page) {
+      document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+      document.querySelector(`.menu-item[onclick="changePage('${page}')"]`).classList.add('active');
+      const mainContent = document.getElementById('main-content');
+      mainContent.innerHTML = `
+        <h1>Página ${page.charAt(0).toUpperCase() + page.slice(1)}</h1>
+        <p>Conteúdo da página ${page}.</p>
+      `;
+    }
+  </script>
+
+</body>
+</html>
