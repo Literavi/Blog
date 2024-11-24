@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sidebar with Animations and Search</title>
+  <style>
+    * {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      position: relative;
+      min-height: 100vh;
+      width: 100%;
+      background: #e7e9f5;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 50px;
+      background: #ffffff;
+      height: 100vh;
+      box-shadow: 5px 0 30px rgba(0, 0, 0, .1);
+      transition: all 0.5s ease;
+      overflow: hidden;
+    }
+
+    .sidebar.active {
+      width: 240px;
+    }
+
+    .sidebar .logo_content {
+      display: flex;
+      align-items: center;
+      height: 80px;
+      padding: 0 10px;
+      background: #00297c;
+    }
+
+    .sidebar .logo_content .logo {
+      display: flex;
+      align-items: center;
+    }
+
+    .sidebar .logo_content .logo i {
+      font-size: 30px;
+      color: #ffffff;
+      margin-right: 10px;
+    }
+
+    .sidebar .logo_content .logo .logo_name {
+      font-size: 20px;
+      font-weight: bold;
+      color: #ffffff;
+      transition: opacity 0.3s ease;
+      opacity: 0;
+    }
+
+    .sidebar.active .logo_content .logo .logo_name {
+      opacity: 1;
+    }
+
+    .sidebar .search-box {
+      display: flex;
+      align-items: center;
+      height: 50px;
+      padding: 0 10px;
+      margin-top: 10px;
+      background: #f1f1f1;
+      border-radius: 8px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .sidebar.active .search-box {
+      opacity: 1;
+    }
+
+    .sidebar .search-box input {
+      flex: 1;
+      height: 80%;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 14px;
+    }
+
+    .sidebar .search-box i {
+      font-size: 18px;
+      margin-left: 10px;
+      color: #00297c;
+    }
+
+    .sidebar .nav_list {
+      margin-top: 20px;
+    }
+
+    .sidebar .nav_list li {
+      position: relative;
+      list-style: none;
+      height: 50px;
+      line-height: 50px;
+    }
+
+    .sidebar .nav_list li a {
+      color: #00297c;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      padding: 0 10px;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+
+    .sidebar .nav_list li a:hover {
+      background: #f1f1f1;
+      transform: scale(1.05);
+      border-radius: 8px;
+    }
+
+    .sidebar .nav_list li a i {
+      font-size: 24px;
+      margin-right: 10px;
+    }
+
+    .sidebar .nav_list li a span {
+      font-size: 16px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .sidebar.active .nav_list li a span {
+      opacity: 1;
+    }
+
+    .toggle-btn {
+      position: absolute;
+      top: 20px;
+      right: -20px;
+      background: #00297c;
+      color: #ffffff;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      font-size: 18px;
+      transition: transform 0.3s ease;
+    }
+
+    .toggle-btn:hover {
+      transform: rotate(90deg);
+    }
+  </style>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="logo_content">
+      <div class="logo">
+        <i class="fas fa-code"></i>
+        <div class="logo_name">MySidebar</div>
+      </div>
+    </div>
+    <div class="search-box">
+      <input type="text" placeholder="Search...">
+      <i class="fas fa-search"></i>
+    </div>
+    <ul class="nav_list">
+      <li>
+        <a href="#">
+          <i class="fas fa-home"></i>
+          <span>Home</span>
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <i class="fas fa-user"></i>
+          <span>Profile</span>
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <i class="fas fa-cog"></i>
+          <span>Settings</span>
+        </a>
+      </li>
+      <li>
+        <a href="#">
+          <i class="fas fa-question-circle"></i>
+          <span>Help</span>
+        </a>
+      </li>
+    </ul>
+    <div class="toggle-btn">
+      <i class="fas fa-bars"></i>
+    </div>
+  </div>
+
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <script>
+    const sidebar = document.querySelector('.sidebar');
+    const toggleBtn = document.querySelector('.toggle-btn');
+
+    toggleBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+    });
+  </script>
+</body>
+</html>
