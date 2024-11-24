@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Sidebar Design</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: start;
+      align-items: center;
+    }
+
+    .sidebar {
+      width: 80px;
+      background: #6c63ff; /* Fundo roxo */
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 20px;
+      position: relative;
+    }
+
+    .sidebar .menu-item {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      margin: 10px 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .sidebar .menu-item.selected {
+      background: white;
+      border-radius: 10px; /* Cantos arredondados do retângulo branco */
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    }
+
+    .sidebar .menu-item.selected::after {
+      content: "";
+      position: absolute;
+      width: 80px;
+      height: 60px;
+      left: -20px;
+      background: #6c63ff; /* Cor de destaque roxa */
+      z-index: -1;
+      border-radius: 10px;
+    }
+
+    .sidebar .menu-item i {
+      font-size: 24px;
+      color: #ffffff;
+      transition: color 0.3s ease;
+    }
+
+    .sidebar .menu-item.selected i {
+      color: #6c63ff; /* Cor roxa para ícones do item selecionado */
+    }
+  </style>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="sidebar">
+    <div class="menu-item selected">
+      <i class="fas fa-windows"></i>
+    </div>
+    <div class="menu-item">
+      <i class="fas fa-user"></i>
+    </div>
+    <div class="menu-item">
+      <i class="fas fa-users-cog"></i>
+    </div>
+    <div class="menu-item">
+      <i class="fas fa-running"></i>
+    </div>
+  </div>
+</body>
+</html>
