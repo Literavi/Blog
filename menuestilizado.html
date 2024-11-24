@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Menu Lateral Personalizado</title>
+  <title>Menu Lateral com Estilo</title>
 
   <style>
     * {
@@ -96,6 +96,7 @@
       padding: 10px;
       justify-content: flex-start;
       align-items: center;
+      position: relative;
     }
 
     .sidebar.expanded .search-bar {
@@ -103,20 +104,28 @@
     }
 
     .search-bar .search-icon {
+      background-color: #9370db;
       color: white;
       font-size: 20px;
+      padding: 8px;
+      border-radius: 50%;
       cursor: pointer;
       margin-right: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .search-bar input {
       width: 100%;
-      padding: 8px;
+      padding: 10px;
       border: none;
-      border-radius: 4px;
+      border-radius: 20px;
       outline: none;
+      background: #ffffff;
+      color: #444;
+      font-size: 14px;
       display: none;
-      transition: width 0.3s ease;
     }
 
     .sidebar.expanded .search-bar input {
@@ -142,6 +151,18 @@
       background: linear-gradient(135deg, #4a90e2, #357ab8);
       color: white;
       font-weight: bold;
+    }
+
+    .menu-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 5px;
+      background-color: white;
+      border-radius: 0 8px 8px 0;
+      transition: top 0.3s ease-in-out;
     }
 
     .menu-item i {
