@@ -3,8 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Responsive Sidebar Navigation</title>
+  <title>Sidebar with Light/Dark Mode</title>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
   <style>
+    :root {
+      --primary-bg: #e7e9f5;
+      --secondary-bg: #ffffff;
+      --text-color: #00297c;
+      --search-bg: #f1f1f1;
+      --icon-color: #00297c;
+      --shadow-color: rgba(0, 0, 0, .1);
+    }
+
+    body.dark {
+      --primary-bg: #181818;
+      --secondary-bg: #242424;
+      --text-color: #f1f1f1;
+      --search-bg: #333333;
+      --icon-color: #ffffff;
+      --shadow-color: rgba(255, 255, 255, .1);
+    }
+
     * {
       font-family: 'Poppins', sans-serif;
       margin: 0;
@@ -13,10 +33,11 @@
     }
 
     body {
+      background: var(--primary-bg);
+      color: var(--text-color);
       position: relative;
       min-height: 100vh;
-      width: 100%;
-      background: #e7e9f5;
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
     .sidebar {
@@ -24,9 +45,9 @@
       top: 0;
       left: 0;
       width: 50px;
-      background: #ffffff;
+      background: var(--secondary-bg);
       height: 100vh;
-      box-shadow: 5px 0 30px rgba(0, 0, 0, .1);
+      box-shadow: 5px 0 30px var(--shadow-color);
       transition: all .3s ease;
       overflow: hidden;
     }
@@ -47,22 +68,54 @@
       align-items: center;
     }
 
-    .sidebar .logo_content .logo i {
+    .sidebar .logo_content .logo ion-icon {
       font-size: 30px;
-      color: #00297c;
+      color: var(--icon-color);
       margin-right: 10px;
     }
 
     .sidebar .logo_content .logo .logo_name {
       font-size: 20px;
       font-weight: bold;
-      color: #00297c;
+      color: var(--text-color);
       transition: opacity 0.3s ease;
       opacity: 0;
     }
 
     .sidebar.active .logo_content .logo .logo_name {
       opacity: 1;
+    }
+
+    .sidebar .search-box {
+      display: flex;
+      align-items: center;
+      height: 50px;
+      padding: 0 10px;
+      margin-top: 10px;
+      background: var(--search-bg);
+      border-radius: 8px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .sidebar.active .search-box {
+      opacity: 1;
+    }
+
+    .sidebar .search-box input {
+      flex: 1;
+      height: 80%;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 14px;
+      color: var(--text-color);
+    }
+
+    .sidebar .search-box ion-icon {
+      font-size: 18px;
+      margin-left: 10px;
+      color: var(--icon-color);
     }
 
     .sidebar .nav_list {
@@ -77,14 +130,14 @@
     }
 
     .sidebar .nav_list li a {
-      color: #00297c;
+      color: var(--text-color);
       text-decoration: none;
       display: flex;
       align-items: center;
       padding: 0 10px;
     }
 
-    .sidebar .nav_list li a i {
+    .sidebar .nav_list li a ion-icon {
       font-size: 24px;
       margin-right: 10px;
     }
@@ -102,9 +155,9 @@
     .toggle-btn {
       position: absolute;
       top: 20px;
-      right: -20px;
-      background: #00297c;
-      color: #ffffff;
+      left: 20px;
+      background: var(--icon-color);
+      color: var(--secondary-bg);
       width: 40px;
       height: 40px;
       border-radius: 50%;
@@ -113,6 +166,26 @@
       align-items: center;
       cursor: pointer;
       font-size: 18px;
+      z-index: 100;
+    }
+
+    .theme-switcher {
+      position: absolute;
+      bottom: 20px;
+      left: 10px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      padding: 10px;
+      background: var(--search-bg);
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+
+    .theme-switcher ion-icon {
+      font-size: 20px;
+      color: var(--icon-color);
+      margin-right: 5px;
     }
   </style>
 </head>
@@ -120,48 +193,66 @@
   <div class="sidebar">
     <div class="logo_content">
       <div class="logo">
-        <i class="fas fa-code"></i>
+        <ion-icon name="code-outline"></ion-icon>
         <div class="logo_name">MySidebar</div>
       </div>
+    </div>
+    <div class="search-box">
+      <input type="text" placeholder="Search...">
+      <ion-icon name="search-outline"></ion-icon>
     </div>
     <ul class="nav_list">
       <li>
         <a href="#">
-          <i class="fas fa-home"></i>
+          <ion-icon name="home-outline"></ion-icon>
           <span>Home</span>
         </a>
       </li>
       <li>
         <a href="#">
-          <i class="fas fa-user"></i>
+          <ion-icon name="person-outline"></ion-icon>
           <span>Profile</span>
         </a>
       </li>
       <li>
         <a href="#">
-          <i class="fas fa-cog"></i>
+          <ion-icon name="settings-outline"></ion-icon>
           <span>Settings</span>
         </a>
       </li>
       <li>
         <a href="#">
-          <i class="fas fa-question-circle"></i>
+          <ion-icon name="help-circle-outline"></ion-icon>
           <span>Help</span>
         </a>
       </li>
     </ul>
-    <div class="toggle-btn">
-      <i class="fas fa-bars"></i>
+    <div class="theme-switcher">
+      <ion-icon name="moon-outline"></ion-icon>
+      <span>Dark Mode</span>
     </div>
   </div>
 
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
   <script>
     const sidebar = document.querySelector('.sidebar');
     const toggleBtn = document.querySelector('.toggle-btn');
+    const themeSwitcher = document.querySelector('.theme-switcher');
+    const body = document.body;
 
     toggleBtn.addEventListener('click', () => {
       sidebar.classList.toggle('active');
+    });
+
+    themeSwitcher.addEventListener('click', () => {
+      body.classList.toggle('dark');
+      const icon = themeSwitcher.querySelector('ion-icon');
+      if (body.classList.contains('dark')) {
+        icon.setAttribute('name', 'sunny-outline');
+        themeSwitcher.querySelector('span').textContent = 'Light Mode';
+      } else {
+        icon.setAttribute('name', 'moon-outline');
+        themeSwitcher.querySelector('span').textContent = 'Dark Mode';
+      }
     });
   </script>
 </body>
