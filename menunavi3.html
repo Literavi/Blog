@@ -3,28 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sidebar with Light/Dark Mode</title>
+  <title>Responsive Sidebar with Dark Mode</title>
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
   <style>
+    /* Variáveis de Tema */
     :root {
-      --primary-bg: #e7e9f5;
-      --secondary-bg: #ffffff;
+      --background: #e7e9f5;
       --text-color: #00297c;
-      --search-bg: #f1f1f1;
-      --icon-color: #00297c;
-      --shadow-color: rgba(0, 0, 0, .1);
+      --sidebar-bg: #ffffff;
+      --input-bg: #f1f1f1;
     }
 
-    body.dark {
-      --primary-bg: #181818;
-      --secondary-bg: #242424;
-      --text-color: #f1f1f1;
-      --search-bg: #333333;
-      --icon-color: #ffffff;
-      --shadow-color: rgba(255, 255, 255, .1);
+    /* Tema Escuro */
+    [data-theme="dark"] {
+      --background: #1e1e2f;
+      --text-color: #ffffff;
+      --sidebar-bg: #2c2c38;
+      --input-bg: #3a3a46;
     }
 
+    /* Estilo Global */
     * {
       font-family: 'Poppins', sans-serif;
       margin: 0;
@@ -33,27 +32,24 @@
     }
 
     body {
-      background: var(--primary-bg);
-      color: var(--text-color);
       position: relative;
       min-height: 100vh;
-      transition: background 0.3s ease, color 0.3s ease;
+      width: 100%;
+      background: var(--background);
+      transition: background 0.5s ease, color 0.5s ease;
+      color: var(--text-color);
     }
 
     .sidebar {
       position: fixed;
       top: 0;
       left: 0;
-      width: 50px;
-      background: var(--secondary-bg);
-      height: 100vh;
-      box-shadow: 5px 0 30px var(--shadow-color);
-      transition: all .3s ease;
-      overflow: hidden;
-    }
-
-    .sidebar.active {
       width: 240px;
+      background: var(--sidebar-bg);
+      height: 100vh;
+      box-shadow: 5px 0 30px rgba(0, 0, 0, .1);
+      overflow: hidden;
+      transition: background 0.5s ease;
     }
 
     .sidebar .logo_content {
@@ -70,20 +66,16 @@
 
     .sidebar .logo_content .logo ion-icon {
       font-size: 30px;
-      color: var(--icon-color);
+      color: var(--text-color);
       margin-right: 10px;
+      transition: color 0.5s ease;
     }
 
     .sidebar .logo_content .logo .logo_name {
       font-size: 20px;
       font-weight: bold;
       color: var(--text-color);
-      transition: opacity 0.3s ease;
-      opacity: 0;
-    }
-
-    .sidebar.active .logo_content .logo .logo_name {
-      opacity: 1;
+      transition: color 0.5s ease;
     }
 
     .sidebar .search-box {
@@ -92,14 +84,9 @@
       height: 50px;
       padding: 0 10px;
       margin-top: 10px;
-      background: var(--search-bg);
+      background: var(--input-bg);
       border-radius: 8px;
-      opacity: 0;
-      transition: opacity 0.5s ease;
-    }
-
-    .sidebar.active .search-box {
-      opacity: 1;
+      transition: background 0.5s ease;
     }
 
     .sidebar .search-box input {
@@ -110,12 +97,14 @@
       background: transparent;
       font-size: 14px;
       color: var(--text-color);
+      transition: color 0.5s ease;
     }
 
     .sidebar .search-box ion-icon {
       font-size: 18px;
       margin-left: 10px;
-      color: var(--icon-color);
+      color: var(--text-color);
+      transition: color 0.5s ease;
     }
 
     .sidebar .nav_list {
@@ -135,57 +124,33 @@
       display: flex;
       align-items: center;
       padding: 0 10px;
+      transition: color 0.5s ease;
     }
 
     .sidebar .nav_list li a ion-icon {
       font-size: 24px;
       margin-right: 10px;
+      transition: color 0.5s ease;
     }
 
     .sidebar .nav_list li a span {
       font-size: 16px;
-      opacity: 0;
-      transition: opacity 0.3s ease;
     }
 
-    .sidebar.active .nav_list li a span {
-      opacity: 1;
-    }
-
-    .toggle-btn {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      background: var(--icon-color);
-      color: var(--secondary-bg);
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      font-size: 18px;
-      z-index: 100;
-    }
-
-    .theme-switcher {
+    .theme-toggle {
       position: absolute;
       bottom: 20px;
-      left: 10px;
+      left: 20px;
       display: flex;
       align-items: center;
       cursor: pointer;
-      padding: 10px;
-      background: var(--search-bg);
-      border-radius: 8px;
-      transition: background 0.3s ease;
     }
 
-    .theme-switcher ion-icon {
+    .theme-toggle ion-icon {
       font-size: 20px;
-      color: var(--icon-color);
-      margin-right: 5px;
+      color: var(--text-color);
+      margin-right: 10px;
+      transition: color 0.5s ease;
     }
   </style>
 </head>
@@ -227,32 +192,25 @@
         </a>
       </li>
     </ul>
-    <div class="theme-switcher">
+    <div class="theme-toggle" id="theme-toggle">
       <ion-icon name="moon-outline"></ion-icon>
       <span>Dark Mode</span>
     </div>
   </div>
 
   <script>
-    const sidebar = document.querySelector('.sidebar');
-    const toggleBtn = document.querySelector('.toggle-btn');
-    const themeSwitcher = document.querySelector('.theme-switcher');
+    const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
 
-    toggleBtn.addEventListener('click', () => {
-      sidebar.classList.toggle('active');
-    });
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = body.getAttribute('data-theme');
+      const isDark = currentTheme === 'dark';
+      body.setAttribute('data-theme', isDark ? 'light' : 'dark');
 
-    themeSwitcher.addEventListener('click', () => {
-      body.classList.toggle('dark');
-      const icon = themeSwitcher.querySelector('ion-icon');
-      if (body.classList.contains('dark')) {
-        icon.setAttribute('name', 'sunny-outline');
-        themeSwitcher.querySelector('span').textContent = 'Light Mode';
-      } else {
-        icon.setAttribute('name', 'moon-outline');
-        themeSwitcher.querySelector('span').textContent = 'Dark Mode';
-      }
+      // Atualiza o ícone do botão
+      const icon = themeToggle.querySelector('ion-icon');
+      icon.setAttribute('name', isDark ? 'moon-outline' : 'sunny-outline');
+      themeToggle.querySelector('span').textContent = isDark ? 'Dark Mode' : 'Light Mode';
     });
   </script>
 </body>
