@@ -44,12 +44,16 @@
       position: fixed;
       top: 0;
       left: 0;
-      width: 240px;
+      width: 50px;
       background: var(--sidebar-bg);
       height: 100vh;
       box-shadow: 5px 0 30px rgba(0, 0, 0, .1);
+      transition: all 0.3s ease;
       overflow: hidden;
-      transition: background 0.5s ease;
+    }
+
+    .sidebar.active {
+      width: 240px;
     }
 
     .sidebar .logo_content {
@@ -76,6 +80,11 @@
       font-weight: bold;
       color: var(--text-color);
       transition: color 0.5s ease;
+      opacity: 0;
+    }
+
+    .sidebar.active .logo_content .logo .logo_name {
+      opacity: 1;
     }
 
     .sidebar .search-box {
@@ -87,6 +96,11 @@
       background: var(--input-bg);
       border-radius: 8px;
       transition: background 0.5s ease;
+      opacity: 0;
+    }
+
+    .sidebar.active .search-box {
+      opacity: 1;
     }
 
     .sidebar .search-box input {
@@ -135,6 +149,23 @@
 
     .sidebar .nav_list li a span {
       font-size: 16px;
+    }
+
+    .toggle-btn {
+      position: absolute;
+      top: 20px;
+      right: -20px;
+      background: var(--text-color);
+      color: var(--sidebar-bg);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      font-size: 18px;
+      transition: background 0.5s ease, color 0.5s ease;
     }
 
     .theme-toggle {
@@ -196,12 +227,23 @@
       <ion-icon name="moon-outline"></ion-icon>
       <span>Dark Mode</span>
     </div>
+    <div class="toggle-btn" id="toggle-btn">
+      <ion-icon name="menu-outline"></ion-icon>
+    </div>
   </div>
 
   <script>
+    const sidebar = document.querySelector('.sidebar');
+    const toggleBtn = document.getElementById('toggle-btn');
     const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
 
+    // Toggle Sidebar
+    toggleBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+    });
+
+    // Toggle Theme
     themeToggle.addEventListener('click', () => {
       const currentTheme = body.getAttribute('data-theme');
       const isDark = currentTheme === 'dark';
