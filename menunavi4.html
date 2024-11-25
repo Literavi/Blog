@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sidebar with Animations and Search</title>
+  <title>Responsive Sidebar with Search</title>
   <style>
     * {
       font-family: 'Poppins', sans-serif;
@@ -27,7 +27,7 @@
       background: #ffffff;
       height: 100vh;
       box-shadow: 5px 0 30px rgba(0, 0, 0, .1);
-      transition: all 0.5s ease;
+      transition: all .3s ease;
       overflow: hidden;
     }
 
@@ -40,7 +40,6 @@
       align-items: center;
       height: 80px;
       padding: 0 10px;
-      background: #00297c;
     }
 
     .sidebar .logo_content .logo {
@@ -50,14 +49,14 @@
 
     .sidebar .logo_content .logo i {
       font-size: 30px;
-      color: #ffffff;
+      color: #00297c;
       margin-right: 10px;
     }
 
     .sidebar .logo_content .logo .logo_name {
       font-size: 20px;
       font-weight: bold;
-      color: #ffffff;
+      color: #00297c;
       transition: opacity 0.3s ease;
       opacity: 0;
     }
@@ -114,13 +113,6 @@
       display: flex;
       align-items: center;
       padding: 0 10px;
-      transition: background 0.3s ease, transform 0.3s ease;
-    }
-
-    .sidebar .nav_list li a:hover {
-      background: #f1f1f1;
-      transform: scale(1.05);
-      border-radius: 8px;
     }
 
     .sidebar .nav_list li a i {
@@ -152,11 +144,6 @@
       align-items: center;
       cursor: pointer;
       font-size: 18px;
-      transition: transform 0.3s ease;
-    }
-
-    .toggle-btn:hover {
-      transform: rotate(90deg);
     }
   </style>
 </head>
