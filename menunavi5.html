@@ -3,34 +3,41 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sidebar with Theme Toggle</title>
+  <title>Responsive Sidebar with Dark Mode</title>
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
   <style>
+    /* Variáveis de Tema */
     :root {
-      --background-light: #e7e9f5;
-      --sidebar-light: #ffffff;
-      --text-light: #00297c;
+      --background: #e7e9f5;
+      --text-color: #00297c;
+      --sidebar-bg: #ffffff;
+      --input-bg: #f1f1f1;
+    }
 
-      --background-dark: #1e1e2f;
-      --sidebar-dark: #292b3a;
-      --text-dark: #ffffff;
+    /* Tema Escuro */
+    [data-theme="dark"] {
+      --background: #1e1e2f;
+      --text-color: #ffffff;
+      --sidebar-bg: #2c2c38;
+      --input-bg: #3a3a46;
+    }
+
+    /* Estilo Global */
+    * {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
 
     body {
-      margin: 0;
-      font-family: 'Poppins', sans-serif;
-      transition: background 0.3s ease, color 0.3s ease;
-    }
-
-    body.light {
-      background: var(--background-light);
-      color: var(--text-light);
-    }
-
-    body.dark {
-      background: var(--background-dark);
-      color: var(--text-dark);
+      position: relative;
+      min-height: 100vh;
+      width: 100%;
+      background: var(--background);
+      transition: background 0.5s ease, color 0.5s ease;
+      color: var(--text-color);
     }
 
     .sidebar {
@@ -38,15 +45,11 @@
       top: 0;
       left: 0;
       width: 50px;
+      background: var(--sidebar-bg);
       height: 100vh;
-      background: var(--sidebar-light);
       box-shadow: 5px 0 30px rgba(0, 0, 0, .1);
-      transition: all 0.3s ease, background 0.3s ease;
+      transition: all 0.3s ease;
       overflow: hidden;
-    }
-
-    .sidebar.dark {
-      background: var(--sidebar-dark);
     }
 
     .sidebar.active {
@@ -60,30 +63,28 @@
       padding: 0 10px;
     }
 
-    .sidebar .logo_content .logo ion-icon {
-      font-size: 30px;
-      margin-right: 10px;
-      color: var(--text-light);
+    .sidebar .logo_content .logo {
+      display: flex;
+      align-items: center;
     }
 
-    .sidebar.dark .logo_content .logo ion-icon {
-      color: var(--text-dark);
+    .sidebar .logo_content .logo ion-icon {
+      font-size: 30px;
+      color: var(--text-color);
+      margin-right: 10px;
+      transition: color 0.5s ease;
     }
 
     .sidebar .logo_content .logo .logo_name {
       font-size: 20px;
       font-weight: bold;
-      color: var(--text-light);
+      color: var(--text-color);
+      transition: opacity 0.5s ease;
       opacity: 0;
-      transition: opacity 0.3s ease, color 0.3s ease;
     }
 
     .sidebar.active .logo_content .logo .logo_name {
       opacity: 1;
-    }
-
-    .sidebar.dark .logo_content .logo .logo_name {
-      color: var(--text-dark);
     }
 
     .sidebar .nav_list {
@@ -91,73 +92,79 @@
     }
 
     .sidebar .nav_list li {
+      position: relative;
       list-style: none;
       height: 50px;
+      line-height: 50px;
     }
 
     .sidebar .nav_list li a {
+      color: var(--text-color);
+      text-decoration: none;
       display: flex;
       align-items: center;
-      height: 100%;
+      justify-content: center; /* Centraliza os ícones quando retraído */
       padding: 0 10px;
-      text-decoration: none;
-      color: var(--text-light);
-      transition: color 0.3s ease;
+      transition: color 0.5s ease;
     }
 
-    .sidebar.dark .nav_list li a {
-      color: var(--text-dark);
-    }
-
-    .sidebar .nav_list li ion-icon {
+    .sidebar .nav_list li a ion-icon {
       font-size: 24px;
-      margin-right: 10px;
+      margin-right: 0; /* Remove o espaçamento dos ícones */
+      transition: margin 0.3s ease;
+    }
+
+    .sidebar.active .nav_list li a ion-icon {
+      margin-right: 10px; /* Adiciona espaçamento no estado expandido */
+    }
+
+    .sidebar .nav_list li a span {
+      display: none; /* Esconde o texto quando retraído */
+      opacity: 0;
+      font-size: 16px;
+      transition: opacity 0.5s ease;
+    }
+
+    .sidebar.active .nav_list li a span {
+      display: inline-block;
+      opacity: 1; /* Mostra o texto quando expandido */
     }
 
     .toggle-btn {
       position: absolute;
       top: 20px;
       right: -20px;
+      background: var(--text-color);
+      color: var(--sidebar-bg);
       width: 40px;
       height: 40px;
-      background: var(--text-light);
-      color: var(--sidebar-light);
       border-radius: 50%;
       display: flex;
       justify-content: center;
       align-items: center;
       cursor: pointer;
-      transition: background 0.3s ease, color 0.3s ease;
-    }
-
-    .toggle-btn.dark {
-      background: var(--text-dark);
-      color: var(--sidebar-dark);
+      font-size: 18px;
+      transition: background 0.5s ease, color 0.5s ease;
     }
 
     .theme-toggle {
       position: absolute;
       bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
+      left: 20px;
       display: flex;
       align-items: center;
       cursor: pointer;
-      color: var(--text-light);
-      transition: color 0.3s ease;
     }
 
     .theme-toggle ion-icon {
-      font-size: 24px;
-      margin: 0 10px;
-    }
-
-    .theme-toggle.dark {
-      color: var(--text-dark);
+      font-size: 20px;
+      color: var(--text-color);
+      margin-right: 10px;
+      transition: color 0.5s ease;
     }
   </style>
 </head>
-<body class="light">
+<body>
   <div class="sidebar">
     <div class="logo_content">
       <div class="logo">
@@ -191,34 +198,36 @@
         </a>
       </li>
     </ul>
-    <div class="toggle-btn">
-      <ion-icon name="menu-outline"></ion-icon>
-    </div>
-    <div class="theme-toggle">
+    <div class="theme-toggle" id="theme-toggle">
       <ion-icon name="moon-outline"></ion-icon>
       <span>Dark Mode</span>
+    </div>
+    <div class="toggle-btn" id="toggle-btn">
+      <ion-icon name="menu-outline"></ion-icon>
     </div>
   </div>
 
   <script>
     const sidebar = document.querySelector('.sidebar');
-    const toggleBtn = document.querySelector('.toggle-btn');
-    const themeToggle = document.querySelector('.theme-toggle');
+    const toggleBtn = document.getElementById('toggle-btn');
+    const themeToggle = document.getElementById('theme-toggle');
     const body = document.body;
 
+    // Toggle Sidebar
     toggleBtn.addEventListener('click', () => {
       sidebar.classList.toggle('active');
     });
 
+    // Toggle Theme
     themeToggle.addEventListener('click', () => {
-      body.classList.toggle('dark');
-      sidebar.classList.toggle('dark');
-      toggleBtn.classList.toggle('dark');
-      themeToggle.classList.toggle('dark');
+      const currentTheme = body.getAttribute('data-theme');
+      const isDark = currentTheme === 'dark';
+      body.setAttribute('data-theme', isDark ? 'light' : 'dark');
 
-      const isDark = body.classList.contains('dark');
-      themeToggle.querySelector('ion-icon').name = isDark ? 'sunny-outline' : 'moon-outline';
-      themeToggle.querySelector('span').textContent = isDark ? 'Light Mode' : 'Dark Mode';
+      // Atualiza o ícone do botão
+      const icon = themeToggle.querySelector('ion-icon');
+      icon.setAttribute('name', isDark ? 'moon-outline' : 'sunny-outline');
+      themeToggle.querySelector('span').textContent = isDark ? 'Dark Mode' : 'Light Mode';
     });
   </script>
 </body>
