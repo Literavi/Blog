@@ -127,6 +127,26 @@
       transition: color 0.5s ease;
     }
 
+    /* Ícone de lupa visível no menu retraído */
+    .search-icon {
+      display: none; /* Esconde o ícone no estado expandido */
+      position: absolute;
+      top: 120px; /* Ajuste conforme necessário */
+      left: 10px;
+      font-size: 24px;
+      color: var(--text-color);
+      cursor: pointer;
+      transition: opacity 0.3s ease;
+    }
+
+    .sidebar:not(.active) .search-icon {
+      display: block; /* Mostra o ícone no menu retraído */
+    }
+
+    .sidebar.active .search-icon {
+      display: none; /* Esconde o ícone quando o menu está expandido */
+    }
+
     .sidebar .nav_list {
       margin-top: 20px;
     }
@@ -209,32 +229,6 @@
       font-size: 18px;
       transition: background 0.5s ease, color 0.5s ease;
     }
-    .toggle-btn:active {
-      transform: scale(0.9); /* Reduz ligeiramente ao clicar */
-      background: rgba(0, 0, 0, 0.2); /* Adiciona um sombreamento temporário */
-    }
-    /* Caixa de Busca no Estado Retraído */
-    .search-box input {
-    display: none; /* Esconde a caixa de texto */
-    }
-
-    /* Mostra a caixa de texto no estado expandido */
-    .sidebar.active .search-box input {
-    display: block; /* Exibe a caixa de texto */
-    }
-
-    /* Alinha o ícone de lupa no centro no estado retraído */
-    .search-box ion-icon {
-    margin: 0 auto;
-    display: block; /* Centraliza a lupa no estado retraído */
-    font-size: 24px; /* Tamanho padrão da lupa */
-    }
-
-    /* Quando expandido, ajuste a posição do ícone de lupa */
-    .sidebar.active .search-box ion-icon {
-    margin: 0;
-    }
-
   </style>
 </head>
 <body>
@@ -246,8 +240,11 @@
       </div>
     </div>
     <div class="search-box">
-      <ion-icon name="search-outline"></ion-icon>
       <input type="text" placeholder="Search...">
+      <ion-icon name="search-outline"></ion-icon>
+    </div>
+    <div class="search-icon">
+      <ion-icon name="search-outline"></ion-icon>
     </div>
     <ul class="nav_list">
       <li>
