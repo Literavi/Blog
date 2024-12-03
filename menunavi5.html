@@ -166,13 +166,20 @@
     }
 
     .theme-toggle {
-      position: relative;
-      bottom: 20px;
-      left: 20px;
+      position: absolute; /* Permite posicioná-lo na parte inferior */
+      bottom: 20px; /* Mantém na parte inferior com espaçamento */
+      left: 10px; /* Alinha o ícone à esquerda */
       display: flex;
       align-items: center;
-      padding: 0 10px; /* Mesmo padding usado nos links do menu */
       cursor: pointer;
+      padding: 0; /* Remove qualquer padding que possa desalinhá-lo */
+    }
+
+    .theme-toggle ion-icon {
+      font-size: 24px; /* Mesmo tamanho dos outros ícones */
+      color: var(--text-color);
+      margin-right: 10px; /* Espaço entre o ícone e o texto */
+      transition: color 0.5s ease;
     }
 
     .theme-toggle span {
@@ -184,13 +191,6 @@
     .sidebar.active .theme-toggle span {
       display: inline-block; /* Mostra o texto no estado expandido */
       opacity: 1;
-    }
-
-    .theme-toggle ion-icon {
-      font-size: 24px;
-      color: var(--text-color);
-      margin-right: 10px;
-      transition: color 0.5s ease;
     }
 
     .toggle-btn {
