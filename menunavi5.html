@@ -80,10 +80,10 @@
       font-weight: bold;
       color: var(--text-color);
       transition: opacity 0.5s ease;
-      opacity: 0;
     }
 
-    .sidebar.active .logo_content .logo .logo_name {
+    /* O logo sempre visível, mesmo quando retraído */
+    .sidebar .logo_content .logo .logo_name {
       opacity: 1;
     }
 
@@ -143,7 +143,7 @@
 
     .sidebar .nav_list li a ion-icon {
       font-size: 24px;
-      margin-right: 10px; /* Mantém alinhamento à esquerda */
+      margin-right: 10px;
       transition: margin 0.3s ease;
     }
 
@@ -157,6 +157,33 @@
     .sidebar.active .nav_list li a span {
       display: inline-block;
       opacity: 1; /* Mostra o texto no estado expandido */
+    }
+
+    .theme-toggle {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .theme-toggle span {
+      display: none; /* Esconde o texto no estado retraído */
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .sidebar.active .theme-toggle span {
+      display: inline-block; /* Mostra o texto no estado expandido */
+      opacity: 1;
+    }
+
+    .theme-toggle ion-icon {
+      font-size: 20px;
+      color: var(--text-color);
+      margin-right: 10px;
+      transition: color 0.5s ease;
     }
 
     .toggle-btn {
@@ -175,19 +202,6 @@
       font-size: 18px;
       transition: background 0.5s ease, color 0.5s ease;
     }
-
-  .theme-toggle span {
-  display: none; /* Esconde o texto no estado retraído */
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-
-.sidebar.active .theme-toggle span {
-  display: inline-block; /* Mostra o texto no estado expandido */
-  opacity: 1;
-}
-
-
   </style>
 </head>
 <body>
