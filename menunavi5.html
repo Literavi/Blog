@@ -87,6 +87,40 @@
       opacity: 1;
     }
 
+    .sidebar .search-box {
+      display: flex;
+      align-items: center;
+      height: 50px;
+      padding: 0 10px;
+      margin-top: 10px;
+      background: var(--input-bg);
+      border-radius: 8px;
+      transition: background 0.5s ease, opacity 0.3s ease;
+      opacity: 0;
+    }
+
+    .sidebar.active .search-box {
+      opacity: 1;
+    }
+
+    .sidebar .search-box input {
+      flex: 1;
+      height: 80%;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 14px;
+      color: var(--text-color);
+      transition: color 0.5s ease;
+    }
+
+    .sidebar .search-box ion-icon {
+      font-size: 18px;
+      margin-left: 10px;
+      color: var(--text-color);
+      transition: color 0.5s ease;
+    }
+
     .sidebar .nav_list {
       margin-top: 20px;
     }
@@ -103,23 +137,18 @@
       text-decoration: none;
       display: flex;
       align-items: center;
-      justify-content: center; /* Centraliza os ícones quando retraído */
       padding: 0 10px;
       transition: color 0.5s ease;
     }
 
     .sidebar .nav_list li a ion-icon {
       font-size: 24px;
-      margin-right: 0; /* Remove o espaçamento dos ícones */
+      margin-right: 10px; /* Mantém alinhamento à esquerda */
       transition: margin 0.3s ease;
     }
 
-    .sidebar.active .nav_list li a ion-icon {
-      margin-right: 10px; /* Adiciona espaçamento no estado expandido */
-    }
-
     .sidebar .nav_list li a span {
-      display: none; /* Esconde o texto quando retraído */
+      display: none; /* Esconde o texto no estado retraído */
       opacity: 0;
       font-size: 16px;
       transition: opacity 0.5s ease;
@@ -127,7 +156,7 @@
 
     .sidebar.active .nav_list li a span {
       display: inline-block;
-      opacity: 1; /* Mostra o texto quando expandido */
+      opacity: 1; /* Mostra o texto no estado expandido */
     }
 
     .toggle-btn {
@@ -171,6 +200,10 @@
         <ion-icon name="code-outline"></ion-icon>
         <div class="logo_name">MySidebar</div>
       </div>
+    </div>
+    <div class="search-box">
+      <input type="text" placeholder="Search...">
+      <ion-icon name="search-outline"></ion-icon>
     </div>
     <ul class="nav_list">
       <li>
