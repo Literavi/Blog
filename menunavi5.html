@@ -66,6 +66,12 @@
     .sidebar .logo_content .logo {
       display: flex;
       align-items: center;
+      opacity: 0; /* Esconde o logo e o texto no estado retraído */
+      transition: opacity 0.5s ease;
+    }
+
+    .sidebar.active .logo_content .logo {
+      opacity: 1; /* Mostra o logo e o texto no estado expandido */
     }
 
     .sidebar .logo_content .logo ion-icon {
