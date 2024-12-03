@@ -213,6 +213,27 @@
       transform: scale(0.9); /* Reduz ligeiramente ao clicar */
       background: rgba(0, 0, 0, 0.2); /* Adiciona um sombreamento temporário */
     }
+    /* Caixa de Busca no Estado Retraído */
+    .search-box input {
+    display: none; /* Esconde a caixa de texto */
+    }
+
+    /* Mostra a caixa de texto no estado expandido */
+    .sidebar.active .search-box input {
+    display: block; /* Exibe a caixa de texto */
+    }
+
+    /* Alinha o ícone de lupa no centro no estado retraído */
+    .search-box ion-icon {
+    margin: 0 auto;
+    display: block; /* Centraliza a lupa no estado retraído */
+    font-size: 24px; /* Tamanho padrão da lupa */
+    }
+
+    /* Quando expandido, ajuste a posição do ícone de lupa */
+    .sidebar.active .search-box ion-icon {
+    margin: 0;
+    }
 
   </style>
 </head>
@@ -225,8 +246,8 @@
       </div>
     </div>
     <div class="search-box">
-      <input type="text" placeholder="Search...">
       <ion-icon name="search-outline"></ion-icon>
+      <input type="text" placeholder="Search...">
     </div>
     <ul class="nav_list">
       <li>
