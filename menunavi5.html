@@ -176,21 +176,17 @@
       transition: background 0.5s ease, color 0.5s ease;
     }
 
-    .theme-toggle {
-      position: absolute;
-      bottom: 20px;
-      left: 20px;
-      display: flex;
-      align-items: center;
-      cursor: pointer;
-    }
+    .theme-toggle span {
+  display: none; /* Esconde o texto no estado retraído */
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
 
-    .theme-toggle ion-icon {
-      font-size: 20px;
-      color: var(--text-color);
-      margin-right: 10px;
-      transition: color 0.5s ease;
-    }
+.sidebar.active .theme-toggle span {
+  display: inline-block; /* Mostra o texto no estado expandido */
+  opacity: 1;
+}
+
   </style>
 </head>
 <body>
