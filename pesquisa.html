@@ -3,25 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Biblioteca Pessoal</title>
+  <title>Biblioteca Pessoal - Pesquisar Livros</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 
   <!-- Link para o arquivo CSS -->
   <link rel="stylesheet" href="style.css">
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </head>
 <body>
 
-  <!-- Cabeçalho -->
-  <header class="header">
-    <div class="container">
-      <h1 class="logo">Biblioteca Pessoal</h1>
-      <nav class="navbar">
-        <a href="index.html">Home</a>
-        <a href="pesquisa.html">Pesquisar Livros</a>
-        <a href="adicionar_livro.html">Adicionar Livro</a>
-      </nav>
-    </div>
-  </header>
+  <!-- Menu dinâmico será carregado aqui -->
+  <div id="menu-container"></div>
 
   <!-- Conteúdo Principal -->
   <div class="container">
@@ -51,9 +44,40 @@
     </div>
   </div>
 
+  <!-- Script para carregar o menu -->
+  <script>
+    // Carrega o menu a partir de menu.html
+    fetch("menu.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("menu-container").innerHTML = data;
+
+        // Ativação do menu interativo após carregá-lo
+        const sidebar = document.querySelector('.sidebar');
+        const toggleBtn = document.getElementById('toggle-btn');
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        // Toggle Sidebar
+        toggleBtn.addEventListener('click', () => {
+          sidebar.classList.toggle('active');
+        });
+
+        // Toggle Theme
+        themeToggle.addEventListener('click', () => {
+          const currentTheme = body.getAttribute('data-theme');
+          const isDark = currentTheme === 'dark';
+          body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+
+          const icon = themeToggle.querySelector('ion-icon');
+          icon.setAttribute('name', isDark ? 'moon-outline' : 'sunny-outline');
+          themeToggle.querySelector('span').textContent = isDark ? 'Dark Mode' : 'Light Mode';
+        });
+      });
+  </script>
+
   <!-- Script para acessar a API do Google Sheets -->
   <script>
-    // Substitua pelos seus valores
     const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc";  // Seu Spreadsheet ID
     const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs";  // Sua chave de API
     const sheetName = "Biblioteca_Pessoal"; // Nome da aba da planilha
@@ -83,7 +107,7 @@
         });
     }
 
-    // Função para buscar livros (sem alterações, exceto a inicialização dos dados)
+    // Função para buscar livros
     function buscarAutor() {
       const nomeAutorOuTitulo = document.getElementById("author-name").value.toLowerCase();
       const statusSelecionado = document.getElementById("status").value;
