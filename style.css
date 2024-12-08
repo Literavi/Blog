@@ -1,0 +1,139 @@
+/* ===== Estilos Gerais ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+}
+
+body {
+  background-color: #f4f4f4;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* ===== Cabeçalho ===== */
+.header {
+  background: #333;
+  color: #fff;
+  padding: 10px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header .logo {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.navbar a {
+  color: #fff;
+  text-decoration: none;
+  margin-left: 15px;
+  font-size: 16px;
+}
+
+.navbar a:hover {
+  text-decoration: underline;
+}
+
+/* ===== Conteúdo Principal ===== */
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 20px;
+}
+
+canvas {
+  margin: 20px 0;
+}
+
+/* ===== Menu Lateral ===== */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 50px;
+  height: 100%;
+  background: #333;
+  color: #fff;
+  overflow: hidden;
+  transition: width 0.3s ease;
+}
+
+.sidebar.active {
+  width: 240px;
+}
+
+.sidebar .logo_content {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar .logo_content .logo {
+  display: flex;
+  align-items: center;
+  color: #fff;
+}
+
+.sidebar .logo_content .logo ion-icon {
+  font-size: 24px;
+  margin-right: 10px;
+}
+
+.sidebar .logo_content .logo_name {
+  font-size: 18px;
+  font-weight: bold;
+  display: none;
+}
+
+.sidebar.active .logo_content .logo_name {
+  display: block;
+}
+
+.sidebar .nav_list {
+  margin-top: 20px;
+}
+
+.sidebar .nav_list li {
+  list-style: none;
+  margin: 10px 0;
+}
+
+.sidebar .nav_list li a {
+  text-decoration: none;
+  color: #fff;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar .nav_list li a ion-icon {
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+.sidebar .nav_list li a:hover {
+  background: #575757;
+  border-radius: 5px;
+}
+
+/* ===== Tema Escuro ===== */
+[data-theme="dark"] {
+  background-color: #222;
+  color: #ddd;
+}
+
+[data-theme="dark"] .header {
+  background-color: #444;
+}
+
+[data-theme="dark"] .sidebar {
+  background-color: #444;
+}
+
+[data-theme="dark"] .navbar a {
+  color: #ddd;
+}
