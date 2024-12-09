@@ -10,30 +10,6 @@
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
   <style>
-    /* Estilo Personalizado para a Página Inicial */
-    body {
-      font-family: 'Roboto', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f9f9f9;
-    }
-
-    .welcome-section {
-      text-align: center;
-      background-color: #00297c;
-      color: #fff;
-      padding: 40px 20px;
-    }
-
-    .welcome-section h1 {
-      font-size: 36px;
-      margin-bottom: 10px;
-    }
-
-    .welcome-section p {
-      font-size: 18px;
-    }
-
     .chart-section {
       text-align: center;
       padding: 20px;
@@ -45,57 +21,17 @@
       margin-bottom: 20px;
     }
 
-    .highlight-section {
-      padding: 20px;
-    }
-
-    .highlight-section h3 {
-      font-size: 20px;
-      color: #00297c;
-      margin-bottom: 15px;
-    }
-
-    .highlight-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-    }
-
-    .highlight-item {
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      padding: 15px;
-    }
-
-    .highlight-item img {
-      max-width: 100px;
-      border-radius: 8px;
-      margin-bottom: 10px;
-    }
-
-    .highlight-item h4 {
-      font-size: 16px;
-      color: #333;
-    }
-
-    .highlight-item p {
-      font-size: 14px;
-      color: #666;
+    canvas {
+      display: block;
+      margin: 0 auto;
+      max-width: 80%;
     }
   </style>
 </head>
 <body>
 
-  <!-- Menu dinâmico será carregado aqui -->
+  <!-- Menu dinâmico -->
   <div id="menu-container"></div>
-
-  <!-- Seção de Boas-Vindas -->
-  <div class="welcome-section">
-    <h1>Bem-vindo à Biblioteca Literavi</h1>
-    <p>Organize e acompanhe seus livros de maneira prática e visual.</p>
-  </div>
 
   <!-- Seção do Gráfico -->
   <div class="chart-section">
@@ -103,62 +39,31 @@
     <canvas id="livrosLidosChart" width="400" height="200"></canvas>
   </div>
 
-  <!-- Seção de Destaques -->
-  <div class="highlight-section">
-    <h3>Destaques do Mês</h3>
-    <div class="highlight-grid">
-      <!-- Exemplo de Destaque -->
-      <div class="highlight-item">
-        <img src="https://via.placeholder.com/150" alt="Livro 1">
-        <h4>Livro do Mês</h4>
-        <p>Autor: Nome do Autor</p>
-      </div>
-      <div class="highlight-item">
-        <img src="https://via.placeholder.com/150" alt="Livro 2">
-        <h4>Outro Livro</h4>
-        <p>Autor: Nome do Autor</p>
-      </div>
-      <!-- Adicione mais itens conforme necessário -->
-    </div>
-  </div>
-
   <!-- Script para carregar o menu -->
   <script>
-    // Carrega o menu a partir de menu.html
     fetch("menu.html")
       .then(response => response.text())
       .then(data => {
         document.getElementById("menu-container").innerHTML = data;
-
-        // Ativação do menu interativo após carregá-lo
         const sidebar = document.querySelector('.sidebar');
         const toggleBtn = document.getElementById('toggle-btn');
         const themeToggle = document.getElementById('theme-toggle');
         const body = document.body;
 
-        // Toggle Sidebar
-        toggleBtn.addEventListener('click', () => {
-          sidebar.classList.toggle('active');
-        });
+        toggleBtn.addEventListener('click', () => sidebar.classList.toggle('active'));
 
-        // Toggle Theme
         themeToggle.addEventListener('click', () => {
-          const currentTheme = body.getAttribute('data-theme');
-          const isDark = currentTheme === 'dark';
+          const isDark = body.getAttribute('data-theme') === 'dark';
           body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-
-          const icon = themeToggle.querySelector('ion-icon');
-          icon.setAttribute('name', isDark ? 'moon-outline' : 'sunny-outline');
-          themeToggle.querySelector('span').textContent = isDark ? 'Dark Mode' : 'Light Mode';
         });
       });
   </script>
 
   <!-- Script para carregar o gráfico -->
   <script>
-    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc"; // Seu Spreadsheet ID
-    const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs"; // Sua chave de API
-    const sheetName = "Biblioteca_Pessoal"; // Nome da aba na planilha
+    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc";
+    const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs";
+    const sheetName = "Biblioteca_Pessoal";
 
     const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
 
@@ -184,4 +89,43 @@
             }
           });
 
-          const ctx = document.getElementById('livrosLidosChart').
+          const ctx = document.getElementById('livrosLidosChart').getContext('2d');
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: meses,
+              datasets: [
+                {
+                  label: 'Físico',
+                  data: livrosFisicosPorMes,
+                  backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                  borderColor: 'rgba(54, 162, 235, 1)',
+                },
+                {
+                  label: 'eBook',
+                  data: livrosEbooksPorMes,
+                  backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                  borderColor: 'rgba(255, 99, 132, 1)',
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  title: { display: true, text: 'Quantidade de Livros' }
+                },
+                x: { title: { display: true, text: 'Mês' } }
+              }
+            }
+          });
+        })
+        .catch(error => console.error("Erro ao carregar dados do gráfico:", error));
+    }
+
+    carregarDadosEExibirGrafico();
+  </script>
+
+</body>
+</html>
