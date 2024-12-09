@@ -5,8 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Biblioteca Pessoal - Home</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
   <style>
     body {
       font-family: 'Roboto', sans-serif;
@@ -14,6 +15,13 @@
       padding: 0;
       background-color: #f9f9f9;
       color: #333;
+    }
+
+    #menu-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
     }
 
     .container {
@@ -96,7 +104,48 @@
     </div>
   </div>
 
-  <!-- Script para carregar dados e gerar o gráfico -->
+  <!-- Script para carregar o menu -->
+  <script>
+    // Carrega o menu a partir de menu.html
+    fetch("menu.html")
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Erro ao carregar o menu: ${response.status}`);
+        }
+        return response.text();
+      })
+      .then(data => {
+        document.getElementById("menu-container").innerHTML = data;
+
+        // Ativação do menu interativo após carregá-lo
+        const sidebar = document.querySelector('.sidebar');
+        const toggleBtn = document.getElementById('toggle-btn');
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        // Toggle Sidebar
+        toggleBtn.addEventListener('click', () => {
+          sidebar.classList.toggle('active');
+        });
+
+        // Toggle Theme
+        themeToggle.addEventListener('click', () => {
+          const currentTheme = body.getAttribute('data-theme');
+          const isDark = currentTheme === 'dark';
+          body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+
+          const icon = themeToggle.querySelector('ion-icon');
+          icon.setAttribute('name', isDark ? 'moon-outline' : 'sunny-outline');
+          themeToggle.querySelector('span').textContent = isDark ? 'Dark Mode' : 'Light Mode';
+        });
+      })
+      .catch(error => {
+        console.error("Erro ao carregar o menu:", error);
+        document.getElementById("menu-container").innerHTML = "<p>Erro ao carregar o menu.</p>";
+      });
+  </script>
+
+  <!-- Script para carregar dados do Google Sheets e gerar o gráfico -->
   <script>
     const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc"; // Seu Spreadsheet ID
     const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs"; // Sua chave de API
@@ -217,7 +266,6 @@
         .catch(error => console.error("Erro ao carregar dados:", error));
     }
 
-    // Carrega os dados e exibe o gráfico ao carregar a página
     carregarDadosEExibirGrafico();
   </script>
 
