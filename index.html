@@ -7,53 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <style>
-    body {
-      font-family: 'Roboto', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f9f9f9;
-      color: #333;
-    }
-
-    .container {
-      padding: 20px;
-      margin-left: 60px; /* Espaço para o menu lateral */
-    }
-
-    h2 {
-      text-align: center;
-      color: #00297c;
-      margin-bottom: 20px;
-    }
-
-    #livrosLidosChart {
-      max-width: 600px;
-      margin: 0 auto;
-      display: block;
-    }
-
-    .stats {
-      max-width: 600px;
-      margin: 20px auto;
-      padding: 20px;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .stats h3 {
-      margin-bottom: 10px;
-      font-size: 18px;
-      color: #444;
-    }
-
-    .stats p {
-      margin: 5px 0;
-      font-size: 14px;
-      color: #666;
-    }
-  </style>
 </head>
 <body>
 
@@ -64,18 +17,11 @@
   <div class="container">
     <h2>Quantidade de Livros Lidos por Mês em 2024</h2>
     <canvas id="livrosLidosChart"></canvas>
-
-    <!-- Resumo de Estatísticas -->
-    <div class="stats">
-      <h3>Resumo de Estatísticas</h3>
-      <p id="totalLivros">Total de Livros Lidos: 0</p>
-      <p id="livrosFisicos">Livros Físicos: 0</p>
-      <p id="livrosEbooks">Livros eBooks: 0</p>
-    </div>
   </div>
 
   <!-- Script para carregar o menu -->
   <script>
+    // Função para carregar o menu de forma dinâmica
     fetch("menu.html")
       .then(response => {
         if (!response.ok) {
@@ -97,12 +43,13 @@
           sidebar?.classList.toggle('active');
         });
 
-        // Toggle Theme
+        // Toggle Tema (Dark/Light)
         themeToggle?.addEventListener('click', () => {
           const currentTheme = body.getAttribute('data-theme');
           const isDark = currentTheme === 'dark';
           body.setAttribute('data-theme', isDark ? 'light' : 'dark');
 
+          // Atualiza o ícone e texto
           const icon = themeToggle.querySelector('ion-icon');
           icon.setAttribute('name', isDark ? 'moon-outline' : 'sunny-outline');
           themeToggle.querySelector('span').textContent = isDark ? 'Dark Mode' : 'Light Mode';
@@ -113,13 +60,12 @@
       });
   </script>
 
-  <!-- Script para carregar dados e gerar o gráfico -->
+  <!-- Script para carregar os dados e exibir o gráfico -->
   <script>
     const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc"; // Seu Spreadsheet ID
     const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs"; // Sua chave de API
     const sheetName = "Biblioteca_Pessoal"; // Nome da aba na planilha
     const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
-    let totalLivros = 0;
 
     function carregarDadosEExibirGrafico() {
       fetch(googleSheetsApiUrl)
@@ -165,12 +111,6 @@
               }
             }
           });
-
-          // Atualiza os valores de estatísticas
-          totalLivros = livrosFisicosPorMes.reduce((a, b) => a + b, 0) + livrosEbooksPorMes.reduce((a, b) => a + b, 0);
-          document.getElementById("totalLivros").textContent = `Total de Livros Lidos: ${totalLivros}`;
-          document.getElementById("livrosFisicos").textContent = `Livros Físicos: ${livrosFisicosPorMes.reduce((a, b) => a + b, 0)}`;
-          document.getElementById("livrosEbooks").textContent = `Livros eBooks: ${livrosEbooksPorMes.reduce((a, b) => a + b, 0)}`;
 
           // Inicializa o gráfico
           const ctx = document.getElementById('livrosLidosChart').getContext('2d');
@@ -222,6 +162,5 @@
 
     carregarDadosEExibirGrafico();
   </script>
-
 </body>
 </html>
