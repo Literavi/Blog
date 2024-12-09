@@ -7,10 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
   <style>
-    /* Estilo para a página */
     body {
       font-family: 'Roboto', sans-serif;
       margin: 0;
@@ -24,101 +21,18 @@
       margin-left: 60px; /* Espaço para o menu lateral */
     }
 
-    h2, h3 {
+    h2 {
       text-align: center;
       color: #00297c;
+      margin-bottom: 20px;
     }
 
-    /* Animação */
-    .container {
-      animation: fadeIn 1s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Links rápidos */
-    #linksRapidos {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin: 20px 0;
-    }
-
-    #linksRapidos a {
-      text-decoration: none;
-      color: #00297c;
-      font-weight: bold;
-      padding: 5px 10px;
-      border: 1px solid #00297c;
-      border-radius: 5px;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    #linksRapidos a:hover {
-      background-color: #00297c;
-      color: #fff;
-    }
-
-    /* Gráfico */
     #livrosLidosChart {
       max-width: 600px;
       margin: 0 auto;
       display: block;
     }
 
-    /* Estatísticas */
-    #estatisticas ul {
-      list-style: none;
-      padding: 0;
-      text-align: center;
-    }
-
-    #estatisticas ul li {
-      margin: 10px 0;
-      font-size: 18px;
-      color: #333;
-    }
-
-    /* Progresso de leitura */
-    #progressoLeitura {
-      max-width: 400px;
-      margin: 20px auto;
-    }
-
-    /* Livros Favoritos */
-    #favoritosContainer {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    #favoritosContainer div {
-      text-align: center;
-    }
-
-    #favoritosContainer img {
-      width: 100px;
-      height: auto;
-      border-radius: 8px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    #favoritosContainer img:hover {
-      transform: scale(1.1);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Capas dos livros */
     #capaLivroContainer {
       display: none;
       flex-wrap: wrap;
@@ -139,6 +53,29 @@
       transform: scale(1.1);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
+
+    .progress-container {
+      max-width: 600px;
+      margin: 20px auto;
+      text-align: center;
+    }
+
+    .progress-bar {
+      width: 100%;
+      background-color: #ddd;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .progress-bar div {
+      height: 20px;
+      background-color: #00297c;
+      text-align: center;
+      line-height: 20px;
+      color: white;
+      width: 0%; /* Valor inicial */
+      transition: width 0.5s ease;
+    }
   </style>
 </head>
 <body>
@@ -146,128 +83,141 @@
   <!-- Aqui o menu será carregado dinamicamente -->
   <div id="menu-container"></div>
 
-  <!-- Links rápidos -->
-  <div id="linksRapidos">
-    <a href="#grafico">Gráfico</a>
-    <a href="#estatisticas">Estatísticas</a>
-    <a href="#favoritosContainer">Favoritos</a>
-    <a href="#progressoLeitura">Progresso</a>
-  </div>
-
-  <!-- Resumo das Estatísticas -->
-  <div id="estatisticas">
-    <h3>Resumo das Leituras</h3>
-    <ul>
-      <li><strong>Total de Livros Lidos:</strong> <span id="totalLivros"></span></li>
-      <li><strong>% Livros Físicos:</strong> <span id="percentFisico"></span></li>
-      <li><strong>% eBooks:</strong> <span id="percentEbook"></span></li>
-      <li><strong>Mês Mais Lido:</strong> <span id="mesMaisLido"></span></li>
-    </ul>
-  </div>
-
-  <!-- Gráfico de Leituras -->
-  <div id="grafico">
+  <!-- Conteúdo Principal -->
+  <div class="container">
     <h2>Quantidade de Livros Lidos por Mês em 2024</h2>
     <canvas id="livrosLidosChart"></canvas>
+    <div id="capaLivroContainer"></div>
+    <div class="progress-container">
+      <h4>Progresso de Leitura</h4>
+      <div class="progress-bar">
+        <div id="progress"></div>
+      </div>
+    </div>
   </div>
 
-  <!-- Progresso de Leitura -->
-  <h3>Progresso de Leitura</h3>
-  <canvas id="progressoLeitura"></canvas>
-
-  <!-- Livros Favoritos -->
-  <div id="livrosFavoritos">
-    <h3>Livros Favoritos de 2024</h3>
-    <div id="favoritosContainer"></div>
-  </div>
-
-  <!-- Capas dos livros -->
-  <div id="capaLivroContainer"></div>
-
-  <!-- Script para carregar o menu -->
+  <!-- Script para carregar dados e gerar o gráfico -->
   <script>
-    fetch("menu.html")
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById("menu-container").innerHTML = data;
-
-        const sidebar = document.querySelector('.sidebar');
-        const toggleBtn = document.getElementById('toggle-btn');
-        const themeToggle = document.getElementById('theme-toggle');
-        const body = document.body;
-
-        toggleBtn.addEventListener('click', () => sidebar.classList.toggle('active'));
-
-        themeToggle.addEventListener('click', () => {
-          const isDark = body.getAttribute('data-theme') === 'dark';
-          body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-        });
-      });
-  </script>
-
-  <!-- Script para gerar o gráfico e as estatísticas -->
-  <script>
-    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc";
-    const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs";
-    const sheetName = "Biblioteca_Pessoal";
-
+    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc"; // Seu Spreadsheet ID
+    const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs"; // Sua chave de API
+    const sheetName = "Biblioteca_Pessoal"; // Nome da aba na planilha
     const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
 
     let mesSelecionado = null;
 
     function carregarDadosEExibirGrafico() {
       fetch(googleSheetsApiUrl)
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Erro ao carregar dados da API do Google Sheets");
+          }
+          return response.json();
+        })
         .then(data => {
           const rows = data.values;
+          const meses = [
+            'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+            'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+          ];
+          const livrosFisicosPorMes = Array(12).fill(0);
+          const livrosEbooksPorMes = Array(12).fill(0);
+          const capasFisico = Array(12).fill().map(() => []);
+          const capasEbook = Array(12).fill().map(() => []);
+
+          // Identifica as colunas
           const headerRow = rows[0];
           const dateLidoIndex = headerRow.indexOf("Date Lido");
           const formatoIndex = headerRow.indexOf("Formato");
           const imageFileIndex = headerRow.indexOf("ImageFile");
 
-          const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-          const livrosFisicos = Array(12).fill(0);
-          const livrosEbooks = Array(12).fill(0);
-
+          // Processa os dados da planilha
           rows.slice(1).forEach(row => {
             const date = row[dateLidoIndex];
             const formato = row[formatoIndex];
-            const [_, month, year] = date.split("/").map(Number);
-            if (year === 2024) {
-              if (formato === "Físico") livrosFisicos[month - 1]++;
-              if (formato === "eBook") livrosEbooks[month - 1]++;
+            const imageFile = row[imageFileIndex];
+            if (date) {
+              const [day, month, year] = date.split("/").map(Number);
+
+              if (year === 2024 && month >= 1 && month <= 12) {
+                if (formato === "Físico") {
+                  livrosFisicosPorMes[month - 1]++;
+                  if (imageFile) {
+                    const imageUrl = `https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${imageFile}`;
+                    capasFisico[month - 1].push(imageUrl);
+                  }
+                } else if (formato === "eBook") {
+                  livrosEbooksPorMes[month - 1]++;
+                  if (imageFile) {
+                    const imageUrl = `https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${imageFile}`;
+                    capasEbook[month - 1].push(imageUrl);
+                  }
+                }
+              }
             }
           });
 
-          atualizarEstatisticas(livrosFisicos, livrosEbooks);
-
-          const ctx = document.getElementById("livrosLidosChart").getContext("2d");
-          new Chart(ctx, {
-            type: "bar",
+          // Inicializa o gráfico
+          const ctx = document.getElementById('livrosLidosChart').getContext('2d');
+          const chart = new Chart(ctx, {
+            type: 'bar',
             data: {
               labels: meses,
               datasets: [
-                { label: "Físico", data: livrosFisicos, backgroundColor: "rgba(54, 162, 235, 0.5)" },
-                { label: "eBook", data: livrosEbooks, backgroundColor: "rgba(255, 99, 132, 0.5)" }
+                {
+                  label: 'Físico',
+                  data: livrosFisicosPorMes,
+                  backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                  borderColor: 'rgba(54, 162, 235, 1)',
+                  borderWidth: 1
+                },
+                {
+                  label: 'eBook',
+                  data: livrosEbooksPorMes,
+                  backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                  borderColor: 'rgba(255, 99, 132, 1)',
+                  borderWidth: 1
+                }
               ]
+            },
+            options: {
+              responsive: true,
+              onClick: (event, elements) => {
+                const capaLivroContainer = document.getElementById("capaLivroContainer");
+                const progressBar = document.getElementById("progress");
+                if (elements.length) {
+                  const elementIndex = elements[0].index; // Mês clicado
+                  const datasetIndex = elements[0].datasetIndex; // 0 = Físico, 1 = eBook
+
+                  const capasDoMes = datasetIndex === 0 ? capasFisico[elementIndex] : capasEbook[elementIndex];
+                  const totalLivros = datasetIndex === 0 ? livrosFisicosPorMes[elementIndex] : livrosEbooksPorMes[elementIndex];
+                  const progressoTotal = livrosFisicosPorMes[elementIndex] + livrosEbooksPorMes[elementIndex];
+                  const progresso = ((totalLivros / progressoTotal) * 100).toFixed(1);
+
+                  capaLivroContainer.innerHTML = '';
+
+                  if (capasDoMes.length > 0) {
+                    capasDoMes.forEach(url => {
+                      const img = document.createElement('img');
+                      img.src = url;
+                      img.alt = 'Capa do Livro';
+                      capaLivroContainer.appendChild(img);
+                    });
+                    capaLivroContainer.style.display = "flex";
+                  } else {
+                    capaLivroContainer.style.display = "none";
+                  }
+
+                  progressBar.style.width = `${progresso}%`;
+                  progressBar.textContent = `${progresso}% Lido`;
+                }
+              }
             }
           });
-        });
+        })
+        .catch(error => console.error("Erro ao carregar dados:", error));
     }
 
-    function atualizarEstatisticas(livrosFisicos, livrosEbooks) {
-      const totalLivros = livrosFisicos.reduce((a, b) => a + b, 0) + livrosEbooks.reduce((a, b) => a + b, 0);
-      const totalFisico = livrosFisicos.reduce((a, b) => a + b, 0);
-      const totalEbook = livrosEbooks.reduce((a, b) => a + b, 0);
-
-      document.getElementById("totalLivros").textContent = totalLivros;
-      document.getElementById("percentFisico").textContent = ((totalFisico / totalLivros) * 100).toFixed(2) + "%";
-      document.getElementById("percentEbook").textContent = ((totalEbook / totalLivros) * 100).toFixed(2) + "%";
-
-      const mesMaisLido = livrosFisicos.map((v, i) => v + livrosEbooks[i]).indexOf(Math.max(...livrosFisicos.map((v, i) => v + livrosEbooks[i])));
-      document.getElementById("mesMaisLido").textContent = meses[mesMaisLido];
-    }
-
+    // Carrega os dados e exibe o gráfico ao carregar a página
     carregarDadosEExibirGrafico();
   </script>
 
