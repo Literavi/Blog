@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Biblioteca Pessoal - Home</title>
+  <title>Biblioteca Pessoal - Meta de Leitura</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
@@ -32,52 +32,50 @@
       margin-bottom: 20px;
     }
 
-    .meta-leitura-container {
-      margin: 20px auto;
-      max-width: 400px;
+    /* Estilo do medidor circular */
+    .meta-leitura-circular {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: conic-gradient(
+        #4caf50 calc(var(--progress) * 1%), 
+        #f1f1f1 0
+      );
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 auto;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .meta-leitura-texto {
+      position: absolute;
+      font-size: 20px;
+      font-weight: bold;
+      color: #00297c;
       text-align: center;
     }
 
-    .progress-container {
-      position: relative;
-      height: 25px;
-      background: #f1f1f1;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      margin: 20px auto;
-      width: 100%;
-      max-width: 300px;
-    }
-
-    .progress-bar {
-      height: 100%;
-      background: linear-gradient(90deg, #4caf50, #66bb6a);
-      transition: width 0.5s ease-in-out;
-      border-radius: 20px;
-    }
-
-    .meta-text {
-      font-size: 16px;
-      font-weight: bold;
-      margin-top: 10px;
-      color: #333;
+    .meta-leitura-subtexto {
+      font-size: 14px;
+      color: #555;
     }
   </style>
 </head>
 <body>
 
-  <!-- Aqui o menu será carregado dinamicamente -->
+  <!-- Menu carregado dinamicamente -->
   <div id="menu-container"></div>
 
   <!-- Conteúdo Principal -->
   <div class="container">
     <h2>Meta de Leitura Anual</h2>
-    <div class="meta-leitura-container">
-      <div class="progress-container">
-        <div class="progress-bar" id="metaLeituraBarra" style="width: 0%;"></div>
+    <div class="meta-leitura-circular" id="metaLeituraCircular" style="--progress: 0;">
+      <div class="meta-leitura-texto">
+        <span id="metaLeituraProgresso">0%</span>
+        <div class="meta-leitura-subtexto">0 de 25 livros</div>
       </div>
-      <p class="meta-text" id="metaLeituraTexto">Carregando...</p>
     </div>
   </div>
 
@@ -103,7 +101,7 @@
     carregarMenu();
   </script>
 
-  <!-- Script para carregar dados do Google Sheets -->
+  <!-- Script para carregar a meta de leitura -->
   <script>
     const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc"; // Seu Spreadsheet ID
     const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs"; // Sua chave de API
@@ -125,13 +123,16 @@
           const meta = 25;
           const progresso = Math.min((livrosLidos / meta) * 100, 100).toFixed(1); // Em porcentagem
 
-          // Atualizar barra de progresso
-          const metaLeituraBarra = document.getElementById("metaLeituraBarra");
-          metaLeituraBarra.style.width = `${progresso}%`;
+          // Atualizar a animação circular
+          const metaLeituraCircular = document.getElementById("metaLeituraCircular");
+          metaLeituraCircular.style.setProperty("--progress", progresso);
 
-          // Atualizar texto
-          const metaLeituraTexto = document.getElementById("metaLeituraTexto");
-          metaLeituraTexto.textContent = `${livrosLidos} de ${meta} livros (${progresso}%)`;
+          // Atualizar textos
+          const metaLeituraProgresso = document.getElementById("metaLeituraProgresso");
+          metaLeituraProgresso.textContent = `${progresso}%`;
+
+          const metaLeituraSubtexto = metaLeituraCircular.querySelector(".meta-leitura-subtexto");
+          metaLeituraSubtexto.textContent = `${livrosLidos} de ${meta} livros`;
         })
         .catch(error => console.error("Erro ao carregar meta de leitura:", error));
     }
