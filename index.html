@@ -1,142 +1,269 @@
-<script>
-  const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc"; // Seu Spreadsheet ID
-  const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs"; // Sua chave de API
-  const sheetName = "Biblioteca_Pessoal"; // Nome da aba na planilha
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca Pessoal - Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+  <style>
+    /* Estilo para a página */
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
 
-  const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
+    .container {
+      padding: 20px;
+      margin-left: 60px; /* Espaço para o menu lateral */
+    }
 
-  let mesSelecionado = null; // Variável para armazenar o índice do mês selecionado
+    h2 {
+      text-align: center;
+      color: #00297c;
+      margin-bottom: 20px;
+    }
 
-  function carregarDadosEExibirGrafico() {
-    fetch(googleSheetsApiUrl)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error("Erro ao carregar dados da API do Google Sheets");
-        }
-        return response.json();
-      })
+    /* Estilo para o gráfico */
+    #livrosLidosChart {
+      max-width: 600px;
+      margin: 0 auto;
+      display: block;
+    }
+
+    /* Estilo para as imagens de capa */
+    #capaLivroContainer {
+      display: none;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    #capaLivroContainer img {
+      width: 100px;
+      height: auto;
+      border-radius: 8px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    #capaLivroContainer img:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Tooltip personalizado */
+    #tooltip {
+      display: none;
+      position: absolute;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Aqui o menu será carregado dinamicamente -->
+  <div id="menu-container"></div>
+
+  <!-- Conteúdo Principal -->
+  <div class="container">
+    <h2>Quantidade de Livros Lidos por Mês em 2024</h2>
+    <canvas id="livrosLidosChart"></canvas>
+    <!-- Container para as imagens das capas -->
+    <div id="capaLivroContainer"></div>
+    <!-- Tooltip personalizado -->
+    <div id="tooltip"></div>
+  </div>
+
+  <!-- Script para carregar o menu -->
+  <script>
+    // Carrega o menu a partir de menu.html
+    fetch("menu.html")
+      .then(response => response.text())
       .then(data => {
-        const rows = data.values;
-        const meses = [
-          'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
-          'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
-        ];
-        const livrosFisicosPorMes = Array(12).fill(0); // Contadores para livros Físicos
-        const livrosEbooksPorMes = Array(12).fill(0); // Contadores para eBooks
-        const capasFisico = Array(12).fill().map(() => []); // Capas para livros Físicos
-        const capasEbook = Array(12).fill().map(() => []); // Capas para eBooks
+        document.getElementById("menu-container").innerHTML = data;
 
-        // Identifica o índice das colunas
-        const headerRow = rows[0];
-        const dateLidoIndex = headerRow.indexOf("Date Lido");
-        const formatoIndex = headerRow.indexOf("Formato");
-        const imageFileIndex = headerRow.indexOf("ImageFile");
+        // Ativação do menu interativo após carregá-lo
+        const sidebar = document.querySelector('.sidebar');
+        const toggleBtn = document.getElementById('toggle-btn');
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
 
-        // Processa os dados da planilha
-        rows.slice(1).forEach(row => {
-          const date = row[dateLidoIndex];
-          const formato = row[formatoIndex];
-          const imageFile = row[imageFileIndex];
-          if (date) {
-            const [day, month, year] = date.split("/").map(Number);
-
-            if (year === 2024 && month >= 1 && month <= 12) {
-              if (formato === "Físico") {
-                livrosFisicosPorMes[month - 1]++;
-                if (imageFile) {
-                  const imageUrl = `https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${imageFile}`;
-                  capasFisico[month - 1].push(imageUrl);
-                }
-              } else if (formato === "eBook") {
-                livrosEbooksPorMes[month - 1]++;
-                if (imageFile) {
-                  const imageUrl = `https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${imageFile}`;
-                  capasEbook[month - 1].push(imageUrl);
-                }
-              }
-            }
-          }
+        // Toggle Sidebar
+        toggleBtn.addEventListener('click', () => {
+          sidebar.classList.toggle('active');
         });
 
-        // Inicializa o gráfico com os dados carregados
-        const ctx = document.getElementById('livrosLidosChart').getContext('2d');
-        const chart = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: meses,
-            datasets: [
-              {
-                label: 'Físico',
-                data: livrosFisicosPorMes,
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 1
-              },
-              {
-                label: 'eBook',
-                data: livrosEbooksPorMes,
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 1
-              }
-            ]
-          },
-          options: {
-            responsive: true,
-            scales: {
-              y: {
-                beginAtZero: true,
-                title: {
-                  display: true,
-                  text: 'Quantidade de Livros'
-                }
-              },
-              x: {
-                title: {
-                  display: true,
-                  text: 'Mês'
-                }
-              }
-            },
-            onClick: (event, elements) => {
-              const capaLivroContainer = document.getElementById("capaLivroContainer");
-              if (elements.length) {
-                const elementIndex = elements[0].index; // Índice do mês
+        // Toggle Theme
+        themeToggle.addEventListener('click', () => {
+          const currentTheme = body.getAttribute('data-theme');
+          const isDark = currentTheme === 'dark';
+          body.setAttribute('data-theme', isDark ? 'light' : 'dark');
 
-                // Alterna a exibição das capas
-                if (mesSelecionado === elementIndex) {
-                  capaLivroContainer.style.display = "none";
-                  mesSelecionado = null; // Deseleciona o mês
-                } else {
-                  mesSelecionado = elementIndex; // Atualiza para o mês selecionado
-                  capaLivroContainer.innerHTML = ''; // Limpa o conteúdo anterior
-                  
-                  // Combina todas as capas (Físico e eBook) para o mês
-                  const capasDoMes = [...capasFisico[elementIndex], ...capasEbook[elementIndex]];
+          const icon = themeToggle.querySelector('ion-icon');
+          icon.setAttribute('name', isDark ? 'moon-outline' : 'sunny-outline');
+          themeToggle.querySelector('span').textContent = isDark ? 'Dark Mode' : 'Light Mode';
+        });
+      });
+  </script>
 
-                  if (capasDoMes.length > 0) {
-                    capasDoMes.forEach(url => {
-                      const img = document.createElement('img');
-                      img.src = url;
-                      img.alt = 'Capa do Livro';
-                      capaLivroContainer.appendChild(img);
-                    });
-                    capaLivroContainer.style.display = "flex";
-                  } else {
-                    capaLivroContainer.style.display = "none";
+  <!-- Script para carregar dados do Google Sheets e gerar o gráfico -->
+  <script>
+    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc"; // Seu Spreadsheet ID
+    const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs"; // Sua chave de API
+    const sheetName = "Biblioteca_Pessoal"; // Nome da aba na planilha
+
+    const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
+
+    let mesSelecionado = null; // Variável para armazenar o índice do mês selecionado
+
+    function carregarDadosEExibirGrafico() {
+      fetch(googleSheetsApiUrl)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Erro ao carregar dados da API do Google Sheets");
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log("Dados carregados da planilha:", data); // Verifica os dados carregados
+          const rows = data.values;
+          const meses = [
+            'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+            'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+          ];
+          const livrosFisicosPorMes = Array(12).fill(0); // Contadores para livros Físicos
+          const livrosEbooksPorMes = Array(12).fill(0); // Contadores para eBooks
+          const capasFisico = Array(12).fill().map(() => []); // Capas para livros Físicos
+          const capasEbook = Array(12).fill().map(() => []); // Capas para eBooks
+
+          // Identifica o índice das colunas
+          const headerRow = rows[0];
+          const dateLidoIndex = headerRow.indexOf("Date Lido");
+          const formatoIndex = headerRow.indexOf("Formato");
+          const imageFileIndex = headerRow.indexOf("ImageFile");
+
+          // Processa os dados da planilha
+          rows.slice(1).forEach(row => {
+            const date = row[dateLidoIndex];
+            const formato = row[formatoIndex];
+            const imageFile = row[imageFileIndex];
+            if (date) {
+              const [day, month, year] = date.split("/").map(Number);
+
+              if (year === 2024 && month >= 1 && month <= 12) {
+                if (formato === "Físico") {
+                  livrosFisicosPorMes[month - 1]++;
+                  if (imageFile) {
+                    const imageUrl = `https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${imageFile}`;
+                    capasFisico[month - 1].push(imageUrl);
+                  }
+                } else if (formato === "eBook") {
+                  livrosEbooksPorMes[month - 1]++;
+                  if (imageFile) {
+                    const imageUrl = `https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${imageFile}`;
+                    capasEbook[month - 1].push(imageUrl);
                   }
                 }
               }
             }
-          }
+          });
+
+          // Inicializa o gráfico com os dados carregados
+          const ctx = document.getElementById('livrosLidosChart').getContext('2d');
+          const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: meses,
+              datasets: [
+                {
+                  label: 'Físico',
+                  data: livrosFisicosPorMes,
+                  backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                  borderColor: 'rgba(54, 162, 235, 1)',
+                  borderWidth: 1
+                },
+                {
+                  label: 'eBook',
+                  data: livrosEbooksPorMes,
+                  backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                  borderColor: 'rgba(255, 99, 132, 1)',
+                  borderWidth: 1
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  title: {
+                    display: true,
+                    text: 'Quantidade de Livros'
+                  }
+                },
+                x: {
+                  title: {
+                    display: true,
+                    text: 'Mês'
+                  }
+                }
+              },
+              onClick: (event, elements) => {
+                const capaLivroContainer = document.getElementById("capaLivroContainer");
+                if (elements.length) {
+                  const elementIndex = elements[0].index; // Índice do mês
+
+                  // Alterna a exibição das capas
+                  if (mesSelecionado === elementIndex) {
+                    capaLivroContainer.style.display = "none";
+                    mesSelecionado = null; // Deseleciona o mês
+                  } else {
+                    mesSelecionado = elementIndex; // Atualiza para o mês selecionado
+                    capaLivroContainer.innerHTML = ''; // Limpa o conteúdo anterior
+
+                    const capasDoMes = [...capasFisico[elementIndex], ...capasEbook[elementIndex]];
+
+                    console.log("Capas do mês selecionado:", capasDoMes); // Debug para verificar capas
+
+                    if (capasDoMes.length > 0) {
+                      capasDoMes.forEach(url => {
+                        const img = document.createElement('img');
+                        img.src = url;
+                        img.alt = 'Capa do Livro';
+                        capaLivroContainer.appendChild(img);
+                      });
+                      capaLivroContainer.style.display = "flex";
+                    } else {
+                      capaLivroContainer.style.display = "none";
+                    }
+                  }
+                }
+              }
+            }
+          });
+
+        })
+        .catch(error => {
+          console.error("Erro ao carregar dados da API do Google Sheets:", error);
         });
+    }
 
-      })
-      .catch(error => {
-        console.error("Erro ao carregar dados da API do Google Sheets:", error);
-      });
-  }
+    // Carrega os dados e exibe o gráfico ao carregar a página
+    carregarDadosEExibirGrafico();
+  </script>
 
-  // Carrega os dados e exibe o gráfico ao carregar a página
-  carregarDadosEExibirGrafico();
-</script>
+</body>
+</html>
