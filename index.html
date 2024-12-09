@@ -60,6 +60,21 @@
       margin: 0 auto;
       display: block;
     }
+
+    .stats {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .stats h3, .stats p {
+      text-align: center;
+      margin: 10px 0;
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
@@ -72,6 +87,9 @@
     <img src="https://media.giphy.com/media/xT5LMBabX6EUj6L6iI/giphy.gif" alt="Estudo" title="Estudo">
   </div>
 
+  <!-- Menu será carregado dinamicamente -->
+  <div id="menu-container"></div>
+
   <!-- Conteúdo Principal -->
   <div class="container">
     <h2>Quantidade de Livros Lidos por Mês em 2024</h2>
@@ -83,18 +101,6 @@
       <p id="totalLivros">Total de Livros Lidos: 0</p>
       <p id="livrosFisicos">Livros Físicos: 0</p>
       <p id="livrosEbooks">Livros eBooks: 0</p>
-    </div>
-
-    <!-- Livros em Andamento -->
-    <div class="current-books">
-      <h3>Livros em Andamento</h3>
-      <div id="currentBooksContainer"></div>
-    </div>
-
-    <!-- Gamificação -->
-    <div class="gamification">
-      <h3>Conquistas</h3>
-      <div id="achievements"></div>
     </div>
   </div>
 
@@ -109,6 +115,13 @@
       })
       .then(data => {
         document.getElementById("menu-container").innerHTML = data;
+
+        // Ativação do menu interativo
+        const sidebar = document.querySelector('.sidebar');
+        const toggleBtn = document.getElementById('toggle-btn');
+        toggleBtn?.addEventListener('click', () => {
+          sidebar?.classList.toggle('active');
+        });
       })
       .catch(error => {
         console.error("Erro ao carregar o menu:", error);
@@ -133,6 +146,7 @@
           return response.json();
         })
         .then(data => {
+          console.log("Dados carregados da API:", data); // Debug dos dados
           const rows = data.values.slice(1); // Exclui a linha de cabeçalho
           const meses = [
             'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
@@ -146,7 +160,6 @@
             title: row[1],
             author: row[2],
             formato: row[3],
-            progresso: row[4] ? Number(row[4]) : 0, // Progresso de leitura
             month: row[0] ? Number(row[0].split("/")[1]) - 1 : null
           }));
 
@@ -195,7 +208,7 @@
             }
           });
         })
-        .catch(error => console.error("Erro ao carregar dados:", error));
+        .catch(error => console.error("Erro ao carregar os dados:", error));
     }
 
     carregarDadosEExibirGrafico();
