@@ -27,47 +27,6 @@
       margin-left: 60px; /* Espaço para o menu lateral */
     }
 
-    .hero {
-      background: linear-gradient(120deg, #00297c, #4caf50);
-      color: white;
-      text-align: center;
-      padding: 20px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-    }
-
-    .hero h1 {
-      margin: 0;
-      font-size: 28px;
-    }
-
-    .hero p {
-      margin: 10px 0;
-      font-size: 16px;
-    }
-
-    .progress-meta {
-      width: 100%;
-      max-width: 400px;
-      margin: 0 auto;
-      background: #ffffff;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .progress-meta-bar {
-      height: 30px;
-      background: #4caf50;
-      width: 0%;
-      text-align: center;
-      color: white;
-      line-height: 30px;
-      font-size: 14px;
-      transition: width 0.5s ease;
-    }
-
     h2 {
       text-align: center;
       color: #00297c;
@@ -78,6 +37,27 @@
       max-width: 600px;
       margin: 0 auto;
       display: block;
+    }
+
+    #capaLivroContainer {
+      display: none;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    #capaLivroContainer img {
+      width: 100px;
+      height: auto;
+      border-radius: 8px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    #capaLivroContainer img:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
     .livros-lendo {
@@ -113,6 +93,28 @@
       color: #777;
       margin-bottom: 10px;
     }
+
+    .progress-container {
+      width: 90%;
+      margin: 10px auto;
+      background-color: #f1f1f1;
+      border-radius: 8px;
+      overflow: hidden;
+      height: 10px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background-color: #4caf50;
+      text-align: center;
+      transition: width 0.4s ease;
+    }
+
+    .progress-text {
+      font-size: 12px;
+      margin-top: 5px;
+      color: #555;
+    }
   </style>
 </head>
 <body>
@@ -122,23 +124,10 @@
 
   <!-- Conteúdo Principal -->
   <div class="container">
-    <!-- Seção Hero -->
-    <div class="hero">
-      <h1>Bem-vindo(a) à sua Biblioteca Pessoal!</h1>
-      <p>Acompanhe seu progresso de leitura e alcance suas metas!</p>
-    </div>
-
-    <!-- Meta de Leitura -->
-    <h2>Meta de Leitura Anual</h2>
-    <div class="progress-meta">
-      <div class="progress-meta-bar" id="metaBar">0%</div>
-    </div>
-
-    <!-- Gráfico de Livros Lidos -->
     <h2>Quantidade de Livros Lidos por Mês em 2024</h2>
     <canvas id="livrosLidosChart"></canvas>
+    <div id="capaLivroContainer"></div>
 
-    <!-- Livros em Leitura -->
     <h2>Livros que Você Está Lendo</h2>
     <div class="livros-lendo" id="livrosLendoContainer"></div>
   </div>
@@ -172,14 +161,52 @@
     const sheetName = "Biblioteca_Pessoal"; // Nome da aba na planilha
     const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
 
-    const metaAnual = 50; // Meta de leitura em livros
-    let livrosLidos = 0;
+    function carregarLivrosLendo() {
+      fetch(googleSheetsApiUrl)
+        .then(response => response.json())
+        .then(data => {
+          const rows = data.values;
+          const headers = rows[0];
+          const livrosLendoContainer = document.getElementById("livrosLendoContainer");
 
-    function atualizarMetaProgresso() {
-      const progresso = Math.min((livrosLidos / metaAnual) * 100, 100).toFixed(1); // Calcula progresso em %
-      const metaBar = document.getElementById("metaBar");
-      metaBar.style.width = `${progresso}%`;
-      metaBar.textContent = `${progresso}% (${livrosLidos} de ${metaAnual} livros)`;
+          // Índices das colunas
+          const titleIndex = headers.indexOf("Title");
+          const authorIndex = headers.indexOf("Author");
+          const statusIndex = headers.indexOf("Status"); // Coluna de status
+          const imageFileIndex = headers.indexOf("ImageFile");
+          const paginaAtualIndex = headers.indexOf("Página Atual"); // Coluna da página atual
+          const paginaTotalIndex = headers.indexOf("Página Total"); // Coluna da página total
+
+          // Filtrar livros com status "lendo"
+          const livrosLendo = rows.slice(1).filter(row => row[statusIndex] && row[statusIndex].toLowerCase() === "lendo");
+
+          livrosLendo.forEach(livro => {
+            const titulo = livro[titleIndex];
+            const autor = livro[authorIndex];
+            const capa = livro[imageFileIndex]
+              ? `https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${livro[imageFileIndex]}`
+              : "https://via.placeholder.com/150";
+            const paginaAtual = parseInt(livro[paginaAtualIndex]) || 0;
+            const paginaTotal = parseInt(livro[paginaTotalIndex]) || 1; // Evita divisão por zero
+            const progresso = Math.min((paginaAtual / paginaTotal) * 100, 100).toFixed(1); // Calcula progresso em %
+
+            const card = document.createElement("div");
+            card.classList.add("livro-card");
+
+            card.innerHTML = `
+              <img src="${capa}" alt="${titulo}">
+              <h4>${titulo}</h4>
+              <p>${autor}</p>
+              <div class="progress-container">
+                <div class="progress-bar" style="width: ${progresso}%"></div>
+              </div>
+              <p class="progress-text">${paginaAtual} de ${paginaTotal} páginas (${progresso}%)</p>
+            `;
+
+            livrosLendoContainer.appendChild(card);
+          });
+        })
+        .catch(error => console.error("Erro ao carregar livros sendo lidos:", error));
     }
 
     function carregarDadosEExibirGrafico() {
@@ -193,31 +220,40 @@
           ];
           const livrosFisicosPorMes = Array(12).fill(0);
           const livrosEbooksPorMes = Array(12).fill(0);
+          const capasFisico = Array(12).fill().map(() => []);
+          const capasEbook = Array(12).fill().map(() => []);
 
           const headers = rows[0];
           const dateLidoIndex = headers.indexOf("Date Lido");
           const formatoIndex = headers.indexOf("Formato");
+          const imageFileIndex = headers.indexOf("ImageFile");
 
           rows.slice(1).forEach(row => {
             const date = row[dateLidoIndex];
             const formato = row[formatoIndex];
+            const imageFile = row[imageFileIndex];
             if (date) {
               const [day, month, year] = date.split("/").map(Number);
 
               if (year === 2024 && month >= 1 && month <= 12) {
-                if (formato === "Físico") livrosFisicosPorMes[month - 1]++;
-                if (formato === "eBook") livrosEbooksPorMes[month - 1]++;
-                livrosLidos++; // Incrementa a contagem de livros lidos
+                if (formato === "Físico") {
+                  livrosFisicosPorMes[month - 1]++;
+                  if (imageFile) {
+                    capasFisico[month - 1].push(imageFile);
+                  }
+                }
+                if (formato === "eBook") {
+                  livrosEbooksPorMes[month - 1]++;
+                  if (imageFile) {
+                    capasEbook[month - 1].push(imageFile);
+                  }
+                }
               }
             }
           });
 
-          // Atualiza a meta de progresso
-          atualizarMetaProgresso();
-
-          // Renderiza o gráfico
           const ctx = document.getElementById('livrosLidosChart').getContext('2d');
-          new Chart(ctx, {
+          const chart = new Chart(ctx, {
             type: 'bar',
             data: {
               labels: meses,
@@ -239,13 +275,36 @@
               ]
             },
             options: {
-              responsive: true
+              responsive: true,
+              onClick: (event, elements) => {
+                if (elements.length) {
+                  const datasetIndex = elements[0].datasetIndex; // 0 = Físico, 1 = eBook
+                  const elementIndex = elements[0].index; // Índice do mês
+                  const capas = datasetIndex === 0 ? capasFisico[elementIndex] : capasEbook[elementIndex];
+                  const capaLivroContainer = document.getElementById("capaLivroContainer");
+
+                  capaLivroContainer.innerHTML = '';
+
+                  if (capas.length > 0) {
+                    capas.forEach(url => {
+                      const img = document.createElement('img');
+                      img.src = `https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${url}`;
+                      img.alt = "Capa do Livro";
+                      capaLivroContainer.appendChild(img);
+                    });
+                    capaLivroContainer.style.display = "flex";
+                  } else {
+                    capaLivroContainer.style.display = "none";
+                  }
+                }
+              }
             }
           });
         })
         .catch(error => console.error("Erro ao carregar dados do gráfico:", error));
     }
 
+    carregarLivrosLendo();
     carregarDadosEExibirGrafico();
   </script>
 
