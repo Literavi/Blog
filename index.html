@@ -79,8 +79,8 @@
       transition: width 0.5s ease;
     }
 
-    /* Resumo de Estatísticas */
-    .stats {
+    /* Livros em Andamento */
+    .current-reading {
       max-width: 600px;
       margin: 20px auto;
       padding: 20px;
@@ -89,47 +89,87 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    .stats h3 {
-      margin-bottom: 10px;
-      font-size: 18px;
+    .current-reading h3 {
+      text-align: center;
       color: #444;
+      margin-bottom: 15px;
     }
 
-    .stats p {
-      margin: 5px 0;
+    .current-reading .book-progress {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .current-reading img {
+      width: 50px;
+      height: auto;
+      border-radius: 5px;
+      margin-right: 10px;
+    }
+
+    .current-reading .progress-info {
+      flex: 1;
+    }
+
+    .current-reading .progress-info p {
+      margin: 2px 0;
       font-size: 14px;
       color: #666;
     }
 
-    /* Busca Rápida */
-    .quick-search {
+    .current-reading .progress-bar {
+      height: 10px;
+      width: 100%;
+      background-color: #ddd;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-top: 5px;
+    }
+
+    .current-reading .progress-bar div {
+      height: 10px;
+      background-color: #00297c;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* Gamificação */
+    .gamification {
       max-width: 600px;
       margin: 20px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .gamification h3 {
       text-align: center;
+      color: #444;
+      margin-bottom: 15px;
     }
 
-    .quick-search input {
-      width: 80%;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      font-size: 16px;
+    .achievement {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
     }
 
-    .quick-search button {
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #00297c;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
+    .achievement img {
+      width: 40px;
+      height: 40px;
+      margin-right: 10px;
     }
 
-    .quick-search button:hover {
-      background-color: #0044cc;
+    .achievement p {
+      margin: 0;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .achievement p strong {
+      color: #00297c;
     }
   </style>
 </head>
@@ -144,28 +184,16 @@
     <canvas id="livrosLidosChart"></canvas>
     <div id="capaLivroContainer"></div>
 
-    <!-- Resumo de Estatísticas -->
-    <div class="stats">
-      <h3>Resumo de Estatísticas</h3>
-      <p id="totalLivros">Total de Livros Lidos: 0</p>
-      <p id="livrosFisicos">Livros Físicos: 0</p>
-      <p id="livrosEbooks">Livros eBooks: 0</p>
+    <!-- Livros em Andamento -->
+    <div class="current-reading">
+      <h3>Livros em Andamento</h3>
+      <div id="currentReadingContainer"></div>
     </div>
 
-    <!-- Progresso de Leitura -->
-    <div class="progress-container">
-      <h4>Progresso de Leitura</h4>
-      <div class="progress-bar">
-        <div id="progress"></div>
-      </div>
-    </div>
-
-    <!-- Busca Rápida -->
-    <div class="quick-search">
-      <h3>Busca Rápida</h3>
-      <input type="text" id="quickSearchInput" placeholder="Digite o título ou autor do livro">
-      <button onclick="buscarLivro()">Buscar</button>
-      <div id="quickSearchResults"></div>
+    <!-- Gamificação -->
+    <div class="gamification">
+      <h3>Conquistas</h3>
+      <div id="achievementsContainer"></div>
     </div>
   </div>
 
@@ -253,9 +281,9 @@
           });
 
           totalLivros = livrosFisicosPorMes.reduce((a, b) => a + b, 0) + livrosEbooksPorMes.reduce((a, b) => a + b, 0);
-          document.getElementById("totalLivros").textContent = `Total de Livros Lidos: ${totalLivros}`;
-          document.getElementById("livrosFisicos").textContent = `Livros Físicos: ${livrosFisicosPorMes.reduce((a, b) => a + b, 0)}`;
-          document.getElementById("livrosEbooks").textContent = `Livros eBooks: ${livrosEbooksPorMes.reduce((a, b) => a + b, 0)}`;
+
+          carregarLivrosEmAndamento();
+          carregarConquistas();
 
           const ctx = document.getElementById('livrosLidosChart').getContext('2d');
           new Chart(ctx, {
@@ -292,20 +320,68 @@
         .catch(error => console.error("Erro ao carregar dados:", error));
     }
 
-    function buscarLivro() {
-      const input = document.getElementById("quickSearchInput").value.toLowerCase();
-      const results = livros.filter(livro =>
-        livro.title.toLowerCase().includes(input) || livro.author.toLowerCase().includes(input)
-      );
+    function carregarLivrosEmAndamento() {
+      const livrosEmAndamento = livros.filter(livro => livro.formato === "Lendo");
+      const container = document.getElementById("currentReadingContainer");
 
-      const resultsContainer = document.getElementById("quickSearchResults");
-      resultsContainer.innerHTML = results.map(livro => `
-        <p><strong>${livro.title}</strong> por ${livro.author} (${livro.formato})</p>
-      `).join("");
-
-      if (!results.length) {
-        resultsContainer.innerHTML = "<p>Nenhum resultado encontrado.</p>";
+      if (livrosEmAndamento.length === 0) {
+        container.innerHTML = "<p>Nenhum livro em andamento no momento.</p>";
+        return;
       }
+
+      livrosEmAndamento.forEach(livro => {
+        const progresso = Math.floor(Math.random() * 100); // Simulação de progresso
+        const livroDiv = document.createElement("div");
+        livroDiv.classList.add("book-progress");
+        livroDiv.innerHTML = `
+          <img src="https://via.placeholder.com/50" alt="${livro.title}">
+          <div class="progress-info">
+            <p><strong>${livro.title}</strong></p>
+            <p>Progresso: ${progresso}%</p>
+            <div class="progress-bar">
+              <div style="width: ${progresso}%;"></div>
+            </div>
+          </div>
+        `;
+        container.appendChild(livroDiv);
+      });
+    }
+
+    function carregarConquistas() {
+      const achievements = [];
+      const livrosFisicos = livros.filter(livro => livro.formato === "Físico").length;
+      const livrosEbooks = livros.filter(livro => livro.formato === "eBook").length;
+
+      // Conquista: Primeiro Livro do Ano
+      if (totalLivros > 0) {
+        achievements.push("Leu o primeiro livro do ano! 🎉");
+      }
+
+      // Conquista: 5 Livros Físicos
+      if (livrosFisicos >= 5) {
+        achievements.push("Leu 5 livros físicos! 📚");
+      }
+
+      // Conquista: 10 Livros no Total
+      if (totalLivros >= 10) {
+        achievements.push("Alcançou 10 livros lidos! 🏆");
+      }
+
+      const container = document.getElementById("achievementsContainer");
+      if (achievements.length === 0) {
+        container.innerHTML = "<p>Sem conquistas no momento. Continue lendo!</p>";
+        return;
+      }
+
+      achievements.forEach(achievement => {
+        const achievementDiv = document.createElement("div");
+        achievementDiv.classList.add("achievement");
+        achievementDiv.innerHTML = `
+          <img src="https://via.placeholder.com/40" alt="Badge">
+          <p><strong>${achievement}</strong></p>
+        `;
+        container.appendChild(achievementDiv);
+      });
     }
 
     carregarDadosEExibirGrafico();
