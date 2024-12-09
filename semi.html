@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gráfico Semicircular</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f9f9f9;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    #graficoSemicircular {
+      max-width: 300px;
+    }
+
+    .meta-texto {
+      margin-top: -60px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <canvas id="graficoSemicircular"></canvas>
+    <div class="meta-texto" id="metaTexto"></div>
+  </div>
+
+  <script>
+    const livrosLidos = 5; // Quantidade de livros lidos
+    const metaAnual = 25; // Meta anual
+
+    // Atualizar o texto da meta
+    document.getElementById("metaTexto").textContent = `${livrosLidos}/${metaAnual}`;
+
+    // Criar gráfico semicircular
+    const ctx = document.getElementById("graficoSemicircular").getContext("2d");
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        datasets: [{
+          data: [livrosLidos, metaAnual - livrosLidos],
+          backgroundColor: ['#4caf50', '#f1f1f1'],
+          borderWidth: 0
+        }],
+      },
+      options: {
+        rotation: -90, // Rotação para começar no topo
+        circumference: 180, // Semicírculo
+        cutout: '70%', // Tamanho do "buraco" no meio
+        plugins: {
+          tooltip: { enabled: false }, // Desativar tooltip
+          legend: { display: false } // Desativar legenda
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
