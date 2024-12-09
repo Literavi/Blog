@@ -10,87 +10,179 @@
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
   <style>
-    .chart-section {
-      text-align: center;
-      padding: 20px;
+    /* Estilo para a página */
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
     }
 
-    .chart-section h2 {
-      font-size: 24px;
+    .container {
+      padding: 20px;
+      margin-left: 60px; /* Espaço para o menu lateral */
+    }
+
+    h2 {
+      text-align: center;
       color: #00297c;
       margin-bottom: 20px;
     }
 
-    canvas {
-      display: block;
+    /* Estilo para o gráfico */
+    #livrosLidosChart {
+      max-width: 600px;
       margin: 0 auto;
-      max-width: 80%;
+      display: block;
+    }
+
+    /* Estilo para as imagens de capa */
+    #capaLivroContainer {
+      display: none;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    #capaLivroContainer img {
+      width: 100px;
+      height: auto;
+      border-radius: 8px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    #capaLivroContainer img:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Tooltip personalizado */
+    #tooltip {
+      display: none;
+      position: absolute;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      z-index: 1000;
     }
   </style>
 </head>
 <body>
 
-  <!-- Menu dinâmico -->
+  <!-- Aqui o menu será carregado dinamicamente -->
   <div id="menu-container"></div>
 
-  <!-- Seção do Gráfico -->
-  <div class="chart-section">
+  <!-- Conteúdo Principal -->
+  <div class="container">
     <h2>Quantidade de Livros Lidos por Mês em 2024</h2>
-    <canvas id="livrosLidosChart" width="400" height="200"></canvas>
+    <canvas id="livrosLidosChart"></canvas>
+    <!-- Container para as imagens das capas -->
+    <div id="capaLivroContainer"></div>
+    <!-- Tooltip personalizado -->
+    <div id="tooltip"></div>
   </div>
 
   <!-- Script para carregar o menu -->
   <script>
+    // Carrega o menu a partir de menu.html
     fetch("menu.html")
       .then(response => response.text())
       .then(data => {
         document.getElementById("menu-container").innerHTML = data;
+
+        // Ativação do menu interativo após carregá-lo
         const sidebar = document.querySelector('.sidebar');
         const toggleBtn = document.getElementById('toggle-btn');
         const themeToggle = document.getElementById('theme-toggle');
         const body = document.body;
 
-        toggleBtn.addEventListener('click', () => sidebar.classList.toggle('active'));
+        // Toggle Sidebar
+        toggleBtn.addEventListener('click', () => {
+          sidebar.classList.toggle('active');
+        });
 
+        // Toggle Theme
         themeToggle.addEventListener('click', () => {
-          const isDark = body.getAttribute('data-theme') === 'dark';
+          const currentTheme = body.getAttribute('data-theme');
+          const isDark = currentTheme === 'dark';
           body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+
+          const icon = themeToggle.querySelector('ion-icon');
+          icon.setAttribute('name', isDark ? 'moon-outline' : 'sunny-outline');
+          themeToggle.querySelector('span').textContent = isDark ? 'Dark Mode' : 'Light Mode';
         });
       });
   </script>
 
-  <!-- Script para carregar o gráfico -->
+  <!-- Script para carregar dados do Google Sheets e gerar o gráfico -->
   <script>
-    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc";
-    const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs";
-    const sheetName = "Biblioteca_Pessoal";
+    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc"; // Seu Spreadsheet ID
+    const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs"; // Sua chave de API
+    const sheetName = "Biblioteca_Pessoal"; // Nome da aba na planilha
 
     const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
 
+    let mesSelecionado = null; // Variável de estado para armazenar o índice do mês selecionado
+
     function carregarDadosEExibirGrafico() {
       fetch(googleSheetsApiUrl)
-        .then(response => response.json())
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Erro ao carregar dados da API do Google Sheets");
+          }
+          return response.json();
+        })
         .then(data => {
           const rows = data.values;
           const meses = [
             'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
             'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
           ];
-          const livrosFisicosPorMes = Array(12).fill(0);
-          const livrosEbooksPorMes = Array(12).fill(0);
+          const livrosFisicosPorMes = Array(12).fill(0); // Contadores para livros Físicos
+          const livrosEbooksPorMes = Array(12).fill(0); // Contadores para eBooks
+          const capasFisico = Array(12).fill().map(() => []); // Capas para livros Físicos
+          const capasEbook = Array(12).fill().map(() => []); // Capas para eBooks
 
+          // Identifica o índice das colunas
+          const headerRow = rows[0];
+          const dateLidoIndex = headerRow.indexOf("Date Lido");
+          const formatoIndex = headerRow.indexOf("Formato");
+          const imageFileIndex = headerRow.indexOf("ImageFile");
+
+          // Processa os dados da planilha
           rows.slice(1).forEach(row => {
-            const [day, month, year] = row[0]?.split("/")?.map(Number) || [];
-            const formato = row[1];
+            const date = row[dateLidoIndex];
+            const formato = row[formatoIndex];
+            const imageFile = row[imageFileIndex];
+            if (date) {
+              const [day, month, year] = date.split("/").map(Number);
 
-            if (year === 2024 && month >= 1 && month <= 12) {
-              if (formato === "Físico") livrosFisicosPorMes[month - 1]++;
-              if (formato === "eBook") livrosEbooksPorMes[month - 1]++;
+              if (year === 2024 && month >= 1 && month <= 12) {
+                if (formato === "Físico") {
+                  livrosFisicosPorMes[month - 1]++;
+                  if (imageFile) {
+                    const imageUrl = `https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${imageFile}`;
+                    capasFisico[month - 1].push(imageUrl);
+                  }
+                } else if (formato === "eBook") {
+                  livrosEbooksPorMes[month - 1]++;
+                  if (imageFile) {
+                    const imageUrl = `https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${imageFile}`;
+                    capasEbook[month - 1].push(imageUrl);
+                  }
+                }
+              }
             }
           });
 
+          // Inicializa o gráfico com os dados carregados
           const ctx = document.getElementById('livrosLidosChart').getContext('2d');
-          new Chart(ctx, {
+          const chart = new Chart(ctx, {
             type: 'bar',
             data: {
               labels: meses,
@@ -100,12 +192,14 @@
                   data: livrosFisicosPorMes,
                   backgroundColor: 'rgba(54, 162, 235, 0.5)',
                   borderColor: 'rgba(54, 162, 235, 1)',
+                  borderWidth: 1
                 },
                 {
                   label: 'eBook',
                   data: livrosEbooksPorMes,
                   backgroundColor: 'rgba(255, 99, 132, 0.5)',
                   borderColor: 'rgba(255, 99, 132, 1)',
+                  borderWidth: 1
                 }
               ]
             },
@@ -114,16 +208,27 @@
               scales: {
                 y: {
                   beginAtZero: true,
-                  title: { display: true, text: 'Quantidade de Livros' }
+                  title: {
+                    display: true,
+                    text: 'Quantidade de Livros'
+                  }
                 },
-                x: { title: { display: true, text: 'Mês' } }
+                x: {
+                  title: {
+                    display: true,
+                    text: 'Mês'
+                  }
+                }
               }
             }
           });
         })
-        .catch(error => console.error("Erro ao carregar dados do gráfico:", error));
+        .catch(error => {
+          console.error("Erro ao carregar dados da API do Google Sheets:", error);
+        });
     }
 
+    // Carrega os dados e exibe o gráfico ao carregar a página
     carregarDadosEExibirGrafico();
   </script>
 
