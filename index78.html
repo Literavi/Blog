@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca Pessoal</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    header {
+      background-color: #4caf50;
+      color: white;
+      padding: 20px 10px;
+      text-align: center;
+      font-size: 1.5rem;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .meta-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 30px 0;
+    }
+
+    canvas {
+      max-width: 300px;
+    }
+
+    .meta-texto {
+      margin-top: -60px;
+      font-size: 22px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 40px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      text-align: center;
+    }
+
+    .card img {
+      width: 100px;
+      margin: 0 auto;
+    }
+
+    .card h3 {
+      margin: 10px 0;
+      color: #4caf50;
+    }
+
+    footer {
+      text-align: center;
+      padding: 10px;
+      margin-top: 20px;
+      background-color: #4caf50;
+      color: white;
+    }
+
+    .highlight {
+      color: #4caf50;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cabeçalho -->
+  <header>
+    📚 Bem-vindo à sua Biblioteca Pessoal!
+  </header>
+
+  <div class="container">
+
+    <!-- Meta de Leitura -->
+    <div class="meta-container">
+      <canvas id="graficoSemicircular"></canvas>
+      <div class="meta-texto" id="metaTexto"></div>
+    </div>
+
+    <!-- Destaques -->
+    <h2 style="text-align: center;">Destaques</h2>
+    <div class="grid">
+      <div class="card">
+        <img src="https://via.placeholder.com/100" alt="Troféu">
+        <h3>Troféus</h3>
+        <p>Você já desbloqueou <span class="highlight">2 troféus</span> este ano!</p>
+      </div>
+      <div class="card">
+        <img src="https://via.placeholder.com/100" alt="Livro">
+        <h3>Livros Favoritos</h3>
+        <p>Seu livro mais bem avaliado é <span class="highlight">"O Senhor dos Anéis"</span>.</p>
+      </div>
+      <div class="card">
+        <img src="https://via.placeholder.com/100" alt="Gêneros">
+        <h3>Gêneros Lidos</h3>
+        <p>Fantasia lidera com <span class="highlight">10 livros</span> lidos.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Rodapé -->
+  <footer>
+    © 2024 Biblioteca Pessoal. Todos os direitos reservados.
+  </footer>
+
+  <!-- Script para o Gráfico -->
+  <script>
+    const livrosLidos = 5; // Quantidade de livros lidos
+    const metaAnual = 25; // Meta anual
+
+    // Atualizar o texto da meta
+    document.getElementById("metaTexto").textContent = `${livrosLidos}/${metaAnual} livros lidos`;
+
+    // Criar gráfico semicircular
+    const ctx = document.getElementById("graficoSemicircular").getContext("2d");
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        datasets: [{
+          data: [livrosLidos, metaAnual - livrosLidos],
+          backgroundColor: ['#4caf50', '#f1f1f1'],
+          borderWidth: 0
+        }],
+      },
+      options: {
+        rotation: -90, // Rotação para começar no topo
+        circumference: 180, // Semicírculo
+        cutout: '70%', // Tamanho do "buraco" no meio
+        plugins: {
+          tooltip: { enabled: false }, // Desativar tooltip
+          legend: { display: false } // Desativar legenda
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
