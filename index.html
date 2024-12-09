@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca Pessoal - Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    #menu-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+    }
+
+    .container {
+      padding: 20px;
+      margin-left: 60px; /* Espaço para o menu lateral */
+    }
+
+    h2 {
+      text-align: center;
+      color: #00297c;
+      margin-bottom: 20px;
+    }
+
+    .livros-lendo {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .livro-card {
+      width: 200px;
+      background: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .livro-card img {
+      width: 100%;
+      height: auto;
+    }
+
+    .livro-card h4 {
+      margin: 10px 0;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .livro-card p {
+      font-size: 14px;
+      color: #777;
+      margin-bottom: 10px;
+    }
+
+    .progress-container {
+      width: 90%;
+      margin: 10px auto;
+      background-color: #f1f1f1;
+      border-radius: 8px;
+      overflow: hidden;
+      height: 10px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background-color: #4caf50;
+      text-align: center;
+      transition: width 0.4s ease;
+    }
+
+    .progress-text {
+      font-size: 12px;
+      margin-top: 5px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Aqui o menu será carregado dinamicamente -->
+  <div id="menu-container"></div>
+
+  <!-- Conteúdo Principal -->
+  <div class="container">
+    <h2>Livros que Você Está Lendo</h2>
+    <div class="livros-lendo" id="livrosLendoContainer"></div>
+  </div>
+
+  <!-- Script para carregar o menu -->
+  <script>
+    async function carregarMenu() {
+      try {
+        const response = await fetch("menu.html");
+        if (!response.ok) throw new Error(`Erro ao carregar o menu: ${response.status}`);
+        const menuHtml = await response.text();
+        document.getElementById("menu-container").innerHTML = menuHtml;
+
+        // Recarregar ícones da Ionicons
+        const script = document.createElement('script');
+        script.src = "https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js";
+        document.body.appendChild(script);
+      } catch (error) {
+        console.error("Erro ao carregar o menu:", error);
+        document.getElementById("menu-container").innerHTML = "<p>Erro ao carregar o menu.</p>";
+      }
+    }
+
+    carregarMenu();
+  </script>
+
+  <!-- Script para carregar dados do Google Sheets -->
+  <script>
+    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc"; // Seu Spreadsheet ID
+    const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs"; // Sua chave de API
+    const sheetName = "Biblioteca_Pessoal"; // Nome da aba na planilha
+    const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
+
+    function carregarLivrosLendo() {
+      fetch(googleSheetsApiUrl)
+        .then(response => response.json())
+        .then(data => {
+          const rows = data.values;
+          const headers = rows[0];
+          const livrosLendoContainer = document.getElementById("livrosLendoContainer");
+
+          // Índices das colunas
+          const titleIndex = headers.indexOf("Title");
+          const authorIndex = headers.indexOf("Author");
+          const statusIndex = headers.indexOf("Status"); // Coluna de status
+          const imageFileIndex = headers.indexOf("ImageFile");
+          const paginaAtualIndex = headers.indexOf("Página Atual"); // Coluna da página atual
+          const paginaTotalIndex = headers.indexOf("Página Total"); // Coluna da página total
+
+          // Filtrar livros com status "lendo"
+          const livrosLendo = rows.slice(1).filter(row => row[statusIndex] && row[statusIndex].toLowerCase() === "lendo");
+
+          livrosLendo.forEach(livro => {
+            const titulo = livro[titleIndex];
+            const autor = livro[authorIndex];
+            const capa = livro[imageFileIndex]
+              ? `https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${livro[imageFileIndex]}`
+              : "https://via.placeholder.com/150";
+            const paginaAtual = parseInt(livro[paginaAtualIndex]) || 0;
+            const paginaTotal = parseInt(livro[paginaTotalIndex]) || 1; // Evita divisão por zero
+            const progresso = Math.min((paginaAtual / paginaTotal) * 100, 100).toFixed(1); // Calcula progresso em %
+
+            const card = document.createElement("div");
+            card.classList.add("livro-card");
+
+            card.innerHTML = `
+              <img src="${capa}" alt="${titulo}">
+              <h4>${titulo}</h4>
+              <p>${autor}</p>
+              <div class="progress-container">
+                <div class="progress-bar" style="width: ${progresso}%"></div>
+              </div>
+              <p class="progress-text">${paginaAtual} de ${paginaTotal} páginas (${progresso}%)</p>
+            `;
+
+            livrosLendoContainer.appendChild(card);
+          });
+        })
+        .catch(error => console.error("Erro ao carregar livros sendo lidos:", error));
+    }
+
+    carregarLivrosLendo();
+  </script>
+
+</body>
+</html>
