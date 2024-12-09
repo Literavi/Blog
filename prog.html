@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Biblioteca Pessoal - Meta de Leitura</title>
+  <title>Biblioteca Pessoal - Troféus</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
@@ -32,34 +32,44 @@
       margin-bottom: 20px;
     }
 
-    /* Estilo do medidor circular */
-    .meta-leitura-circular {
-      position: relative;
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      background: conic-gradient(
-        #4caf50 calc(var(--progress) * 1%), 
-        #f1f1f1 0
-      );
+    .trofeus-container {
       display: flex;
+      flex-wrap: wrap;
       justify-content: center;
-      align-items: center;
-      margin: 0 auto;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      gap: 20px;
+      margin-top: 20px;
     }
 
-    .meta-leitura-texto {
-      position: absolute;
-      font-size: 20px;
-      font-weight: bold;
-      color: #00297c;
+    .trofeu {
+      width: 150px;
       text-align: center;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px;
+      background: #ffffff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    .meta-leitura-subtexto {
+    .trofeu img {
+      width: 100px;
+      height: auto;
+      margin: 10px 0;
+    }
+
+    .trofeu .titulo {
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .trofeu .descricao {
       font-size: 14px;
       color: #555;
+    }
+
+    .trofeu.inativo {
+      opacity: 0.5;
+      filter: grayscale(100%);
     }
   </style>
 </head>
@@ -70,12 +80,9 @@
 
   <!-- Conteúdo Principal -->
   <div class="container">
-    <h2>Meta de Leitura Anual</h2>
-    <div class="meta-leitura-circular" id="metaLeituraCircular" style="--progress: 0;">
-      <div class="meta-leitura-texto">
-        <span id="metaLeituraProgresso">0%</span>
-        <div class="meta-leitura-subtexto">0 de 25 livros</div>
-      </div>
+    <h2>Conquistas de Leitura</h2>
+    <div class="trofeus-container" id="trofeusContainer">
+      <!-- Troféus serão carregados aqui dinamicamente -->
     </div>
   </div>
 
@@ -101,14 +108,14 @@
     carregarMenu();
   </script>
 
-  <!-- Script para carregar a meta de leitura -->
+  <!-- Script para carregar troféus -->
   <script>
     const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc"; // Seu Spreadsheet ID
     const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs"; // Sua chave de API
     const sheetName = "Biblioteca_Pessoal"; // Nome da aba na planilha
     const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
 
-    function carregarMetaDeLeitura() {
+    function carregarTrofeus() {
       fetch(googleSheetsApiUrl)
         .then(response => response.json())
         .then(data => {
@@ -116,29 +123,37 @@
           const headers = rows[0];
           const statusIndex = headers.indexOf("Status");
 
-          // Filtrar livros com status "lido"
+          // Contar livros lidos
           const livrosLidos = rows.slice(1).filter(row => row[statusIndex] && row[statusIndex].toLowerCase() === "lido").length;
 
-          // Meta de leitura
-          const meta = 25;
-          const progresso = Math.min((livrosLidos / meta) * 100, 100).toFixed(1); // Em porcentagem
+          // Definir os troféus
+          const trofeus = [
+            { titulo: "Primeiro Livro!", descricao: "Leia seu primeiro livro do ano.", requisito: 1, imagem: "trofeu1.png" },
+            { titulo: "5 Livros!", descricao: "Leia 5 livros.", requisito: 5, imagem: "trofeu2.png" },
+            { titulo: "Meta Alcançada!", descricao: "Complete sua meta de 25 livros.", requisito: 25, imagem: "trofeu3.png" },
+          ];
 
-          // Atualizar a animação circular
-          const metaLeituraCircular = document.getElementById("metaLeituraCircular");
-          metaLeituraCircular.style.setProperty("--progress", progresso);
-
-          // Atualizar textos
-          const metaLeituraProgresso = document.getElementById("metaLeituraProgresso");
-          metaLeituraProgresso.textContent = `${progresso}%`;
-
-          const metaLeituraSubtexto = metaLeituraCircular.querySelector(".meta-leitura-subtexto");
-          metaLeituraSubtexto.textContent = `${livrosLidos} de ${meta} livros`;
+          // Exibir troféus
+          const container = document.getElementById("trofeusContainer");
+          trofeus.forEach(trofeu => {
+            const div = document.createElement("div");
+            div.classList.add("trofeu");
+            if (livrosLidos < trofeu.requisito) {
+              div.classList.add("inativo"); // Troféu inativo
+            }
+            div.innerHTML = `
+              <img src="https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${trofeu.imagem}" alt="${trofeu.titulo}">
+              <div class="titulo">${trofeu.titulo}</div>
+              <div class="descricao">${trofeu.descricao}</div>
+            `;
+            container.appendChild(div);
+          });
         })
-        .catch(error => console.error("Erro ao carregar meta de leitura:", error));
+        .catch(error => console.error("Erro ao carregar troféus:", error));
     }
 
-    // Carregar meta de leitura ao iniciar
-    carregarMetaDeLeitura();
+    // Carregar troféus ao iniciar
+    carregarTrofeus();
   </script>
 
 </body>
