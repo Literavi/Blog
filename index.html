@@ -7,6 +7,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
   <style>
     body {
       font-family: 'Roboto', sans-serif;
@@ -21,7 +23,7 @@
       margin-left: 60px; /* Espaço para o menu lateral */
     }
 
-    h2 {
+    h2, h3 {
       text-align: center;
       color: #00297c;
       margin-bottom: 20px;
@@ -76,6 +78,59 @@
       width: 0%; /* Valor inicial */
       transition: width 0.5s ease;
     }
+
+    /* Resumo de Estatísticas */
+    .stats {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .stats h3 {
+      margin-bottom: 10px;
+      font-size: 18px;
+      color: #444;
+    }
+
+    .stats p {
+      margin: 5px 0;
+      font-size: 14px;
+      color: #666;
+    }
+
+    /* Busca Rápida */
+    .quick-search {
+      max-width: 600px;
+      margin: 20px auto;
+      text-align: center;
+    }
+
+    .quick-search input {
+      width: 80%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    .quick-search button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #00297c;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .quick-search button:hover {
+      background-color: #0044cc;
+    }
   </style>
 </head>
 <body>
@@ -88,13 +143,70 @@
     <h2>Quantidade de Livros Lidos por Mês em 2024</h2>
     <canvas id="livrosLidosChart"></canvas>
     <div id="capaLivroContainer"></div>
+
+    <!-- Resumo de Estatísticas -->
+    <div class="stats">
+      <h3>Resumo de Estatísticas</h3>
+      <p id="totalLivros">Total de Livros Lidos: 0</p>
+      <p id="livrosFisicos">Livros Físicos: 0</p>
+      <p id="livrosEbooks">Livros eBooks: 0</p>
+    </div>
+
+    <!-- Progresso de Leitura -->
     <div class="progress-container">
       <h4>Progresso de Leitura</h4>
       <div class="progress-bar">
         <div id="progress"></div>
       </div>
     </div>
+
+    <!-- Busca Rápida -->
+    <div class="quick-search">
+      <h3>Busca Rápida</h3>
+      <input type="text" id="quickSearchInput" placeholder="Digite o título ou autor do livro">
+      <button onclick="buscarLivro()">Buscar</button>
+      <div id="quickSearchResults"></div>
+    </div>
   </div>
+
+  <!-- Script para carregar o menu -->
+  <script>
+    fetch("menu.html")
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Erro ao carregar o menu");
+        }
+        return response.text();
+      })
+      .then(data => {
+        document.getElementById("menu-container").innerHTML = data;
+
+        // Ativação do menu interativo após carregá-lo
+        const sidebar = document.querySelector('.sidebar');
+        const toggleBtn = document.getElementById('toggle-btn');
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        // Toggle Sidebar
+        toggleBtn?.addEventListener('click', () => {
+          sidebar?.classList.toggle('active');
+        });
+
+        // Toggle Theme
+        themeToggle?.addEventListener('click', () => {
+          const currentTheme = body.getAttribute('data-theme');
+          const isDark = currentTheme === 'dark';
+          body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+
+          const icon = themeToggle.querySelector('ion-icon');
+          icon.setAttribute('name', isDark ? 'moon-outline' : 'sunny-outline');
+          themeToggle.querySelector('span').textContent = isDark ? 'Dark Mode' : 'Light Mode';
+        });
+      })
+      .catch(error => {
+        console.error("Erro ao carregar o menu:", error);
+      });
+  </script>
 
   <!-- Script para carregar dados e gerar o gráfico -->
   <script>
@@ -102,8 +214,8 @@
     const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs"; // Sua chave de API
     const sheetName = "Biblioteca_Pessoal"; // Nome da aba na planilha
     const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
-
-    let mesSelecionado = null;
+    let livros = [];
+    let totalLivros = 0;
 
     function carregarDadosEExibirGrafico() {
       fetch(googleSheetsApiUrl)
@@ -121,44 +233,32 @@
           ];
           const livrosFisicosPorMes = Array(12).fill(0);
           const livrosEbooksPorMes = Array(12).fill(0);
-          const capasFisico = Array(12).fill().map(() => []);
-          const capasEbook = Array(12).fill().map(() => []);
 
-          // Identifica as colunas
-          const headerRow = rows[0];
-          const dateLidoIndex = headerRow.indexOf("Date Lido");
-          const formatoIndex = headerRow.indexOf("Formato");
-          const imageFileIndex = headerRow.indexOf("ImageFile");
+          livros = rows.slice(1).map(row => {
+            const [day, month, year] = row[0]?.split("/") || [];
+            return {
+              title: row[1],
+              author: row[2],
+              formato: row[3],
+              month: month - 1,
+              year: Number(year)
+            };
+          });
 
-          // Processa os dados da planilha
-          rows.slice(1).forEach(row => {
-            const date = row[dateLidoIndex];
-            const formato = row[formatoIndex];
-            const imageFile = row[imageFileIndex];
-            if (date) {
-              const [day, month, year] = date.split("/").map(Number);
-
-              if (year === 2024 && month >= 1 && month <= 12) {
-                if (formato === "Físico") {
-                  livrosFisicosPorMes[month - 1]++;
-                  if (imageFile) {
-                    const imageUrl = `https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${imageFile}`;
-                    capasFisico[month - 1].push(imageUrl);
-                  }
-                } else if (formato === "eBook") {
-                  livrosEbooksPorMes[month - 1]++;
-                  if (imageFile) {
-                    const imageUrl = `https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${imageFile}`;
-                    capasEbook[month - 1].push(imageUrl);
-                  }
-                }
-              }
+          livros.forEach(livro => {
+            if (livro.year === 2024 && livro.month >= 0) {
+              if (livro.formato === "Físico") livrosFisicosPorMes[livro.month]++;
+              if (livro.formato === "eBook") livrosEbooksPorMes[livro.month]++;
             }
           });
 
-          // Inicializa o gráfico
+          totalLivros = livrosFisicosPorMes.reduce((a, b) => a + b, 0) + livrosEbooksPorMes.reduce((a, b) => a + b, 0);
+          document.getElementById("totalLivros").textContent = `Total de Livros Lidos: ${totalLivros}`;
+          document.getElementById("livrosFisicos").textContent = `Livros Físicos: ${livrosFisicosPorMes.reduce((a, b) => a + b, 0)}`;
+          document.getElementById("livrosEbooks").textContent = `Livros eBooks: ${livrosEbooksPorMes.reduce((a, b) => a + b, 0)}`;
+
           const ctx = document.getElementById('livrosLidosChart').getContext('2d');
-          const chart = new Chart(ctx, {
+          new Chart(ctx, {
             type: 'bar',
             data: {
               labels: meses,
@@ -181,34 +281,9 @@
             },
             options: {
               responsive: true,
-              onClick: (event, elements) => {
-                const capaLivroContainer = document.getElementById("capaLivroContainer");
-                const progressBar = document.getElementById("progress");
-                if (elements.length) {
-                  const elementIndex = elements[0].index; // Mês clicado
-                  const datasetIndex = elements[0].datasetIndex; // 0 = Físico, 1 = eBook
-
-                  const capasDoMes = datasetIndex === 0 ? capasFisico[elementIndex] : capasEbook[elementIndex];
-                  const totalLivros = datasetIndex === 0 ? livrosFisicosPorMes[elementIndex] : livrosEbooksPorMes[elementIndex];
-                  const progressoTotal = livrosFisicosPorMes[elementIndex] + livrosEbooksPorMes[elementIndex];
-                  const progresso = ((totalLivros / progressoTotal) * 100).toFixed(1);
-
-                  capaLivroContainer.innerHTML = '';
-
-                  if (capasDoMes.length > 0) {
-                    capasDoMes.forEach(url => {
-                      const img = document.createElement('img');
-                      img.src = url;
-                      img.alt = 'Capa do Livro';
-                      capaLivroContainer.appendChild(img);
-                    });
-                    capaLivroContainer.style.display = "flex";
-                  } else {
-                    capaLivroContainer.style.display = "none";
-                  }
-
-                  progressBar.style.width = `${progresso}%`;
-                  progressBar.textContent = `${progresso}% Lido`;
+              scales: {
+                y: {
+                  beginAtZero: true
                 }
               }
             }
@@ -217,7 +292,22 @@
         .catch(error => console.error("Erro ao carregar dados:", error));
     }
 
-    // Carrega os dados e exibe o gráfico ao carregar a página
+    function buscarLivro() {
+      const input = document.getElementById("quickSearchInput").value.toLowerCase();
+      const results = livros.filter(livro =>
+        livro.title.toLowerCase().includes(input) || livro.author.toLowerCase().includes(input)
+      );
+
+      const resultsContainer = document.getElementById("quickSearchResults");
+      resultsContainer.innerHTML = results.map(livro => `
+        <p><strong>${livro.title}</strong> por ${livro.author} (${livro.formato})</p>
+      `).join("");
+
+      if (!results.length) {
+        resultsContainer.innerHTML = "<p>Nenhum resultado encontrado.</p>";
+      }
+    }
+
     carregarDadosEExibirGrafico();
   </script>
 
