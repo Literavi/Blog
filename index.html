@@ -7,8 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
   <style>
     body {
       font-family: 'Roboto', sans-serif;
@@ -23,7 +21,7 @@
       margin-left: 60px; /* Espaço para o menu lateral */
     }
 
-    h2, h3 {
+    h2 {
       text-align: center;
       color: #00297c;
       margin-bottom: 20px;
@@ -35,51 +33,6 @@
       display: block;
     }
 
-    #capaLivroContainer {
-      display: none;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    #capaLivroContainer img {
-      width: 100px;
-      height: auto;
-      border-radius: 8px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      cursor: pointer;
-    }
-
-    #capaLivroContainer img:hover {
-      transform: scale(1.1);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
-    .progress-container {
-      max-width: 600px;
-      margin: 20px auto;
-      text-align: center;
-    }
-
-    .progress-bar {
-      width: 100%;
-      background-color: #ddd;
-      border-radius: 5px;
-      overflow: hidden;
-    }
-
-    .progress-bar div {
-      height: 20px;
-      background-color: #00297c;
-      text-align: center;
-      line-height: 20px;
-      color: white;
-      width: 0%; /* Valor inicial */
-      transition: width 0.5s ease;
-    }
-
-    /* Resumo de Estatísticas */
     .stats {
       max-width: 600px;
       margin: 20px auto;
@@ -100,37 +53,6 @@
       font-size: 14px;
       color: #666;
     }
-
-    /* Busca Rápida */
-    .quick-search {
-      max-width: 600px;
-      margin: 20px auto;
-      text-align: center;
-    }
-
-    .quick-search input {
-      width: 80%;
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ddd;
-      border-radius: 5px;
-      font-size: 16px;
-    }
-
-    .quick-search button {
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #00297c;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .quick-search button:hover {
-      background-color: #0044cc;
-    }
   </style>
 </head>
 <body>
@@ -142,7 +64,6 @@
   <div class="container">
     <h2>Quantidade de Livros Lidos por Mês em 2024</h2>
     <canvas id="livrosLidosChart"></canvas>
-    <div id="capaLivroContainer"></div>
 
     <!-- Resumo de Estatísticas -->
     <div class="stats">
@@ -150,22 +71,6 @@
       <p id="totalLivros">Total de Livros Lidos: 0</p>
       <p id="livrosFisicos">Livros Físicos: 0</p>
       <p id="livrosEbooks">Livros eBooks: 0</p>
-    </div>
-
-    <!-- Progresso de Leitura -->
-    <div class="progress-container">
-      <h4>Progresso de Leitura</h4>
-      <div class="progress-bar">
-        <div id="progress"></div>
-      </div>
-    </div>
-
-    <!-- Busca Rápida -->
-    <div class="quick-search">
-      <h3>Busca Rápida</h3>
-      <input type="text" id="quickSearchInput" placeholder="Digite o título ou autor do livro">
-      <button onclick="buscarLivro()">Buscar</button>
-      <div id="quickSearchResults"></div>
     </div>
   </div>
 
@@ -214,7 +119,6 @@
     const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs"; // Sua chave de API
     const sheetName = "Biblioteca_Pessoal"; // Nome da aba na planilha
     const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
-    let livros = [];
     let totalLivros = 0;
 
     function carregarDadosEExibirGrafico() {
@@ -226,42 +130,54 @@
           return response.json();
         })
         .then(data => {
+          console.log("Dados carregados da planilha:", data); // Verifique os dados no console
           const rows = data.values;
           const meses = [
             'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
             'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
           ];
-          const livrosFisicosPorMes = Array(12).fill(0);
-          const livrosEbooksPorMes = Array(12).fill(0);
+          const livrosFisicosPorMes = Array(12).fill(0); // Contadores para livros físicos
+          const livrosEbooksPorMes = Array(12).fill(0); // Contadores para eBooks
 
-          livros = rows.slice(1).map(row => {
-            const [day, month, year] = row[0]?.split("/") || [];
-            return {
-              title: row[1],
-              author: row[2],
-              formato: row[3],
-              month: month - 1,
-              year: Number(year)
-            };
-          });
+          if (rows.length < 2) {
+            console.error("Nenhum dado encontrado na planilha.");
+            return;
+          }
 
-          livros.forEach(livro => {
-            if (livro.year === 2024 && livro.month >= 0) {
-              if (livro.formato === "Físico") livrosFisicosPorMes[livro.month]++;
-              if (livro.formato === "eBook") livrosEbooksPorMes[livro.month]++;
+          // Identifica os índices das colunas
+          const headerRow = rows[0];
+          const dateLidoIndex = headerRow.indexOf("Date Lido");
+          const formatoIndex = headerRow.indexOf("Formato");
+
+          // Processa os dados da planilha
+          rows.slice(1).forEach(row => {
+            const date = row[dateLidoIndex];
+            const formato = row[formatoIndex];
+
+            if (date) {
+              const [day, month, year] = date.split("/").map(Number);
+              if (year === 2024 && month >= 1 && month <= 12) {
+                if (formato === "Físico") {
+                  livrosFisicosPorMes[month - 1]++;
+                } else if (formato === "eBook") {
+                  livrosEbooksPorMes[month - 1]++;
+                }
+              }
             }
           });
 
+          // Atualiza os valores de estatísticas
           totalLivros = livrosFisicosPorMes.reduce((a, b) => a + b, 0) + livrosEbooksPorMes.reduce((a, b) => a + b, 0);
           document.getElementById("totalLivros").textContent = `Total de Livros Lidos: ${totalLivros}`;
           document.getElementById("livrosFisicos").textContent = `Livros Físicos: ${livrosFisicosPorMes.reduce((a, b) => a + b, 0)}`;
           document.getElementById("livrosEbooks").textContent = `Livros eBooks: ${livrosEbooksPorMes.reduce((a, b) => a + b, 0)}`;
 
+          // Inicializa o gráfico
           const ctx = document.getElementById('livrosLidosChart').getContext('2d');
           new Chart(ctx, {
             type: 'bar',
             data: {
-              labels: meses,
+              labels: meses, // Todos os meses
               datasets: [
                 {
                   label: 'Físico',
@@ -283,29 +199,25 @@
               responsive: true,
               scales: {
                 y: {
-                  beginAtZero: true
+                  beginAtZero: true,
+                  title: {
+                    display: true,
+                    text: 'Quantidade de Livros'
+                  }
+                },
+                x: {
+                  title: {
+                    display: true,
+                    text: 'Mês'
+                  }
                 }
               }
             }
           });
         })
-        .catch(error => console.error("Erro ao carregar dados:", error));
-    }
-
-    function buscarLivro() {
-      const input = document.getElementById("quickSearchInput").value.toLowerCase();
-      const results = livros.filter(livro =>
-        livro.title.toLowerCase().includes(input) || livro.author.toLowerCase().includes(input)
-      );
-
-      const resultsContainer = document.getElementById("quickSearchResults");
-      resultsContainer.innerHTML = results.map(livro => `
-        <p><strong>${livro.title}</strong> por ${livro.author} (${livro.formato})</p>
-      `).join("");
-
-      if (!results.length) {
-        resultsContainer.innerHTML = "<p>Nenhum resultado encontrado.</p>";
-      }
+        .catch(error => {
+          console.error("Erro ao carregar dados:", error);
+        });
     }
 
     carregarDadosEExibirGrafico();
