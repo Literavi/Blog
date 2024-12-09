@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Biblioteca Pessoal - Home</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
       font-family: 'Roboto', sans-serif;
@@ -34,24 +33,35 @@
     }
 
     .meta-leitura-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       margin: 20px auto;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .progress-container {
+      position: relative;
+      height: 25px;
+      background: #f1f1f1;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin: 20px auto;
+      width: 100%;
       max-width: 300px;
     }
 
-    #metaLeituraChart {
-      width: 200px;
-      height: 200px;
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #4caf50, #66bb6a);
+      transition: width 0.5s ease-in-out;
+      border-radius: 20px;
     }
 
-    .meta-leitura-texto {
-      font-size: 18px;
+    .meta-text {
+      font-size: 16px;
       font-weight: bold;
-      color: #00297c;
-      margin-top: -40px; /* Para posicionar no centro do gráfico */
-      text-align: center;
+      margin-top: 10px;
+      color: #333;
     }
   </style>
 </head>
@@ -64,8 +74,10 @@
   <div class="container">
     <h2>Meta de Leitura Anual</h2>
     <div class="meta-leitura-container">
-      <canvas id="metaLeituraChart"></canvas>
-      <p class="meta-leitura-texto" id="metaLeituraTexto">0 de 25 livros</p>
+      <div class="progress-container">
+        <div class="progress-bar" id="metaLeituraBarra" style="width: 0%;"></div>
+      </div>
+      <p class="meta-text" id="metaLeituraTexto">Carregando...</p>
     </div>
   </div>
 
@@ -98,8 +110,6 @@
     const sheetName = "Biblioteca_Pessoal"; // Nome da aba na planilha
     const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
 
-    let metaLeituraChart; // Variável global para armazenar a instância do gráfico
-
     function carregarMetaDeLeitura() {
       fetch(googleSheetsApiUrl)
         .then(response => response.json())
@@ -115,37 +125,13 @@
           const meta = 25;
           const progresso = Math.min((livrosLidos / meta) * 100, 100).toFixed(1); // Em porcentagem
 
+          // Atualizar barra de progresso
+          const metaLeituraBarra = document.getElementById("metaLeituraBarra");
+          metaLeituraBarra.style.width = `${progresso}%`;
+
           // Atualizar texto
           const metaLeituraTexto = document.getElementById("metaLeituraTexto");
-          metaLeituraTexto.textContent = `${livrosLidos} de ${meta} livros`;
-
-          const ctx = document.getElementById("metaLeituraChart").getContext("2d");
-
-          // Atualiza ou cria o gráfico de meta de leitura
-          if (metaLeituraChart) {
-            metaLeituraChart.data.datasets[0].data = [livrosLidos, meta - livrosLidos];
-            metaLeituraChart.update();
-          } else {
-            metaLeituraChart = new Chart(ctx, {
-              type: "doughnut",
-              data: {
-                datasets: [
-                  {
-                    data: [livrosLidos, meta - livrosLidos],
-                    backgroundColor: ["#4caf50", "#f1f1f1"],
-                    borderWidth: 0,
-                  },
-                ],
-              },
-              options: {
-                responsive: true,
-                cutout: "80%", // Faz o gráfico parecer um donut
-                plugins: {
-                  tooltip: { enabled: false }, // Desativa o tooltip
-                },
-              },
-            });
-          }
+          metaLeituraTexto.textContent = `${livrosLidos} de ${meta} livros (${progresso}%)`;
         })
         .catch(error => console.error("Erro ao carregar meta de leitura:", error));
     }
