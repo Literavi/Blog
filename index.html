@@ -14,39 +14,11 @@
       padding: 0;
       background-color: #f9f9f9;
       color: #333;
-      display: flex;
-    }
-
-    .gif-sidebar {
-      width: 80px;
-      background-color: #00297c;
-      color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 10px 0;
-      height: 100vh;
-      overflow-y: auto;
-      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    }
-
-    .gif-sidebar img {
-      width: 60px;
-      height: auto;
-      margin-bottom: 10px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: transform 0.3s ease;
-    }
-
-    .gif-sidebar img:hover {
-      transform: scale(1.1);
     }
 
     .container {
-      flex: 1;
       padding: 20px;
-      margin-left: 0;
+      margin-left: 60px; /* Espaço para o menu lateral */
     }
 
     h2, h3 {
@@ -61,6 +33,51 @@
       display: block;
     }
 
+    #capaLivroContainer {
+      display: none;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    #capaLivroContainer img {
+      width: 100px;
+      height: auto;
+      border-radius: 8px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    #capaLivroContainer img:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .progress-container {
+      max-width: 600px;
+      margin: 20px auto;
+      text-align: center;
+    }
+
+    .progress-bar {
+      width: 100%;
+      background-color: #ddd;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .progress-bar div {
+      height: 20px;
+      background-color: #00297c;
+      text-align: center;
+      line-height: 20px;
+      color: white;
+      width: 0%; /* Valor inicial */
+      transition: width 0.5s ease;
+    }
+
+    /* Resumo de Estatísticas */
     .stats {
       max-width: 600px;
       margin: 20px auto;
@@ -70,30 +87,60 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    .stats h3, .stats p {
+    .stats h3 {
+      margin-bottom: 10px;
+      font-size: 18px;
+      color: #444;
+    }
+
+    .stats p {
+      margin: 5px 0;
+      font-size: 14px;
+      color: #666;
+    }
+
+    /* Busca Rápida */
+    .quick-search {
+      max-width: 600px;
+      margin: 20px auto;
       text-align: center;
+    }
+
+    .quick-search input {
+      width: 80%;
+      padding: 10px;
       margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
       font-size: 16px;
+    }
+
+    .quick-search button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #00297c;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .quick-search button:hover {
+      background-color: #0044cc;
     }
   </style>
 </head>
 <body>
 
-  <!-- Barra lateral de GIFs -->
-  <div class="gif-sidebar">
-    <img src="https://media.giphy.com/media/3o6gE9Xdjyz7eNttDi/giphy.gif" alt="Leitura" title="Leitura">
-    <img src="https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif" alt="Livro animado" title="Livro animado">
-    <img src="https://media.giphy.com/media/l0HlBO7eyXzSZkJri/giphy.gif" alt="Motivação" title="Motivação">
-    <img src="https://media.giphy.com/media/xT5LMBabX6EUj6L6iI/giphy.gif" alt="Estudo" title="Estudo">
-  </div>
-
-  <!-- Menu será carregado dinamicamente -->
+  <!-- Aqui o menu será carregado dinamicamente -->
   <div id="menu-container"></div>
 
   <!-- Conteúdo Principal -->
   <div class="container">
     <h2>Quantidade de Livros Lidos por Mês em 2024</h2>
     <canvas id="livrosLidosChart"></canvas>
+    <div id="capaLivroContainer"></div>
 
     <!-- Resumo de Estatísticas -->
     <div class="stats">
@@ -102,31 +149,23 @@
       <p id="livrosFisicos">Livros Físicos: 0</p>
       <p id="livrosEbooks">Livros eBooks: 0</p>
     </div>
+
+    <!-- Progresso de Leitura -->
+    <div class="progress-container">
+      <h4>Progresso de Leitura</h4>
+      <div class="progress-bar">
+        <div id="progress"></div>
+      </div>
+    </div>
+
+    <!-- Busca Rápida -->
+    <div class="quick-search">
+      <h3>Busca Rápida</h3>
+      <input type="text" id="quickSearchInput" placeholder="Digite o título ou autor do livro">
+      <button onclick="buscarLivro()">Buscar</button>
+      <div id="quickSearchResults"></div>
+    </div>
   </div>
-
-  <!-- Script para carregar o menu -->
-  <script>
-    fetch("menu.html")
-      .then(response => {
-        if (!response.ok) {
-          throw new Error("Erro ao carregar o menu");
-        }
-        return response.text();
-      })
-      .then(data => {
-        document.getElementById("menu-container").innerHTML = data;
-
-        // Ativação do menu interativo
-        const sidebar = document.querySelector('.sidebar');
-        const toggleBtn = document.getElementById('toggle-btn');
-        toggleBtn?.addEventListener('click', () => {
-          sidebar?.classList.toggle('active');
-        });
-      })
-      .catch(error => {
-        console.error("Erro ao carregar o menu:", error);
-      });
-  </script>
 
   <!-- Script para carregar dados e gerar o gráfico -->
   <script>
@@ -146,32 +185,33 @@
           return response.json();
         })
         .then(data => {
-          console.log("Dados carregados da API:", data); // Debug dos dados
-          const rows = data.values.slice(1); // Exclui a linha de cabeçalho
+          const rows = data.values;
           const meses = [
             'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
             'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
           ];
-
           const livrosFisicosPorMes = Array(12).fill(0);
           const livrosEbooksPorMes = Array(12).fill(0);
 
-          livros = rows.map(row => ({
-            title: row[1],
-            author: row[2],
-            formato: row[3],
-            month: row[0] ? Number(row[0].split("/")[1]) - 1 : null
-          }));
+          livros = rows.slice(1).map(row => {
+            const [day, month, year] = row[0]?.split("/") || [];
+            return {
+              title: row[1],
+              author: row[2],
+              formato: row[3],
+              month: month - 1,
+              year: Number(year)
+            };
+          });
 
           livros.forEach(livro => {
-            if (livro.month !== null) {
+            if (livro.year === 2024 && livro.month >= 0) {
               if (livro.formato === "Físico") livrosFisicosPorMes[livro.month]++;
               if (livro.formato === "eBook") livrosEbooksPorMes[livro.month]++;
             }
           });
 
-          totalLivros = livros.length;
-
+          totalLivros = livrosFisicosPorMes.reduce((a, b) => a + b, 0) + livrosEbooksPorMes.reduce((a, b) => a + b, 0);
           document.getElementById("totalLivros").textContent = `Total de Livros Lidos: ${totalLivros}`;
           document.getElementById("livrosFisicos").textContent = `Livros Físicos: ${livrosFisicosPorMes.reduce((a, b) => a + b, 0)}`;
           document.getElementById("livrosEbooks").textContent = `Livros eBooks: ${livrosEbooksPorMes.reduce((a, b) => a + b, 0)}`;
@@ -208,7 +248,23 @@
             }
           });
         })
-        .catch(error => console.error("Erro ao carregar os dados:", error));
+        .catch(error => console.error("Erro ao carregar dados:", error));
+    }
+
+    function buscarLivro() {
+      const input = document.getElementById("quickSearchInput").value.toLowerCase();
+      const results = livros.filter(livro =>
+        livro.title.toLowerCase().includes(input) || livro.author.toLowerCase().includes(input)
+      );
+
+      const resultsContainer = document.getElementById("quickSearchResults");
+      resultsContainer.innerHTML = results.map(livro => `
+        <p><strong>${livro.title}</strong> por ${livro.author} (${livro.formato})</p>
+      `).join("");
+
+      if (!results.length) {
+        resultsContainer.innerHTML = "<p>Nenhum resultado encontrado.</p>";
+      }
     }
 
     carregarDadosEExibirGrafico();
