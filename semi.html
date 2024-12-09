@@ -41,13 +41,14 @@
   </div>
 
   <script>
-    const livrosLidos = 5; // Quantidade de livros lidos
+    // Dados do progresso
+    const livrosLidos = 5; // Livros lidos
     const metaAnual = 25; // Meta anual
 
-    // Atualizar o texto da meta
+    // Atualizar o texto no centro
     document.getElementById("metaTexto").textContent = `${livrosLidos}/${metaAnual}`;
 
-    // Criar gráfico semicircular
+    // Configuração do gráfico semicircular
     const ctx = document.getElementById("graficoSemicircular").getContext("2d");
     new Chart(ctx, {
       type: 'doughnut',
@@ -55,16 +56,17 @@
         datasets: [{
           data: [livrosLidos, metaAnual - livrosLidos],
           backgroundColor: ['#4caf50', '#f1f1f1'],
-          borderWidth: 0
+          borderWidth: 0 // Sem bordas no gráfico
         }],
       },
       options: {
-        rotation: -90, // Rotação para começar no topo
+        animation: false, // Desativa animações
+        rotation: -90, // Começa no topo
         circumference: 180, // Semicírculo
-        cutout: '70%', // Tamanho do "buraco" no meio
+        cutout: '70%', // Buraco central
         plugins: {
-          tooltip: { enabled: false }, // Desativar tooltip
-          legend: { display: false } // Desativar legenda
+          tooltip: { enabled: false }, // Sem tooltip
+          legend: { display: false } // Sem legenda
         }
       }
     });
