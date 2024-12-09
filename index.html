@@ -6,6 +6,8 @@
   <title>Biblioteca Pessoal - Home</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
   <style>
     body {
       font-family: 'Roboto', sans-serif;
@@ -31,6 +33,33 @@
       text-align: center;
       color: #00297c;
       margin-bottom: 20px;
+    }
+
+    #livrosLidosChart {
+      max-width: 600px;
+      margin: 0 auto;
+      display: block;
+    }
+
+    #capaLivroContainer {
+      display: none;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    #capaLivroContainer img {
+      width: 100px;
+      height: auto;
+      border-radius: 8px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+
+    #capaLivroContainer img:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
     .livros-lendo {
@@ -75,13 +104,147 @@
 
   <!-- Conteúdo Principal -->
   <div class="container">
+    <h2>Quantidade de Livros Lidos por Mês em 2024</h2>
+    <canvas id="livrosLidosChart"></canvas>
+    <div id="capaLivroContainer"></div>
+
     <h2>Livros que Você Está Lendo</h2>
     <div class="livros-lendo" id="livrosLendoContainer"></div>
   </div>
 
-  <!-- Script para carregar livros sendo lidos -->
+  <!-- Script para carregar o menu -->
   <script>
-    // Dados fictícios para simulação - substitua com dados reais da planilha
+    // Carrega o menu a partir de menu.html
+    fetch("menu.html")
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Erro ao carregar o menu: ${response.status}`);
+        }
+        return response.text();
+      })
+      .then(data => {
+        document.getElementById("menu-container").innerHTML = data;
+
+        // Ativação do menu interativo após carregá-lo
+        const sidebar = document.querySelector('.sidebar');
+        const toggleBtn = document.getElementById('toggle-btn');
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        // Toggle Sidebar
+        toggleBtn.addEventListener('click', () => {
+          sidebar.classList.toggle('active');
+        });
+
+        // Toggle Theme
+        themeToggle.addEventListener('click', () => {
+          const currentTheme = body.getAttribute('data-theme');
+          const isDark = currentTheme === 'dark';
+          body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+
+          const icon = themeToggle.querySelector('ion-icon');
+          icon.setAttribute('name', isDark ? 'moon-outline' : 'sunny-outline');
+          themeToggle.querySelector('span').textContent = isDark ? 'Dark Mode' : 'Light Mode';
+        });
+      })
+      .catch(error => {
+        console.error("Erro ao carregar o menu:", error);
+        document.getElementById("menu-container").innerHTML = "<p>Erro ao carregar o menu.</p>";
+      });
+  </script>
+
+  <!-- Script para carregar o gráfico -->
+  <script>
+    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc"; // Seu Spreadsheet ID
+    const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs"; // Sua chave de API
+    const sheetName = "Biblioteca_Pessoal"; // Nome da aba na planilha
+    const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
+
+    let mesSelecionado = null;
+
+    function carregarDadosEExibirGrafico() {
+      fetch(googleSheetsApiUrl)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error("Erro ao carregar dados da API do Google Sheets");
+          }
+          return response.json();
+        })
+        .then(data => {
+          const rows = data.values;
+          const meses = [
+            'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+            'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+          ];
+          const livrosFisicosPorMes = Array(12).fill(0);
+          const livrosEbooksPorMes = Array(12).fill(0);
+          const capasFisico = Array(12).fill().map(() => []);
+          const capasEbook = Array(12).fill().map(() => []);
+
+          const headerRow = rows[0];
+          const dateLidoIndex = headerRow.indexOf("Date Lido");
+          const formatoIndex = headerRow.indexOf("Formato");
+          const imageFileIndex = headerRow.indexOf("ImageFile");
+
+          rows.slice(1).forEach(row => {
+            const date = row[dateLidoIndex];
+            const formato = row[formatoIndex];
+            const imageFile = row[imageFileIndex];
+            if (date) {
+              const [day, month, year] = date.split("/").map(Number);
+              if (year === 2024 && month >= 1 && month <= 12) {
+                if (formato === "Físico") {
+                  livrosFisicosPorMes[month - 1]++;
+                  if (imageFile) {
+                    const imageUrl = `https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${imageFile}`;
+                    capasFisico[month - 1].push(imageUrl);
+                  }
+                } else if (formato === "eBook") {
+                  livrosEbooksPorMes[month - 1]++;
+                  if (imageFile) {
+                    const imageUrl = `https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${imageFile}`;
+                    capasEbook[month - 1].push(imageUrl);
+                  }
+                }
+              }
+            }
+          });
+
+          const ctx = document.getElementById('livrosLidosChart').getContext('2d');
+          new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: meses,
+              datasets: [
+                {
+                  label: 'Físico',
+                  data: livrosFisicosPorMes,
+                  backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                  borderColor: 'rgba(54, 162, 235, 1)',
+                  borderWidth: 1
+                },
+                {
+                  label: 'eBook',
+                  data: livrosEbooksPorMes,
+                  backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                  borderColor: 'rgba(255, 99, 132, 1)',
+                  borderWidth: 1
+                }
+              ]
+            },
+            options: {
+              responsive: true
+            }
+          });
+        })
+        .catch(error => console.error("Erro ao carregar dados:", error));
+    }
+
+    carregarDadosEExibirGrafico();
+  </script>
+
+  <!-- Script para exibir livros sendo lidos -->
+  <script>
     const livrosLendo = [
       {
         titulo: "O Caminho dos Reis",
@@ -94,12 +257,6 @@
         autor: "George Orwell",
         capa: "https://raw.githubusercontent.com/Literavi/Blog/main/imagens/1984.jpg",
         progresso: "Pág. 120 de 328"
-      },
-      {
-        titulo: "Dom Casmurro",
-        autor: "Machado de Assis",
-        capa: "https://raw.githubusercontent.com/Literavi/Blog/main/imagens/dom-casmurro.jpg",
-        progresso: "Pág. 55 de 180"
       }
     ];
 
@@ -119,7 +276,6 @@
       });
     }
 
-    // Chama a função para carregar os livros
     carregarLivrosLendo();
   </script>
 
