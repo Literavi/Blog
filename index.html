@@ -7,8 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
   <style>
     body {
       font-family: 'Roboto', sans-serif;
@@ -35,27 +33,6 @@
       display: block;
     }
 
-    #capaLivroContainer {
-      display: none;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 20px;
-    }
-
-    #capaLivroContainer img {
-      width: 100px;
-      height: auto;
-      border-radius: 8px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      cursor: pointer;
-    }
-
-    #capaLivroContainer img:hover {
-      transform: scale(1.1);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-
     .progress-container {
       max-width: 600px;
       margin: 20px auto;
@@ -79,8 +56,7 @@
       transition: width 0.5s ease;
     }
 
-    /* Resumo de Estatísticas */
-    .stats {
+    .stats, .current-books, .gamification {
       max-width: 600px;
       margin: 20px auto;
       padding: 20px;
@@ -89,19 +65,34 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    .stats h3 {
+    .stats h3, .current-books h3, .gamification h3 {
       margin-bottom: 10px;
       font-size: 18px;
       color: #444;
     }
 
-    .stats p {
+    .stats p, .current-books p, .gamification p {
       margin: 5px 0;
       font-size: 14px;
       color: #666;
     }
 
-    /* Busca Rápida */
+    .current-books .progress-bar {
+      margin-bottom: 10px;
+    }
+
+    .gamification .achievement {
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+    }
+
+    .gamification .achievement span {
+      margin-left: 10px;
+      font-size: 14px;
+      color: #444;
+    }
+
     .quick-search {
       max-width: 600px;
       margin: 20px auto;
@@ -142,7 +133,6 @@
   <div class="container">
     <h2>Quantidade de Livros Lidos por Mês em 2024</h2>
     <canvas id="livrosLidosChart"></canvas>
-    <div id="capaLivroContainer"></div>
 
     <!-- Resumo de Estatísticas -->
     <div class="stats">
@@ -152,12 +142,16 @@
       <p id="livrosEbooks">Livros eBooks: 0</p>
     </div>
 
-    <!-- Progresso de Leitura -->
-    <div class="progress-container">
-      <h4>Progresso de Leitura</h4>
-      <div class="progress-bar">
-        <div id="progress"></div>
-      </div>
+    <!-- Livros em Andamento -->
+    <div class="current-books">
+      <h3>Livros em Andamento</h3>
+      <div id="currentBooksContainer"></div>
+    </div>
+
+    <!-- Gamificação -->
+    <div class="gamification">
+      <h3>Conquistas</h3>
+      <div id="achievements"></div>
     </div>
 
     <!-- Busca Rápida -->
@@ -180,28 +174,6 @@
       })
       .then(data => {
         document.getElementById("menu-container").innerHTML = data;
-
-        // Ativação do menu interativo após carregá-lo
-        const sidebar = document.querySelector('.sidebar');
-        const toggleBtn = document.getElementById('toggle-btn');
-        const themeToggle = document.getElementById('theme-toggle');
-        const body = document.body;
-
-        // Toggle Sidebar
-        toggleBtn?.addEventListener('click', () => {
-          sidebar?.classList.toggle('active');
-        });
-
-        // Toggle Theme
-        themeToggle?.addEventListener('click', () => {
-          const currentTheme = body.getAttribute('data-theme');
-          const isDark = currentTheme === 'dark';
-          body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-
-          const icon = themeToggle.querySelector('ion-icon');
-          icon.setAttribute('name', isDark ? 'moon-outline' : 'sunny-outline');
-          themeToggle.querySelector('span').textContent = isDark ? 'Dark Mode' : 'Light Mode';
-        });
       })
       .catch(error => {
         console.error("Erro ao carregar o menu:", error);
@@ -226,33 +198,32 @@
           return response.json();
         })
         .then(data => {
-          const rows = data.values;
+          const rows = data.values.slice(1); // Exclui a linha de cabeçalho
           const meses = [
             'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
             'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
           ];
+
           const livrosFisicosPorMes = Array(12).fill(0);
           const livrosEbooksPorMes = Array(12).fill(0);
 
-          livros = rows.slice(1).map(row => {
-            const [day, month, year] = row[0]?.split("/") || [];
-            return {
-              title: row[1],
-              author: row[2],
-              formato: row[3],
-              month: month - 1,
-              year: Number(year)
-            };
-          });
+          livros = rows.map(row => ({
+            title: row[1],
+            author: row[2],
+            formato: row[3],
+            progresso: row[4] ? Number(row[4]) : 0, // Progresso de leitura
+            month: row[0] ? Number(row[0].split("/")[1]) - 1 : null
+          }));
 
           livros.forEach(livro => {
-            if (livro.year === 2024 && livro.month >= 0) {
+            if (livro.month !== null) {
               if (livro.formato === "Físico") livrosFisicosPorMes[livro.month]++;
               if (livro.formato === "eBook") livrosEbooksPorMes[livro.month]++;
             }
           });
 
-          totalLivros = livrosFisicosPorMes.reduce((a, b) => a + b, 0) + livrosEbooksPorMes.reduce((a, b) => a + b, 0);
+          totalLivros = livros.length;
+
           document.getElementById("totalLivros").textContent = `Total de Livros Lidos: ${totalLivros}`;
           document.getElementById("livrosFisicos").textContent = `Livros Físicos: ${livrosFisicosPorMes.reduce((a, b) => a + b, 0)}`;
           document.getElementById("livrosEbooks").textContent = `Livros eBooks: ${livrosEbooksPorMes.reduce((a, b) => a + b, 0)}`;
@@ -288,24 +259,58 @@
               }
             }
           });
+
+          exibirLivrosEmAndamento();
+          exibirGamificacao();
         })
         .catch(error => console.error("Erro ao carregar dados:", error));
     }
 
-    function buscarLivro() {
-      const input = document.getElementById("quickSearchInput").value.toLowerCase();
-      const results = livros.filter(livro =>
-        livro.title.toLowerCase().includes(input) || livro.author.toLowerCase().includes(input)
-      );
+    function exibirLivrosEmAndamento() {
+      const container = document.getElementById("currentBooksContainer");
+      container.innerHTML = "";
 
-      const resultsContainer = document.getElementById("quickSearchResults");
-      resultsContainer.innerHTML = results.map(livro => `
-        <p><strong>${livro.title}</strong> por ${livro.author} (${livro.formato})</p>
-      `).join("");
+      const livrosEmAndamento = livros.filter(livro => livro.progresso > 0 && livro.progresso < 100);
+      livrosEmAndamento.forEach(livro => {
+        const div = document.createElement("div");
+        div.classList.add("progress-bar");
 
-      if (!results.length) {
-        resultsContainer.innerHTML = "<p>Nenhum resultado encontrado.</p>";
-      }
+        div.innerHTML = `
+          <p><strong>${livro.title}</strong> por ${livro.author}</p>
+          <div class="progress-bar">
+            <div style="width: ${livro.progresso}%; background-color: #00297c; color: white;">
+              ${livro.progresso}%
+            </div>
+          </div>
+        `;
+
+        container.appendChild(div);
+      });
+    }
+
+    function exibirGamificacao() {
+      const achievements = [
+        { id: 1, title: "Primeiro Livro Lido!", condition: livros.length >= 1 },
+        { id: 2, title: "10 Livros Lidos!", condition: livros.length >= 10 },
+        { id: 3, title: "50 Livros Lidos!", condition: livros.length >= 50 }
+      ];
+
+      const container = document.getElementById("achievements");
+      container.innerHTML = "";
+
+      achievements.forEach(achievement => {
+        if (achievement.condition) {
+          const div = document.createElement("div");
+          div.classList.add("achievement");
+
+          div.innerHTML = `
+            <ion-icon name="trophy-outline"></ion-icon>
+            <span>${achievement.title}</span>
+          `;
+
+          container.appendChild(div);
+        }
+      });
     }
 
     carregarDadosEExibirGrafico();
