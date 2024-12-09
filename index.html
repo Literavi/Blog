@@ -7,6 +7,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
   <style>
     body {
       font-family: 'Roboto', sans-serif;
@@ -166,6 +168,45 @@
       <div id="quickSearchResults"></div>
     </div>
   </div>
+
+  <!-- Script para carregar o menu -->
+  <script>
+    fetch("menu.html")
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Erro ao carregar o menu");
+        }
+        return response.text();
+      })
+      .then(data => {
+        document.getElementById("menu-container").innerHTML = data;
+
+        // Ativação do menu interativo após carregá-lo
+        const sidebar = document.querySelector('.sidebar');
+        const toggleBtn = document.getElementById('toggle-btn');
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        // Toggle Sidebar
+        toggleBtn?.addEventListener('click', () => {
+          sidebar?.classList.toggle('active');
+        });
+
+        // Toggle Theme
+        themeToggle?.addEventListener('click', () => {
+          const currentTheme = body.getAttribute('data-theme');
+          const isDark = currentTheme === 'dark';
+          body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+
+          const icon = themeToggle.querySelector('ion-icon');
+          icon.setAttribute('name', isDark ? 'moon-outline' : 'sunny-outline');
+          themeToggle.querySelector('span').textContent = isDark ? 'Dark Mode' : 'Light Mode';
+        });
+      })
+      .catch(error => {
+        console.error("Erro ao carregar o menu:", error);
+      });
+  </script>
 
   <!-- Script para carregar dados e gerar o gráfico -->
   <script>
