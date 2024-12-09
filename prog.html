@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Biblioteca Pessoal - Troféus</title>
+  <title>Biblioteca Pessoal - Gráficos de Meta</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
       font-family: 'Roboto', sans-serif;
@@ -32,44 +33,21 @@
       margin-bottom: 20px;
     }
 
-    .trofeus-container {
+    .grafico-container {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 20px;
-      margin-top: 20px;
+      gap: 30px;
     }
 
-    .trofeu {
-      width: 150px;
+    .grafico-box {
+      width: 400px;
       text-align: center;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 10px;
-      background: #ffffff;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
-    .trofeu img {
-      width: 100px;
+    canvas {
+      max-width: 100%;
       height: auto;
-      margin: 10px 0;
-    }
-
-    .trofeu .titulo {
-      font-size: 16px;
-      font-weight: bold;
-      color: #333;
-    }
-
-    .trofeu .descricao {
-      font-size: 14px;
-      color: #555;
-    }
-
-    .trofeu.inativo {
-      opacity: 0.5;
-      filter: grayscale(100%);
     }
   </style>
 </head>
@@ -80,9 +58,36 @@
 
   <!-- Conteúdo Principal -->
   <div class="container">
-    <h2>Conquistas de Leitura</h2>
-    <div class="trofeus-container" id="trofeusContainer">
-      <!-- Troféus serão carregados aqui dinamicamente -->
+    <h2>Meta de Leitura Anual</h2>
+    <div class="grafico-container">
+      <div class="grafico-box">
+        <h3>Progresso Geral</h3>
+        <canvas id="graficoRosca"></canvas>
+      </div>
+      <div class="grafico-box">
+        <h3>Livros por Mês</h3>
+        <canvas id="graficoBarras"></canvas>
+      </div>
+      <div class="grafico-box">
+        <h3>Progresso Cumulativo</h3>
+        <canvas id="graficoLinha"></canvas>
+      </div>
+      <div class="grafico-box">
+        <h3>Livros por Formato</h3>
+        <canvas id="graficoPizza"></canvas>
+      </div>
+      <div class="grafico-box">
+        <h3>Gêneros Mais Lidos</h3>
+        <canvas id="graficoRadar"></canvas>
+      </div>
+      <div class="grafico-box">
+        <h3>Progresso Horizontal</h3>
+        <canvas id="graficoHorizontal"></canvas>
+      </div>
+      <div class="grafico-box">
+        <h3>Livros por Ano</h3>
+        <canvas id="graficoArea"></canvas>
+      </div>
     </div>
   </div>
 
@@ -108,52 +113,139 @@
     carregarMenu();
   </script>
 
-  <!-- Script para carregar troféus -->
+  <!-- Script para gráficos -->
   <script>
-    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc"; // Seu Spreadsheet ID
-    const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs"; // Sua chave de API
-    const sheetName = "Biblioteca_Pessoal"; // Nome da aba na planilha
-    const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
+    // Dados simulados para teste
+    const livrosLidos = 18; // Quantidade de livros lidos
+    const metaAnual = 25; // Meta anual
+    const livrosPorMes = [2, 1, 3, 5, 0, 4, 2, 1, 3, 6, 2, 3];
+    const formatos = { fisico: 20, ebook: 12 };
+    const generos = { Fantasia: 10, Romance: 5, Ficção: 7, Biografia: 2, Mistério: 4 };
 
-    function carregarTrofeus() {
-      fetch(googleSheetsApiUrl)
-        .then(response => response.json())
-        .then(data => {
-          const rows = data.values;
-          const headers = rows[0];
-          const statusIndex = headers.indexOf("Status");
+    // Gráfico de Rosca
+    const ctxRosca = document.getElementById("graficoRosca").getContext("2d");
+    new Chart(ctxRosca, {
+      type: 'doughnut',
+      data: {
+        datasets: [{
+          data: [livrosLidos, metaAnual - livrosLidos],
+          backgroundColor: ['#4caf50', '#f1f1f1']
+        }],
+        labels: ['Lidos', 'Restantes']
+      },
+      options: {
+        plugins: {
+          legend: { position: 'bottom' }
+        },
+        responsive: true,
+      }
+    });
 
-          // Contar livros lidos
-          const livrosLidos = rows.slice(1).filter(row => row[statusIndex] && row[statusIndex].toLowerCase() === "lido").length;
+    // Gráfico de Barras
+    const ctxBarras = document.getElementById("graficoBarras").getContext("2d");
+    new Chart(ctxBarras, {
+      type: 'bar',
+      data: {
+        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+        datasets: [{
+          label: 'Livros Lidos',
+          data: livrosPorMes,
+          backgroundColor: '#4caf50'
+        }]
+      },
+      options: {
+        scales: { y: { beginAtZero: true } }
+      }
+    });
 
-          // Definir os troféus
-          const trofeus = [
-            { titulo: "Primeiro Livro!", descricao: "Leia seu primeiro livro do ano.", requisito: 1, imagem: "trofeu1.png" },
-            { titulo: "5 Livros!", descricao: "Leia 5 livros.", requisito: 5, imagem: "trofeu2.png" },
-            { titulo: "Meta Alcançada!", descricao: "Complete sua meta de 25 livros.", requisito: 25, imagem: "trofeu3.png" },
-          ];
+    // Gráfico de Linha
+    const ctxLinha = document.getElementById("graficoLinha").getContext("2d");
+    new Chart(ctxLinha, {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+        datasets: [{
+          label: 'Progresso Cumulativo',
+          data: livrosPorMes.map((_, i) => livrosPorMes.slice(0, i + 1).reduce((a, b) => a + b, 0)),
+          borderColor: '#4caf50',
+          tension: 0.3,
+          fill: false
+        }]
+      },
+      options: {
+        scales: { y: { beginAtZero: true } }
+      }
+    });
 
-          // Exibir troféus
-          const container = document.getElementById("trofeusContainer");
-          trofeus.forEach(trofeu => {
-            const div = document.createElement("div");
-            div.classList.add("trofeu");
-            if (livrosLidos < trofeu.requisito) {
-              div.classList.add("inativo"); // Troféu inativo
-            }
-            div.innerHTML = `
-              <img src="https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${trofeu.imagem}" alt="${trofeu.titulo}">
-              <div class="titulo">${trofeu.titulo}</div>
-              <div class="descricao">${trofeu.descricao}</div>
-            `;
-            container.appendChild(div);
-          });
-        })
-        .catch(error => console.error("Erro ao carregar troféus:", error));
-    }
+    // Gráfico de Pizza
+    const ctxPizza = document.getElementById("graficoPizza").getContext("2d");
+    new Chart(ctxPizza, {
+      type: 'pie',
+      data: {
+        labels: ['Físico', 'eBook'],
+        datasets: [{
+          data: [formatos.fisico, formatos.ebook],
+          backgroundColor: ['#4caf50', '#ff5722']
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { position: 'bottom' } }
+      }
+    });
 
-    // Carregar troféus ao iniciar
-    carregarTrofeus();
+    // Gráfico de Radar
+    const ctxRadar = document.getElementById("graficoRadar").getContext("2d");
+    new Chart(ctxRadar, {
+      type: 'radar',
+      data: {
+        labels: Object.keys(generos),
+        datasets: [{
+          label: 'Livros Lidos',
+          data: Object.values(generos),
+          backgroundColor: 'rgba(76, 175, 80, 0.2)',
+          borderColor: '#4caf50',
+          borderWidth: 2
+        }]
+      },
+      options: { responsive: true }
+    });
+
+    // Gráfico Horizontal
+    const ctxHorizontal = document.getElementById("graficoHorizontal").getContext("2d");
+    new Chart(ctxHorizontal, {
+      type: 'bar',
+      data: {
+        labels: ['Meta Anual', 'Livros Lidos'],
+        datasets: [{
+          label: 'Progresso',
+          data: [metaAnual, livrosLidos],
+          backgroundColor: ['#f1f1f1', '#4caf50']
+        }]
+      },
+      options: {
+        indexAxis: 'y',
+        scales: { x: { beginAtZero: true } }
+      }
+    });
+
+    // Gráfico de Área
+    const ctxArea = document.getElementById("graficoArea").getContext("2d");
+    new Chart(ctxArea, {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+        datasets: [{
+          label: 'Livros Lidos',
+          data: livrosPorMes,
+          backgroundColor: 'rgba(76, 175, 80, 0.2)',
+          borderColor: '#4caf50',
+          tension: 0.3,
+          fill: true
+        }]
+      },
+      options: { scales: { y: { beginAtZero: true } } }
+    });
   </script>
 
 </body>
