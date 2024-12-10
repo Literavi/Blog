@@ -1,32 +1,39 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gráfico Semicircular</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
-      font-family: 'Roboto', sans-serif;
-      margin: 0;
-      padding: 0;
+      font-family: Arial, sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      background-color: #f9f9f9;
+      margin: 0;
+      background-color: #f4f4f4;
     }
-
-    .container {
-      text-align: center;
+    .chart-container {
+      position: relative;
+      width: 200px;
+      height: 100px;
     }
-
-    #graficoSemicircular {
-      max-width: 300px;
+    .chart {
+      width: 100%;
+      height: 100%;
+      border-radius: 100px 100px 0 0;
+      background: conic-gradient(
+        #4caf50 calc(var(--percentage) * 1%),
+        #ddd calc(var(--percentage) * 1%)
+      );
+      transform: rotate(-90deg);
     }
-
-    .meta-texto {
-      margin-top: -60px;
+    .label {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
       font-size: 20px;
       font-weight: bold;
       color: #333;
@@ -34,43 +41,22 @@
   </style>
 </head>
 <body>
-
-  <div class="container">
-    <canvas id="graficoSemicircular"></canvas>
-    <div class="meta-texto" id="metaTexto"></div>
+  <div class="chart-container">
+    <div class="chart" style="--percentage: 20;"></div>
+    <div class="label" id="chart-label">5/25</div>
   </div>
-
   <script>
-    // Dados do progresso
-    const livrosLidos = 5; // Livros lidos
-    const metaAnual = 25; // Meta anual
+    // Dados
+    const totalBooks = 25;
+    const readBooks = 5;
 
-    // Atualizar o texto no centro
-    document.getElementById("metaTexto").textContent = `${livrosLidos}/${metaAnual}`;
+    // Atualiza o gráfico
+    const percentage = (readBooks / totalBooks) * 100;
+    const chart = document.querySelector('.chart');
+    const label = document.getElementById('chart-label');
 
-    // Configuração do gráfico semicircular
-    const ctx = document.getElementById("graficoSemicircular").getContext("2d");
-    new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-        datasets: [{
-          data: [livrosLidos, metaAnual - livrosLidos],
-          backgroundColor: ['#4caf50', '#f1f1f1'],
-          borderWidth: 0 // Sem bordas no gráfico
-        }],
-      },
-      options: {
-        animation: false, // Desativa animações
-        rotation: -90, // Começa no topo
-        circumference: 180, // Semicírculo
-        cutout: '70%', // Buraco central
-        plugins: {
-          tooltip: { enabled: false }, // Sem tooltip
-          legend: { display: false } // Sem legenda
-        }
-      }
-    });
+    chart.style.setProperty('--percentage', percentage);
+    label.textContent = `${readBooks}/${totalBooks}`;
   </script>
-
 </body>
 </html>
