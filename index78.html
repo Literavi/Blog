@@ -6,27 +6,30 @@
   <title>Reading Progress</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Poppins', sans-serif;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       height: 100vh;
       margin: 0;
-      background-color: #f9f9f9;
+      background-color: #f4f4f9;
     }
     .chart-container {
       position: relative;
-      width: 200px;
-      height: 200px;
+      width: 240px;
+      height: 240px;
+      background: linear-gradient(145deg, #ffffff, #e6e6e6);
+      box-shadow: 20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;
+      border-radius: 50%;
     }
     .chart {
       width: 100%;
       height: 100%;
       border-radius: 50%;
       background: conic-gradient(
-        #4caf50 calc(var(--percentage) * 1%),
-        #ddd calc(var(--percentage) * 1%)
+        #6c63ff calc(var(--percentage) * 1%),
+        #d1d1d1 calc(var(--percentage) * 1%)
       );
       mask: radial-gradient(circle, transparent 50%, white 51%);
       -webkit-mask: radial-gradient(circle, transparent 50%, white 51%);
@@ -41,51 +44,73 @@
     }
     .chart-text .number {
       font-size: 36px;
-      font-weight: bold;
+      font-weight: 600;
       color: #333;
     }
     .chart-text .goal {
-      font-size: 14px;
-      color: #555;
+      font-size: 16px;
+      color: #777;
+      font-weight: 500;
     }
     .title {
       text-align: center;
-      font-size: 18px;
-      margin-bottom: 20px;
+      font-size: 22px;
+      font-weight: 600;
       color: #333;
+      margin-bottom: 20px;
     }
     .buttons {
-      margin-top: 20px;
+      margin-top: 30px;
       display: flex;
-      gap: 10px;
+      gap: 15px;
     }
     .buttons button {
-      padding: 10px 15px;
+      padding: 12px 20px;
       font-size: 16px;
+      font-weight: 500;
       border: none;
-      border-radius: 5px;
+      border-radius: 25px;
       cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 5px 5px 15px #d4d4d4, -5px -5px 15px #ffffff;
     }
     .buttons button.add {
-      background-color: #4caf50;
+      background-color: #6c63ff;
       color: white;
     }
+    .buttons button.add:hover {
+      background-color: #5848d8;
+      box-shadow: 2px 2px 10px #b0b0b0, -2px -2px 10px #ffffff;
+    }
     .buttons button.remove {
-      background-color: #f44336;
+      background-color: #ff6c6c;
       color: white;
+    }
+    .buttons button.remove:hover {
+      background-color: #d85858;
+      box-shadow: 2px 2px 10px #b0b0b0, -2px -2px 10px #ffffff;
     }
     .message {
       margin-top: 20px;
-      font-size: 18px;
+      font-size: 20px;
       font-weight: bold;
-      color: #4caf50;
+      color: #6c63ff;
       display: none;
+      animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
     }
   </style>
 </head>
 <body>
   <div>
-    <div class="title">Books Read</div>
+    <div class="title">Reading Progress</div>
     <div class="chart-container">
       <div class="chart" style="--percentage: 20;"></div>
       <div class="chart-text">
@@ -97,7 +122,7 @@
       <button class="add" onclick="addBook()">+ Add Book</button>
       <button class="remove" onclick="removeBook()">- Remove Book</button>
     </div>
-    <div class="message" id="congrats">Parabéns! Você atingiu sua meta!</div>
+    <div class="message" id="congrats">🎉 Parabéns! Você atingiu sua meta! 🎉</div>
   </div>
   <script>
     let totalBooks = 25; // Meta total de livros
