@@ -12,73 +12,146 @@
       align-items: center;
       height: 100vh;
       margin: 0;
-      background-color: #f9f9f9;
+      background-color: #f4f4f4;
     }
     .chart-container {
       position: relative;
-      width: 200px;
-      height: 200px;
+      width: 250px;
+      height: 125px;
     }
     .chart {
       width: 100%;
       height: 100%;
-      border-radius: 50%;
+      border-radius: 100px 100px 0 0;
       background: conic-gradient(
-        #4caf50 calc(var(--percentage) * 1%),
+        var(--color) calc(var(--percentage) * 1%),
         #ddd calc(var(--percentage) * 1%)
       );
-      mask: radial-gradient(circle, transparent 50%, white 51%);
-      -webkit-mask: radial-gradient(circle, transparent 50%, white 51%);
       transform: rotate(-90deg);
+      animation: fillChart 1s ease-out forwards;
     }
-    .chart-text {
+    @keyframes fillChart {
+      from {
+        background: conic-gradient(#ddd 0%, #ddd 100%);
+      }
+      to {
+        background: conic-gradient(
+          var(--color) calc(var(--percentage) * 1%),
+          #ddd calc(var(--percentage) * 1%)
+        );
+      }
+    }
+    .label {
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+    }
+    .remaining {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 16px;
+      color: #555;
+      text-align: center;
+    }
+    .buttons {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .buttons button {
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      padding: 10px 15px;
+      margin: 0 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .buttons button:hover {
+      background-color: #45a049;
+    }
+    .completed {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       text-align: center;
-    }
-    .chart-text .number {
-      font-size: 36px;
-      font-weight: bold;
-      color: #333;
-    }
-    .chart-text .goal {
-      font-size: 14px;
-      color: #555;
-    }
-    .title {
-      text-align: center;
       font-size: 18px;
-      margin-bottom: 10px;
-      color: #333;
+      font-weight: bold;
+      color: #4caf50;
     }
   </style>
 </head>
 <body>
-  <div>
-    <div class="title">Books Read</div>
-    <div class="chart-container">
-      <div class="chart" style="--percentage: 20;"></div>
-      <div class="chart-text">
-        <div class="number" id="number">5/25</div>
-      </div>
-    </div>
+  <div class="chart-container">
+    <div class="chart" style="--percentage: 0;"></div>
+    <div class="remaining" id="remaining">5/25</div>
+    <div class="label" id="percentage-label">20%</div>
+  </div>
+  <div class="buttons">
+    <button id="increment">+1 Book</button>
+    <button id="decrement">-1 Book</button>
   </div>
   <script>
-    // Dados
-    const totalBooks = 25; // Meta total de livros
-    const readBooks = 5; // Livros lidos
+    // Dados iniciais
+    const totalBooks = 25;
+    let readBooks = 5;
 
-    // Calcula a porcentagem
-    const percentage = (readBooks / totalBooks) * 100;
-
-    // Atualiza o gráfico e o texto
+    // Elementos do DOM
     const chart = document.querySelector('.chart');
-    const number = document.getElementById('number');
+    const remaining = document.getElementById('remaining');
+    const percentageLabel = document.getElementById('percentage-label');
+    const incrementButton = document.getElementById('increment');
+    const decrementButton = document.getElementById('decrement');
 
-    chart.style.setProperty('--percentage', percentage);
-    number.textContent = `${readBooks}/${totalBooks}`;
+    // Atualiza o gráfico
+    function updateChart() {
+      const percentage = (readBooks / totalBooks) * 100;
+      let color;
+
+      // Define a cor com base no progresso
+      if (percentage >= 75) color = '#4caf50'; // Verde
+      else if (percentage >= 50) color = '#ffc107'; // Amarelo
+      else color = '#f44336'; // Vermelho
+
+      // Atualiza as propriedades do gráfico
+      chart.style.setProperty('--percentage', percentage);
+      chart.style.setProperty('--color', color);
+      remaining.textContent = `${readBooks}/${totalBooks}`;
+      percentageLabel.textContent = `${Math.round(percentage)}%`;
+
+      // Feedback ao completar a meta
+      if (readBooks === totalBooks) {
+        document.querySelector('.chart-container').innerHTML =
+          '<div class="completed">🎉 Goal Achieved!</div>';
+      }
+    }
+
+    // Incrementa os livros lidos
+    incrementButton.addEventListener('click', () => {
+      if (readBooks < totalBooks) {
+        readBooks++;
+        updateChart();
+      }
+    });
+
+    // Decrementa os livros lidos
+    decrementButton.addEventListener('click', () => {
+      if (readBooks > 0) {
+        readBooks--;
+        updateChart();
+      }
+    });
+
+    // Inicializa o gráfico
+    updateChart();
   </script>
 </body>
 </html>
