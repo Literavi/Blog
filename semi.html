@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gráfico Semicircular</title>
+  <title>Reading Progress</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -12,51 +12,76 @@
       align-items: center;
       height: 100vh;
       margin: 0;
-      background-color: #f4f4f4;
+      background-color: #f9f9f9;
     }
     .chart-container {
       position: relative;
       width: 200px;
-      height: 100px;
+      height: 200px;
     }
     .chart {
       width: 100%;
       height: 100%;
-      border-radius: 100px 100px 0 0;
+      border-radius: 50%;
       background: conic-gradient(
         #4caf50 calc(var(--percentage) * 1%),
         #ddd calc(var(--percentage) * 1%)
       );
+      mask: radial-gradient(circle, transparent 50%, white 51%);
+      -webkit-mask: radial-gradient(circle, transparent 50%, white 51%);
       transform: rotate(-90deg);
     }
-    .label {
+    .chart-text {
       position: absolute;
-      bottom: 10px;
+      top: 50%;
       left: 50%;
-      transform: translateX(-50%);
-      font-size: 20px;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+    .chart-text .number {
+      font-size: 36px;
       font-weight: bold;
+      color: #333;
+    }
+    .chart-text .goal {
+      font-size: 14px;
+      color: #555;
+    }
+    .title {
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 10px;
       color: #333;
     }
   </style>
 </head>
 <body>
-  <div class="chart-container">
-    <div class="chart" style="--percentage: 20;"></div>
-    <div class="label" id="chart-label">5/25</div>
+  <div>
+    <div class="title">Today's Reading</div>
+    <div class="chart-container">
+      <div class="chart" style="--percentage: 71;"></div>
+      <div class="chart-text">
+        <div class="number" id="number">25</div>
+        <div class="goal" id="goal">of your 35-minute goal</div>
+      </div>
+    </div>
   </div>
   <script>
     // Dados
-    const totalBooks = 25;
-    const readBooks = 5;
+    const totalGoal = 35; // Meta total
+    const currentProgress = 25; // Progresso atual
 
-    // Atualiza o gráfico
-    const percentage = (readBooks / totalBooks) * 100;
+    // Calcula a porcentagem
+    const percentage = (currentProgress / totalGoal) * 100;
+
+    // Atualiza o gráfico e texto
     const chart = document.querySelector('.chart');
-    const label = document.getElementById('chart-label');
+    const number = document.getElementById('number');
+    const goal = document.getElementById('goal');
 
     chart.style.setProperty('--percentage', percentage);
-    label.textContent = `${readBooks}/${totalBooks}`;
+    number.textContent = currentProgress;
+    goal.textContent = `of your ${totalGoal}-minute goal`;
   </script>
 </body>
 </html>
