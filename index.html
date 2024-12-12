@@ -96,6 +96,24 @@
       margin-bottom: 10px;
     }
 
+    .progress-bar {
+      width: 100%;
+      background-color: #f1f1f1;
+      border-radius: 5px;
+      overflow: hidden;
+      margin: 10px 0;
+      height: 15px;
+    }
+
+    .progress-bar div {
+      height: 100%;
+      background-color: #6c63ff;
+      text-align: center;
+      color: white;
+      border-radius: 5px;
+      transition: width 0.3s;
+    }
+
     .title {
       text-align: center;
       font-size: 24px;
@@ -289,6 +307,7 @@
           const statusIndex = headers.indexOf("Status"); // Coluna de status
           const imageFileIndex = headers.indexOf("ImageFile");
           const pagesIndex = headers.indexOf("Number of Pages");
+          const currentPageIndex = headers.indexOf("Current Page");
 
           // Filtrar livros com status "lendo"
           const livrosLendo = rows.slice(1).filter(row => row[statusIndex] && row[statusIndex].toLowerCase() === "lendo");
@@ -299,7 +318,9 @@
             const capa = livro[imageFileIndex]
               ? `https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${livro[imageFileIndex]}`
               : "https://via.placeholder.com/150";
-            const paginas = livro[pagesIndex] ? `${livro[pagesIndex]} páginas` : "Sem informações de páginas";
+            const paginasTotais = parseInt(livro[pagesIndex], 10) || 0;
+            const paginaAtual = parseInt(livro[currentPageIndex], 10) || 0;
+            const progresso = paginasTotais > 0 ? (paginaAtual / paginasTotais) * 100 : 0;
 
             const card = document.createElement("div");
             card.classList.add("livro-card");
@@ -308,7 +329,10 @@
               <img src="${capa}" alt="${titulo}">
               <h4>${titulo}</h4>
               <p>${autor}</p>
-              <p>${paginas}</p>
+              <p>${paginaAtual} / ${paginasTotais} páginas</p>
+              <div class="progress-bar">
+                <div style="width: ${progresso}%;">${Math.round(progresso)}%</div>
+              </div>
             `;
 
             livrosLendoContainer.appendChild(card);
@@ -399,10 +423,11 @@
                       img.src = `https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${url}`;
                       img.alt = "Capa do Livro";
                       capaLivroContainer.appendChild(img);
-                    });
-                    capaLivroContainer.style.display = "flex";
-                  } else {
-                    capaLivroContainer.style.display = "none";
+                      });
+                      capaLivroContainer.style.display = "flex";
+                    } else {
+                      capaLivroContainer.style.display = "none";
+                    }
                   }
                 }
               }
@@ -414,36 +439,8 @@
 
     carregarLivrosLendo();
     carregarDadosEExibirGrafico();
-
-    // Funções para o gráfico de metas
-    let livrosLidos = 5; // Quantidade inicial de livros lidos
-    const meta = 25; // Meta definida
-    const congratsMessage = document.getElementById("congrats");
-
-    function atualizarGraficoMeta() {
-      const percentual = (livrosLidos / meta) * 100;
-      document.querySelector(".chart").style.setProperty("--percentage", percentual);
-      document.getElementById("number").textContent = `${livrosLidos}/${meta}`;
-      congratsMessage.style.display = livrosLidos >= meta ? "block" : "none";
-    }
-
-    function addBook() {
-      if (livrosLidos < meta) {
-        livrosLidos++;
-        atualizarGraficoMeta();
-      }
-    }
-
-    function removeBook() {
-      if (livrosLidos > 0) {
-        livrosLidos--;
-        atualizarGraficoMeta();
-      }
-    }
-
-    // Inicializar o gráfico com os valores iniciais
-    atualizarGraficoMeta();
   </script>
 </body>
 </html>
 
+                   
