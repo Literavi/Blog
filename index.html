@@ -302,12 +302,12 @@
           const livrosLendoContainer = document.getElementById("livrosLendoContainer");
 
           // Índices das colunas
-          const titleIndex = headers.indexOf("Title");
-          const authorIndex = headers.indexOf("Author");
+          const titleIndex = headers.indexOf("Nome");
+          const authorIndex = headers.indexOf("Autor");
           const statusIndex = headers.indexOf("Status"); // Coluna de status
           const imageFileIndex = headers.indexOf("ImageFile");
-          const pagesIndex = headers.indexOf("Number of Pages");
-          const currentPageIndex = headers.indexOf("Current Page");
+          const pagesIndex = headers.indexOf("Página Total");
+          const currentPageIndex = headers.indexOf("Página Atual");
 
           // Filtrar livros com status "lendo"
           const livrosLendo = rows.slice(1).filter(row => row[statusIndex] && row[statusIndex].toLowerCase() === "lendo");
