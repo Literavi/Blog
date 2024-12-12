@@ -17,6 +17,27 @@
   <div class="container">
     <h1>Bem-vindo à Biblioteca</h1>
     <p>Veja suas metas e progresso de leitura aqui.</p>
+
+    <!-- Gráfico de Metas -->
+    <div class="title">Meta de Leitura</div>
+    <div class="chart-container">
+      <div class="chart" style="--percentage: 20;"></div>
+      <div class="chart-text">
+        <div class="number" id="number">5/25</div>
+        <div class="goal" id="goal">Livros Lidos</div>
+      </div>
+    </div>
+    <div class="buttons">
+      <button class="add" onclick="addBook()">+ Adicionar Livro</button>
+      <button class="remove" onclick="removeBook()">- Remover Livro</button>
+    </div>
+    <div class="message" id="congrats">🎉 Parabéns! Você atingiu sua meta! 🎉</div>
+
+    <!-- Lista de Livros Lendo Atualmente -->
+    <div class="currently-reading">
+      <h2>Livros que você está lendo</h2>
+      <div id="reading-list"></div>
+    </div>
   </div>
 
   <!-- Script para carregar o menu -->
@@ -45,6 +66,113 @@
         document.getElementById("menu-container").innerHTML = "<p>Erro ao carregar o menu.</p>";
       });
   </script>
+
+  <!-- Script para o Gráfico e Lista de Livros -->
+  <script>
+    let totalBooks = 25; // Meta total de livros
+    let readBooks = 5; // Livros lidos até o momento
+
+    // Exemplo de dados dos livros (substitua com a API do Google Sheets no futuro)
+    const livros = [
+      { title: "Livro 1", author: "Autor A", image: "https://via.placeholder.com/150" },
+      { title: "Livro 2", author: "Autor B", image: "https://via.placeholder.com/150" },
+      { title: "Livro 3", author: "Autor C", image: "https://via.placeholder.com/150" },
+    ];
+
+    function updateChart() {
+      const percentage = (readBooks / totalBooks) * 100;
+      const chart = document.querySelector(".chart");
+      const number = document.getElementById("number");
+      const message = document.getElementById("congrats");
+
+      chart.style.setProperty("--percentage", percentage);
+      number.textContent = `${readBooks}/${totalBooks}`;
+
+      if (readBooks >= totalBooks) {
+        message.style.display = "block";
+      } else {
+        message.style.display = "none";
+      }
+    }
+
+    function addBook() {
+      if (readBooks < totalBooks) {
+        readBooks++;
+        updateChart();
+      }
+    }
+
+    function removeBook() {
+      if (readBooks > 0) {
+        readBooks--;
+        updateChart();
+      }
+    }
+
+    // Atualiza a lista de livros lendo atualmente
+    function updateReadingList() {
+      const readingList = document.getElementById("reading-list");
+      readingList.innerHTML = ""; // Limpa a lista existente
+
+      livros.forEach((livro) => {
+        const bookCard = document.createElement("div");
+        bookCard.classList.add("book-card");
+        bookCard.innerHTML = `
+          <img src="${livro.image}" alt="${livro.title}" class="book-cover">
+          <div class="book-info">
+            <h3>${livro.title}</h3>
+            <p>${livro.author}</p>
+          </div>
+        `;
+        readingList.appendChild(bookCard);
+      });
+    }
+
+    // Inicializa o gráfico e a lista de livros
+    updateChart();
+    updateReadingList();
+  </script>
+
+  <style>
+    .currently-reading {
+      margin-top: 40px;
+    }
+
+    #reading-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .book-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 120px;
+      text-align: center;
+    }
+
+    .book-cover {
+      width: 100px;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    .book-info {
+      margin-top: 10px;
+    }
+
+    .book-info h3 {
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .book-info p {
+      font-size: 12px;
+      color: gray;
+      margin: 0;
+    }
+  </style>
 
 </body>
 </html>
