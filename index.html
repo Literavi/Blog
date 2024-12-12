@@ -424,4 +424,26 @@
       const percentual = (livrosLidos / meta) * 100;
       document.querySelector(".chart").style.setProperty("--percentage", percentual);
       document.getElementById("number").textContent = `${livrosLidos}/${meta}`;
-      congratsMessage
+      congratsMessage.style.display = livrosLidos >= meta ? "block" : "none";
+    }
+
+    function addBook() {
+      if (livrosLidos < meta) {
+        livrosLidos++;
+        atualizarGraficoMeta();
+      }
+    }
+
+    function removeBook() {
+      if (livrosLidos > 0) {
+        livrosLidos--;
+        atualizarGraficoMeta();
+      }
+    }
+
+    // Inicializar o gráfico com os valores iniciais
+    atualizarGraficoMeta();
+  </script>
+</body>
+</html>
+
