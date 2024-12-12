@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca Pessoal - Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</head>
+<body>
+
+  <!-- Aqui o menu será carregado dinamicamente -->
+  <div id="menu-container"></div>
+
+  <!-- Conteúdo Principal -->
+  <div class="container">
+    <h2>Quantidade de Livros Lidos por Mês em 2024</h2>
+    <canvas id="livrosLidosChart"></canvas>
+    <div id="capaLivroContainer"></div>
+
+    <h2>Livros que Você Está Lendo</h2>
+    <div class="livros-lendo" id="livrosLendoContainer"></div>
+  </div>
+
+  <!-- Script para carregar o menu -->
+  <script>
+    async function carregarMenu() {
+      try {
+        const response = await fetch("menu.html");
+        if (!response.ok) throw new Error(`Erro ao carregar o menu: ${response.status}`);
+        const menuHtml = await response.text();
+        document.getElementById("menu-container").innerHTML = menuHtml;
+
+        // Ativação do menu interativo após carregá-lo
+        const sidebar = document.querySelector('.sidebar');
+        const toggleBtn = document.getElementById('toggle-btn');
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        // Toggle Sidebar
+        toggleBtn.addEventListener('click', () => {
+          sidebar.classList.toggle('active');
+        });
+
+        // Toggle Theme
+        themeToggle.addEventListener('click', () => {
+          const currentTheme = body.getAttribute('data-theme');
+          const isDark = currentTheme === 'dark';
+          body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+
+          const icon = themeToggle.querySelector('ion-icon');
+          icon.setAttribute('name', isDark ? 'moon-outline' : 'sunny-outline');
+          themeToggle.querySelector('span').textContent = isDark ? 'Dark Mode' : 'Light Mode';
+        });
+
+        // Recarregar ícones da Ionicons (caso necessário)
+        const script = document.createElement('script');
+        script.src = "https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js";
+        document.body.appendChild(script);
+      } catch (error) {
+        console.error("Erro ao carregar o menu:", error);
+        document.getElementById("menu-container").innerHTML = "<p>Erro ao carregar o menu.</p>";
+      }
+    }
+
+    carregarMenu();
+  </script>
+
+  <!-- Script para carregar dados do Google Sheets -->
+  <script>
+    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc"; // Seu Spreadsheet ID
+    const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs"; // Sua chave de API
+    const sheetName = "Biblioteca_Pessoal"; // Nome da aba na planilha
+    const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
+
+    function carregarLivrosLendo() {
+      fetch(googleSheetsApiUrl)
+        .then(response => response.json())
+        .then(data => {
+          const rows = data.values;
+          const headers = rows[0];
+          const livrosLendoContainer = document.getElementById("livrosLendoContainer");
+
+          // Índices das colunas
+          const titleIndex = headers.indexOf("Title");
+          const authorIndex = headers.indexOf("Author");
+          const statusIndex = headers.indexOf("Status"); // Coluna de status
+          const imageFileIndex = headers.indexOf("ImageFile");
+          const pagesIndex = headers.indexOf("Number of Pages");
+
+          // Filtrar livros com status "lendo"
+          const livrosLendo = rows.slice(1).filter(row => row[statusIndex] && row[statusIndex].toLowerCase() === "lendo");
+
+          livrosLendo.forEach(livro => {
+            const titulo = livro[titleIndex];
+            const autor = livro[authorIndex];
+            const capa = livro[imageFileIndex]
+              ? `https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${livro[imageFileIndex]}`
+              : "https://via.placeholder.com/150";
+            const paginas = livro[pagesIndex] ? `${livro[pagesIndex]} páginas` : "Sem informações de páginas";
+
+            const card = document.createElement("div");
+            card.classList.add("livro-card");
+
+            card.innerHTML = `
+              <img src="${capa}" alt="${titulo}">
+              <h4>${titulo}</h4>
+              <p>${autor}</p>
+              <p>${paginas}</p>
+            `;
+
+            livrosLendoContainer.appendChild(card);
+          });
+        })
+        .catch(error => console.error("Erro ao carregar livros sendo lidos:", error));
+    }
+
+    function carregarDadosEExibirGrafico() {
+      fetch(googleSheetsApiUrl)
+        .then(response => response.json())
+        .then(data => {
+          const rows = data.values;
+          const meses = [
+            'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+            'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+          ];
+          const livrosFisicosPorMes = Array(12).fill(0);
+          const livrosEbooksPorMes = Array(12).fill(0);
+          const capasFisico = Array(12).fill().map(() => []);
+          const capasEbook = Array(12).fill().map(() => []);
+
+          const headers = rows[0];
+          const dateLidoIndex = headers.indexOf("Date Lido");
+          const formatoIndex = headers.indexOf("Formato");
+          const imageFileIndex = headers.indexOf("ImageFile");
+
+          rows.slice(1).forEach(row => {
+            const date = row[dateLidoIndex];
+            const formato = row[formatoIndex];
+            const imageFile = row[imageFileIndex];
+            if (date) {
+              const [day, month, year] = date.split("/").map(Number);
+
+              if (year === 2024 && month >= 1 && month <= 12) {
+                if (formato === "Físico") {
+                  livrosFisicosPorMes[month - 1]++;
+                  if (imageFile) {
+                    capasFisico[month - 1].push(imageFile);
+                  }
+                }
+                if (formato === "eBook") {
+                  livrosEbooksPorMes[month - 1]++;
+                  if (imageFile) {
+                    capasEbook[month - 1].push(imageFile);
+                  }
+                }
+              }
+            }
+          });
+
+          const ctx = document.getElementById('livrosLidosChart').getContext('2d');
+          const chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+              labels: meses,
+              datasets: [
+                {
+                  label: 'Físico',
+                  data: livrosFisicosPorMes,
+                  backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                  borderColor: 'rgba(54, 162, 235, 1)',
+                  borderWidth: 1
+                },
+                {
+                  label: 'eBook',
+                  data: livrosEbooksPorMes,
+                  backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                  borderColor: 'rgba(255, 99, 132, 1)',
+                  borderWidth: 1
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              onClick: (event, elements) => {
+                if (elements.length) {
+                  const datasetIndex = elements[0].datasetIndex; // 0 = Físico, 1 = eBook
+                  const elementIndex = elements[0].index; // Índice do mês
+                  const capas = datasetIndex === 0 ? capasFisico[elementIndex] : capasEbook[elementIndex];
+                  const capaLivroContainer = document.getElementById("capaLivroContainer");
+
+                  capaLivroContainer.innerHTML = '';
+
+                  if (capas.length > 0) {
+                    capas.forEach(url => {
+                      const img = document.createElement('img');
+                      img.src = `https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${url}`;
+                      img.alt = "Capa do Livro";
+                      capaLivroContainer.appendChild(img);
+                    });
+                    capaLivroContainer.style.display = "flex";
+                  } else {
+                    capaLivroContainer.style.display = "none";
+                  }
+                }
+              }
+            }
+          });
+        })
+        .catch(error => console.error("Erro ao carregar dados do gráfico:", error));
+    }
+
+    carregarLivrosLendo();
+    carregarDadosEExibirGrafico();
+  </script>
+
+</body>
+</html>
