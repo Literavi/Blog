@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reading Progress</title>
+  <title>Reading Progress - Semicircular</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -17,19 +17,18 @@
     .chart-container {
       position: relative;
       width: 200px;
-      height: 200px;
+      height: 100px; /* Metade da altura */
+      overflow: hidden; /* Oculta a parte inferior */
     }
     .chart {
       width: 100%;
-      height: 100%;
+      height: 200px; /* Altura total do círculo */
       border-radius: 50%;
       background: conic-gradient(
         #4caf50 calc(var(--percentage) * 1%),
         #ddd calc(var(--percentage) * 1%)
       );
-      mask: radial-gradient(circle, transparent 50%, white 51%);
-      -webkit-mask: radial-gradient(circle, transparent 50%, white 51%);
-      transform: rotate(-90deg);
+      transform: rotate(-90deg); /* Começa no topo */
     }
     .chart-text {
       position: absolute;
@@ -39,7 +38,7 @@
       text-align: center;
     }
     .chart-text .number {
-      font-size: 36px;
+      font-size: 32px;
       font-weight: bold;
       color: #333;
     }
