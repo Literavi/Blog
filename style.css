@@ -1,3 +1,14 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+}
+
+.container {
+  padding: 20px;
+}
+
 .chart-container {
   position: relative;
   width: 240px;
@@ -85,4 +96,43 @@
   font-weight: bold;
   color: #6c63ff;
   display: none;
+}
+
+.currently-reading {
+  margin-top: 40px;
+}
+
+#reading-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.book-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 120px;
+  text-align: center;
+}
+
+.book-cover {
+  width: 100px;
+  height: auto;
+  border-radius: 8px;
+}
+
+.book-info {
+  margin-top: 10px;
+}
+
+.book-info h3 {
+  font-size: 14px;
+  margin: 0;
+}
+
+.book-info p {
+  font-size: 12px;
+  color: gray;
+  margin: 0;
 }
