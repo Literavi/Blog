@@ -3,32 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Books Read Progress</title>
+  <title>Reading Progress</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       height: 100vh;
       margin: 0;
       background-color: #f9f9f9;
-      color: #333;
-      transition: background-color 0.3s, color 0.3s;
     }
-
-    body.dark {
-      background-color: #333;
-      color: #f9f9f9;
-    }
-
     .chart-container {
       position: relative;
       width: 200px;
       height: 200px;
     }
-
     .chart {
       width: 100%;
       height: 100%;
@@ -40,24 +31,7 @@
       mask: radial-gradient(circle, transparent 50%, white 51%);
       -webkit-mask: radial-gradient(circle, transparent 50%, white 51%);
       transform: rotate(-90deg);
-      animation: fillChart 1.5s ease-out;
     }
-
-    @keyframes fillChart {
-      from {
-        background: conic-gradient(
-          #4caf50 0%,
-          #ddd 0%
-        );
-      }
-      to {
-        background: conic-gradient(
-          #4caf50 calc(var(--percentage) * 1%),
-          #ddd calc(var(--percentage) * 1%)
-        );
-      }
-    }
-
     .chart-text {
       position: absolute;
       top: 50%;
@@ -65,134 +39,99 @@
       transform: translate(-50%, -50%);
       text-align: center;
     }
-
     .chart-text .number {
       font-size: 36px;
       font-weight: bold;
+      color: #333;
     }
-
     .chart-text .goal {
       font-size: 14px;
+      color: #555;
     }
-
-    .tooltip {
-      position: absolute;
-      top: 20%;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 5px 10px;
-      background-color: #333;
-      color: white;
-      font-size: 12px;
-      border-radius: 4px;
-      display: none;
-      pointer-events: none;
+    .title {
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 20px;
+      color: #333;
     }
-
-    .chart-container:hover .tooltip {
-      display: block;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 8px;
-      background-color: #ddd;
-      border-radius: 4px;
-      margin-top: 10px;
-      overflow: hidden;
-    }
-
-    .progress-bar .progress {
-      height: 100%;
-      width: 0;
-      background-color: #4caf50;
-      transition: width 1.5s ease-out;
-    }
-
-    .actions {
+    .buttons {
       margin-top: 20px;
       display: flex;
       gap: 10px;
     }
-
-    .actions button {
+    .buttons button {
+      padding: 10px 15px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .buttons button.add {
       background-color: #4caf50;
       color: white;
-      border: none;
-      padding: 8px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background-color 0.3s;
     }
-
-    .actions button:hover {
-      background-color: #45a049;
+    .buttons button.remove {
+      background-color: #f44336;
+      color: white;
+    }
+    .message {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #4caf50;
+      display: none;
     }
   </style>
 </head>
 <body>
-  <div class="chart-container">
-    <div class="chart" style="--percentage: 20;"></div>
-    <div class="chart-text">
-      <div class="number" id="number">5/25</div>
-      <div class="goal" id="goal">Books Read</div>
+  <div>
+    <div class="title">Books Read</div>
+    <div class="chart-container">
+      <div class="chart" style="--percentage: 20;"></div>
+      <div class="chart-text">
+        <div class="number" id="number">5/25</div>
+        <div class="goal" id="goal">Books Read</div>
+      </div>
     </div>
-    <div class="tooltip" id="tooltip">20% of your goal</div>
-  </div>
-  <div class="progress-bar">
-    <div class="progress" id="progress"></div>
-  </div>
-  <div class="actions">
-    <button id="updateGoal">Update Goal</button>
-    <button id="resetProgress">Reset</button>
-    <button id="toggleTheme">Toggle Theme</button>
+    <div class="buttons">
+      <button class="add" onclick="addBook()">+ Add Book</button>
+      <button class="remove" onclick="removeBook()">- Remove Book</button>
+    </div>
+    <div class="message" id="congrats">Parabéns! Você atingiu sua meta!</div>
   </div>
   <script>
     let totalBooks = 25; // Meta total de livros
     let readBooks = 5; // Livros lidos até o momento
 
-    const chart = document.querySelector('.chart');
-    const number = document.getElementById('number');
-    const goal = document.getElementById('goal');
-    const progress = document.getElementById('progress');
-    const tooltip = document.getElementById('tooltip');
-
-    // Atualiza o gráfico e barra de progresso
     function updateChart() {
       const percentage = (readBooks / totalBooks) * 100;
+      const chart = document.querySelector('.chart');
+      const number = document.getElementById('number');
+      const message = document.getElementById('congrats');
+
       chart.style.setProperty('--percentage', percentage);
       number.textContent = `${readBooks}/${totalBooks}`;
-      progress.style.width = `${percentage}%`;
-      tooltip.textContent = `${Math.round(percentage)}% of your goal`;
 
       if (readBooks >= totalBooks) {
-        goal.textContent = "Congratulations! Goal Achieved!";
-        goal.style.color = "#4caf50";
+        message.style.display = 'block';
       } else {
-        goal.textContent = "Books Read";
-        goal.style.color = "";
+        message.style.display = 'none';
       }
     }
 
-    // Botão para atualizar a meta
-    document.getElementById('updateGoal').addEventListener('click', () => {
-      const newGoal = prompt("Enter a new total goal:");
-      if (newGoal && !isNaN(newGoal)) {
-        totalBooks = parseInt(newGoal);
+    function addBook() {
+      if (readBooks < totalBooks) {
+        readBooks++;
         updateChart();
       }
-    });
+    }
 
-    // Botão para resetar o progresso
-    document.getElementById('resetProgress').addEventListener('click', () => {
-      readBooks = 0;
-      updateChart();
-    });
-
-    // Alternar entre tema claro e escuro
-    document.getElementById('toggleTheme').addEventListener('click', () => {
-      document.body.classList.toggle('dark');
-    });
+    function removeBook() {
+      if (readBooks > 0) {
+        readBooks--;
+        updateChart();
+      }
+    }
 
     // Inicializa o gráfico
     updateChart();
