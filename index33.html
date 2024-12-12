@@ -19,7 +19,7 @@
     <p>Veja suas metas e progresso de leitura aqui.</p>
   </div>
 
-  <!-- Carregar Menu -->
+  <!-- Script para carregar o menu -->
   <script>
     // Carrega o menu do arquivo menu.html
     fetch("menu.html")
@@ -30,10 +30,15 @@
       .then(data => {
         document.getElementById("menu-container").innerHTML = data;
 
-        // Carregar funcionalidade do menu após carregá-lo
-        const script = document.createElement("script");
-        script.src = "menu.js";
-        document.body.appendChild(script);
+        // Adiciona funcionalidade ao menu após carregá-lo
+        const menuContainer = document.querySelector(".sidebar");
+        const toggleBtn = document.querySelector(".toggle-btn");
+
+        // Alterna a classe 'active' no menu e ajusta o conteúdo
+        toggleBtn.addEventListener("click", () => {
+          menuContainer.classList.toggle("active");
+          document.querySelector(".container").classList.toggle("menu-expanded");
+        });
       })
       .catch(error => {
         console.error(error);
