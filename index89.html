@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meta de Leitura Anual</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f4f4f9;
+    }
+
+    /* Gráfico Circular */
+    .chart-container {
+      position: relative;
+      width: 240px;
+      height: 240px;
+      background: linear-gradient(145deg, #ffffff, #e6e6e6);
+      box-shadow: 20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;
+      border-radius: 50%;
+    }
+    .chart {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: conic-gradient(
+        #6c63ff calc(var(--percentage) * 1%),
+        #d1d1d1 calc(var(--percentage) * 1%)
+      );
+      mask: radial-gradient(circle, transparent 50%, white 51%);
+      -webkit-mask: radial-gradient(circle, transparent 50%, white 51%);
+      transform: rotate(-90deg);
+    }
+    .chart-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+    .chart-text .number {
+      font-size: 36px;
+      font-weight: 600;
+      color: #333;
+    }
+    .chart-text .goal {
+      font-size: 16px;
+      color: #777;
+      font-weight: 500;
+    }
+
+    /* Títulos e Botões */
+    .title {
+      text-align: center;
+      font-size: 22px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .buttons {
+      margin-top: 30px;
+      display: flex;
+      gap: 15px;
+    }
+    .buttons button {
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: 500;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 5px 5px 15px #d4d4d4, -5px -5px 15px #ffffff;
+    }
+    .buttons button.add {
+      background-color: #6c63ff;
+      color: white;
+    }
+    .buttons button.add:hover {
+      background-color: #5848d8;
+      box-shadow: 2px 2px 10px #b0b0b0, -2px -2px 10px #ffffff;
+    }
+    .buttons button.remove {
+      background-color: #ff6c6c;
+      color: white;
+    }
+    .buttons button.remove:hover {
+      background-color: #d85858;
+      box-shadow: 2px 2px 10px #b0b0b0, -2px -2px 10px #ffffff;
+    }
+    .message {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      color: #6c63ff;
+      display: none;
+      animation: fadeIn 1s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Título -->
+  <div>
+    <div class="title">Progresso de Leitura</div>
+
+    <!-- Gráfico Circular -->
+    <div class="chart-container">
+      <div class="chart" style="--percentage: 20;"></div>
+      <div class="chart-text">
+        <div class="number" id="number">5/25</div>
+        <div class="goal" id="goal">Livros Lidos</div>
+      </div>
+    </div>
+
+    <!-- Botões -->
+    <div class="buttons">
+      <button class="add" onclick="addBook()">+ Adicionar Livro</button>
+      <button class="remove" onclick="removeBook()">- Remover Livro</button>
+    </div>
+
+    <!-- Mensagem de Parabéns -->
+    <div class="message" id="congrats">🎉 Parabéns! Você atingiu sua meta! 🎉</div>
+  </div>
+
+  <!-- Script do Progresso -->
+  <script>
+    let totalBooks = 25; // Meta de leitura anual
+    let readBooks = 5; // Livros lidos atualmente
+
+    function updateChart() {
+      const percentage = (readBooks / totalBooks) * 100;
+      const chart = document.querySelector('.chart');
+      const number = document.getElementById('number');
+      const message = document.getElementById('congrats');
+
+      chart.style.setProperty('--percentage', percentage);
+      number.textContent = `${readBooks}/${totalBooks}`;
+
+      // Exibe mensagem de parabéns se atingir a meta
+      if (readBooks >= totalBooks) {
+        message.style.display = 'block';
+      } else {
+        message.style.display = 'none';
+      }
+    }
+
+    function addBook() {
+      if (readBooks < totalBooks) {
+        readBooks++;
+        updateChart();
+      }
+    }
+
+    function removeBook() {
+      if (readBooks > 0) {
+        readBooks--;
+        updateChart();
+      }
+    }
+
+    // Inicializar gráfico
+    updateChart();
+  </script>
+</body>
+</html>
