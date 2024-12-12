@@ -423,11 +423,10 @@
                       img.src = `https://raw.githubusercontent.com/Literavi/Blog/main/imagens/${url}`;
                       img.alt = "Capa do Livro";
                       capaLivroContainer.appendChild(img);
-                      });
-                      capaLivroContainer.style.display = "flex";
-                    } else {
-                      capaLivroContainer.style.display = "none";
-                    }
+                                          });
+                    capaLivroContainer.style.display = "flex";
+                  } else {
+                    capaLivroContainer.style.display = "none";
                   }
                 }
               }
@@ -437,10 +436,39 @@
         .catch(error => console.error("Erro ao carregar dados do gráfico:", error));
     }
 
+    function atualizarGraficoMeta() {
+      const livrosLidos = 5; // Exemplo de valor inicial
+      const meta = 25; // Meta total de leitura
+      const percentage = (livrosLidos / meta) * 100;
+
+      const chart = document.querySelector('.chart');
+      const numberElement = document.getElementById('number');
+      const congratsMessage = document.getElementById('congrats');
+
+      chart.style.setProperty('--percentage', percentage);
+      numberElement.textContent = `${livrosLidos}/${meta}`;
+      congratsMessage.style.display = livrosLidos >= meta ? "block" : "none";
+    }
+
+    function addBook() {
+      if (livrosLidos < meta) {
+        livrosLidos++;
+        atualizarGraficoMeta();
+      }
+    }
+
+    function removeBook() {
+      if (livrosLidos > 0) {
+        livrosLidos--;
+        atualizarGraficoMeta();
+      }
+    }
+
     carregarLivrosLendo();
     carregarDadosEExibirGrafico();
+
+    // Inicializar o gráfico com os valores iniciais
+    atualizarGraficoMeta();
   </script>
 </body>
 </html>
-
-                   
