@@ -1,78 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gráfico Semicircular</title>
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
-        }
-
-        .chart-container {
-            position: relative;
-            width: 200px;
-            height: 100px;
-        }
-
-        .chart {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: conic-gradient(
-                #4caf50 calc(var(--percentage) * 1%),
-                #ccc calc(var(--percentage) * 1%)
-            );
-            clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-        }
-
-        .chart::before {
-            content: "";
-            position: absolute;
-            width: 180px;
-            height: 90px;
-            border-radius: 50%;
-            background: #fff;
-            top: 5px;
-            left: 10px;
-            clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-        }
-
-        .chart-value {
-            position: absolute;
-            bottom: -40px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: Arial, sans-serif;
-            font-size: 20px;
-            font-weight: bold;
-            color: #333;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gráfico Semicircular</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f4;
+    }
+    .chart-container {
+      position: relative;
+      width: 200px;
+      height: 100px;
+      margin-bottom: 20px;
+    }
+    .chart {
+      width: 100%;
+      height: 100%;
+      border-radius: 100px 100px 0 0;
+      background: conic-gradient(
+        #4caf50 calc(var(--percentage) * 1%),
+        #ddd calc(var(--percentage) * 1%)
+      );
+      transform: rotate(-90deg);
+    }
+    .label {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+    }
+    .controls {
+      display: flex;
+      gap: 10px;
+    }
+    .controls button {
+      padding: 10px 15px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .controls button:active {
+      transform: scale(0.98);
+    }
+    .congrats {
+      margin-top: 20px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #4caf50;
+      opacity: 0;
+      animation: fade-in 1s forwards;
+    }
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="chart-container">
-        <div class="chart" style="--percentage: 20;"></div>
-        <div class="chart-value" id="chartValue">5/25</div>
-    </div>
+  <div class="chart-container">
+    <div class="chart" style="--percentage: 20;"></div>
+    <div class="label" id="chart-label">5/25</div>
+  </div>
+  <div class="controls">
+    <button id="decrement">-1 Livro</button>
+    <button id="increment">+1 Livro</button>
+  </div>
+  <div id="congrats-message" class="congrats">Parabéns! Meta concluída!</div>
 
-    <script>
-        // Configurações do gráfico
-        const totalBooks = 25;
-        const readBooks = 5;
+  <script>
+    const totalBooks = 25;
+    let readBooks = 5;
 
-        // Atualiza o gráfico
-        const percentage = (readBooks / totalBooks) * 100;
-        const chart = document.querySelector('.chart');
-        const chartValue = document.getElementById('chartValue');
+    const chart = document.querySelector('.chart');
+    const label = document.getElementById('chart-label');
+    const congratsMessage = document.getElementById('congrats-message');
 
-        chart.style.setProperty('--percentage', percentage);
-        chartValue.textContent = `${readBooks}/${totalBooks}`;
-    </script>
+    function updateChart() {
+      const percentage = (readBooks / totalBooks) * 100;
+      chart.style.setProperty('--percentage', percentage);
+      label.textContent = `${readBooks}/${totalBooks}`;
+      
+      if (readBooks === totalBooks) {
+        congratsMessage.style.opacity = 1;
+      } else {
+        congratsMessage.style.opacity = 0;
+      }
+    }
+
+    document.getElementById('increment').addEventListener('click', () => {
+      if (readBooks < totalBooks) {
+        readBooks++;
+        updateChart();
+      }
+    });
+
+    document.getElementById('decrement').addEventListener('click', () => {
+      if (readBooks > 0) {
+        readBooks--;
+        updateChart();
+      }
+    });
+
+    // Atualiza o gráfico inicial
+    updateChart();
+  </script>
 </body>
 </html>
