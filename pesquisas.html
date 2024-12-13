@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Biblioteca Pessoal - Pesquisar Livros</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  
-  <!-- Estilo interno -->
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
   <style>
-    /* Configurações gerais */
+    /* Estilos gerais */
     body {
       font-family: 'Roboto', sans-serif;
       margin: 0;
@@ -105,63 +105,32 @@
       color: #7f8c8d;
     }
 
-    /* Etiquetas de status */
+    /* Etiquetas */
     .status-tag {
       position: absolute;
       top: 8px;
       left: 8px;
-      color: white;
       padding: 4px 8px;
       border-radius: 4px;
       font-size: 12px;
+      color: white;
       font-weight: bold;
     }
 
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
+    .status-quero-ler {
+      background-color: #3498db; /* Azul */
     }
 
-    .modal-content {
-      background: #ffffff;
-      padding: 20px;
-      width: 90%;
-      max-width: 500px;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      text-align: center;
-      position: relative;
+    .status-lido {
+      background-color: #e91e63; /* Rosa */
     }
 
-    .modal-content h4 {
-      color: #2c3e50;
-      margin-bottom: 1rem;
+    .status-lendo {
+      background-color: #ff9800; /* Laranja */
     }
 
-    .modal-content p {
-      color: #7f8c8d;
-    }
-
-    .close {
-      position: absolute;
-      top: 10px;
-      right: 20px;
-      font-size: 1.5rem;
-      color: #e74c3c;
-      cursor: pointer;
-    }
-
-    .close:hover {
-      color: #c0392b;
+    .status-indefinido {
+      background-color: #95a5a6; /* Cinza */
     }
 
     /* Mensagem de erro */
@@ -172,14 +141,8 @@
       display: none;
     }
   </style>
-  
-  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </head>
 <body>
-
-  <!-- Menu dinâmico -->
-  <div id="menu-container"></div>
 
   <!-- Conteúdo Principal -->
   <div class="container">
@@ -188,8 +151,8 @@
       <input type="text" id="author-name" class="search-box" placeholder="Digite o nome do autor ou título">
       <select id="status" class="dropdown">
         <option value="">Selecione o status</option>
-        <option value="lendo">Lendo</option>
         <option value="quero ler">Quero Ler</option>
+        <option value="lendo">Lendo</option>
         <option value="lido">Lido</option>
       </select>
       <button class="button" onclick="buscarAutor()">Pesquisar</button>
@@ -200,85 +163,23 @@
     <p id="error-message"></p>
   </div>
 
-  <!-- Modal para exibir a sinopse -->
-  <div id="synopsis-modal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="fecharModal()">&times;</span>
-      <h4 id="modal-title"></h4>
-      <p id="modal-synopsis"></p>
-    </div>
-  </div>
-
-  <!-- Script para carregar o menu -->
   <script>
-    fetch("menu.html")
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById("menu-container").innerHTML = data;
-
-        const sidebar = document.querySelector('.sidebar');
-        const toggleBtn = document.getElementById('toggle-btn');
-        const themeToggle = document.getElementById('theme-toggle');
-        const body = document.body;
-
-        toggleBtn.addEventListener('click', () => {
-          sidebar.classList.toggle('active');
-        });
-
-        themeToggle.addEventListener('click', () => {
-          const currentTheme = body.getAttribute('data-theme');
-          const isDark = currentTheme === 'dark';
-          body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-
-          const icon = themeToggle.querySelector('ion-icon');
-          icon.setAttribute('name', isDark ? 'moon-outline' : 'sunny-outline');
-          themeToggle.querySelector('span').textContent = isDark ? 'Dark Mode' : 'Light Mode';
-        });
-      });
-  </script>
-
-  <!-- Script para acessar a API do Google Sheets -->
-  <script>
-    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc"; // Seu Spreadsheet ID
-    const apiKey = "AIzaSyBFBF48H0wGkPAh5QRyPSctsrH8GAM7OTs"; // Sua chave de API
-    const sheetName = "Biblioteca_Pessoal"; // Nome da aba da planilha
-
-    const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
-    let livros = [];
-
-    function carregarLivros() {
-      fetch(googleSheetsApiUrl)
-        .then(response => response.json())
-        .then(data => {
-          const rows = data.values;
-          const headers = rows[0];
-          livros = rows.slice(1).map(row => {
-            let livro = {};
-            headers.forEach((header, index) => {
-              livro[header.trim()] = row[index] || "";
-            });
-            return livro;
-          });
-          buscarAutor(); // Exibe os livros assim que são carregados
-        })
-        .catch(error => {
-          console.error("Erro ao carregar dados da API do Google Sheets:", error);
-          mostrarMensagem("erro", "Erro ao carregar dados da API do Google Sheets.");
-        });
-    }
+    const livros = [
+      { Nome: "Anna Karênina", Autor: "Liev Tolstói", Status: "Lido", ImageFile: "anna-karenina.jpg", Sinopse: "Sinopse de Anna Karênina." },
+      { Nome: "Guerra e Paz", Autor: "Liev Tolstói", Status: "Quero Ler", ImageFile: "guerra-e-paz.jpg", Sinopse: "Sinopse de Guerra e Paz." },
+      { Nome: "Dom Quixote", Autor: "Miguel de Cervantes", Status: "Lendo", ImageFile: "dom-quixote.jpg", Sinopse: "Sinopse de Dom Quixote." }
+    ];
 
     function buscarAutor() {
       const nomeAutorOuTitulo = document.getElementById("author-name").value.toLowerCase();
       const statusSelecionado = document.getElementById("status").value.toLowerCase();
 
       const resultados = livros.filter(livro => {
-        const autorMatch = livro["Autor"]?.toLowerCase().includes(nomeAutorOuTitulo) || false;
-        const tituloMatch = livro["Nome"]?.toLowerCase().includes(nomeAutorOuTitulo) || false;
-        const statusMatch = !statusSelecionado || (livro["Status"]?.toLowerCase() === statusSelecionado);
+        const autorMatch = livro.Autor.toLowerCase().includes(nomeAutorOuTitulo);
+        const tituloMatch = livro.Nome.toLowerCase().includes(nomeAutorOuTitulo);
+        const statusMatch = !statusSelecionado || livro.Status.toLowerCase() === statusSelecionado;
         return (autorMatch || tituloMatch) && statusMatch;
       });
-
-      resultados.sort((a, b) => a["Nome"].localeCompare(b["Nome"]));
 
       const lista = document.getElementById("book-list");
       lista.innerHTML = '';
@@ -287,33 +188,16 @@
         resultados.forEach(livro => {
           const card = document.createElement("div");
 
-          const imagePath = livro["ImageFile"]
-            ? `https://github.com/Literavi/Blog/raw/main/imagens/${livro["ImageFile"]}`
-            : "https://via.placeholder.com/150";
-
-          // Define a cor da etiqueta com base no status
-          let tagColor = "";
-          switch (livro["Status"].toLowerCase()) {
-            case "quero ler":
-              tagColor = "#3498db"; // Azul
-              break;
-            case "lido":
-              tagColor = "#e91e63"; // Rosa
-              break;
-            case "lendo":
-              tagColor = "#ff9800"; // Laranja
-              break;
-            default:
-              tagColor = "#95a5a6"; // Cinza para status indefinido
-          }
+          let tagClass = "status-indefinido";
+          if (livro.Status.toLowerCase() === "quero ler") tagClass = "status-quero-ler";
+          else if (livro.Status.toLowerCase() === "lido") tagClass = "status-lido";
+          else if (livro.Status.toLowerCase() === "lendo") tagClass = "status-lendo";
 
           card.innerHTML = `
-            <div style="position: relative;">
-              <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}')">
-              <span class="status-tag" style="background-color: ${tagColor};">${livro["Status"]}</span>
-            </div>
-            <h4>${livro["Nome"]}</h4>
-            <p><strong>Autor:</strong> ${livro["Autor"]}</p>
+            <img src="https://github.com/Literavi/Blog/raw/main/imagens/${livro.ImageFile}" alt="${livro.Nome}">
+            <span class="status-tag ${tagClass}">${livro.Status}</span>
+            <h4>${livro.Nome}</h4>
+            <p><strong>Autor:</strong> ${livro.Autor}</p>
           `;
           lista.appendChild(card);
         });
@@ -321,30 +205,6 @@
         lista.innerHTML = '<p>Nenhum livro encontrado com o autor/título e status selecionados.</p>';
       }
     }
-
-    function abrirModal(titulo, sinopse) {
-      document.getElementById("modal-title").textContent = titulo;
-      document.getElementById("modal-synopsis").textContent = sinopse || "Sinopse não disponível.";
-      document.getElementById("synopsis-modal").style.display = "flex";
-    }
-
-    function fecharModal() {
-      document.getElementById("synopsis-modal").style.display = "none";
-    }
-
-    function mostrarMensagem(tipo, mensagem) {
-      const errorMessage = document.getElementById("error-message");
-      errorMessage.textContent = mensagem;
-      errorMessage.style.color = tipo === "sucesso" ? "green" : "red";
-      errorMessage.style.display = "block";
-
-      setTimeout(() => {
-        errorMessage.style.display = "none";
-      }, 5000);
-    }
-
-    // Carrega os livros ao iniciar a página
-    carregarLivros();
   </script>
 </body>
 </html>
