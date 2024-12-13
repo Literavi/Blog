@@ -8,7 +8,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-  <style>
+    <style>
     body {
       font-family: 'Roboto', sans-serif;
       margin: 0;
@@ -239,120 +239,6 @@
       <button class="remove" onclick="removeBook()">- Remover Livro</button>
     </div>
     <div class="message" id="congrats">🎉 Parabéns! Você atingiu sua meta! 🎉</div>
-
-    <div class="instructions">
-      <h3>Com a aba Variáveis configurada, agora precisamos garantir que o código do seu projeto acesse corretamente essa aba para carregar e atualizar os valores das variáveis. Vou guiar você pelos próximos passos:</h3>
-      <ol>
-        <li>
-          <strong>Passo 1: Estrutura da Aba Variáveis</strong>
-          <p>Certifique-se de que a aba Variáveis no Google Sheets tenha este formato:</p>
-          <pre>
-            Variável       Valor
-            livrosLidos    5
-            meta           25
-          </pre>
-          <p>Isso é importante para que o código possa localizar as variáveis corretamente.</p>
-        </li>
-        <li>
-          <strong>Passo 2: Atualizar o Código para Usar a Aba Variáveis</strong>
-          <p>Aqui está como o código deve ser ajustado para interagir com a aba Variáveis:</p>
-          <pre>
-            async function carregarVariaveis() {
-              const endpoint = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Variáveis!A1:B?key=${apiKey}`;
-              try {
-                const response = await fetch(endpoint);
-                const data = await response.json();
-                const rows = data.values;
-
-                rows.forEach(row => {
-                  const nomeVariavel = row[0];
-                  const valor = parseInt(row[1], 10);
-
-                  if (nomeVariavel === "livrosLidos") {
-                    livrosLidos = valor;
-                  } else if (nomeVariavel === "meta") {
-                    meta = valor;
-                  }
-                });
-
-                atualizarGraficoMeta();
-              } catch (error) {
-                console.error("Erro ao carregar variáveis do Google Sheets:", error);
-              }
-            }
-
-            async function atualizarVariavel(nomeVariavel, valor) {
-              const endpoint = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Variáveis!A1:B?valueInputOption=USER_ENTERED&key=${apiKey}`;
-              const requestBody = {
-                range: "Variáveis!A1:B",
-                values: [[nomeVariavel, valor]]
-              };
-
-              try {
-                const response = await fetch(endpoint, {
-                  method: "PUT",
-                  headers: {
-                    "Content-Type": "application/json"
-                  },
-                  body: JSON.stringify(requestBody)
-                });
-
-                if (!response.ok) {
-                  console.error("Erro ao atualizar a aba Variáveis:", response.statusText);
-                } else {
-                  console.log(`${nomeVariavel} atualizado com sucesso.`);
-                }
-              } catch (error) {
-                console.error("Erro ao conectar com a API do Google Sheets:", error);
-              }
-            }
-
-            function addBook() {
-              if (livrosLidos < meta) {
-                livrosLidos++;
-                atualizarGraficoMeta();
-                atualizarVariavel("livrosLidos", livrosLidos);
-              }
-            }
-
-            function removeBook() {
-              if (livrosLidos > 0) {
-                livrosLidos--;
-                atualizarGraficoMeta();
-                atualizarVariavel("livrosLidos", livrosLidos);
-              }
-            }
-
-            function atualizarGraficoMeta() {
-              const percentage = (livrosLidos / meta) * 100;
-
-              const chart = document.querySelector('.chart');
-              const numberElement = document.getElementById('number');
-              const congratsMessage = document.getElementById('congrats');
-
-              chart.style.setProperty('--percentage', percentage);
-              numberElement.textContent = `${livrosLidos}/${meta}`;
-              congratsMessage.style.display = livrosLidos >= meta ? "block" : "none";
-            }
-          </pre>
-        </li>
-        <li>
-          <strong>Passo 3: Inicializar na Carga da Página</strong>
-          <p>Adicione a chamada de carregarVariaveis() no evento de inicialização da página:</p>
-          <pre>
-            document.addEventListener("DOMContentLoaded", carregarVariaveis);
-          </pre>
-        </li>
-        <li>
-          <strong>Passo 4: Testar</strong>
-          <ul>
-            <li><strong>Carregamento Inicial:</strong> Abra a página e veja se o gráfico de metas carrega os valores iniciais de livrosLidos e meta da aba Variáveis.</li>
-            <li><strong>Atualização ao Clicar nos Botões:</strong> Clique nos botões de "Adicionar Livro" e "Remover Livro". Verifique se os valores na aba Variáveis são atualizados corretamente.</li>
-            <li><strong>Erros no Console:</strong> Abra o console do navegador (F12 > Console) e verifique se há erros relacionados à API do Google Sheets.</li>
-          </ul>
-        </li>
-      </ol>
-    </div>
   </div>
 
   <script>
@@ -426,7 +312,8 @@
       numberElement.textContent = `${livrosLidos}/${meta}`;
       congratsMessage.style.display = livrosLidos >= meta ? "block" : "none";
     }
-        // Adicionar livro e atualizar o Google Sheets
+
+    // Adicionar livro e atualizar o Google Sheets
     function addBook() {
       if (livrosLidos < meta) {
         livrosLidos++;
@@ -453,4 +340,3 @@
   </script>
 </body>
 </html>
-
