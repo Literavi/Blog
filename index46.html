@@ -1,346 +1,217 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-   <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Biblioteca Pessoal - Home</title>
-      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-      <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-      <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-      <style>F
-         body {
-         font-family: 'Roboto', sans-serif;
-         margin: 0;
-         padding: 0;
-         background-color: #f9f9f9;
-         color: #333;
-         }
-         #menu-container {
-         position: fixed;
-         top: 0;
-         left: 0;
-         height: 100vh;
-         }
-         .container {
-         padding: 20px;
-         margin-left: 60px;
-         }
-         h2 {
-         text-align: center;
-         color: #00297c;
-         margin-bottom: 20px;
-         }
-         #livrosLidosChart {
-         max-width: 600px;
-         margin: 0 auto;
-         display: block;
-         }
-         #capaLivroContainer {
-         display: none;
-         flex-wrap: wrap;
-         justify-content: center;
-         gap: 10px;
-         margin-top: 20px;
-         }
-         #capaLivroContainer img {
-         width: 100px;
-         height: auto;
-         border-radius: 8px;
-         transition: transform 0.3s ease, box-shadow 0.3s ease;
-         cursor: pointer;
-         }
-         #capaLivroContainer img:hover {
-         transform: scale(1.1);
-         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-         }
-         .livros-lendo {
-         display: flex;
-         flex-wrap: wrap;
-         gap: 20px;
-         margin-top: 20px;
-         }
-         .livro-card {
-         width: 200px;
-         background: #ffffff;
-         border: 1px solid #ddd;
-         border-radius: 8px;
-         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-         text-align: center;
-         overflow: hidden;
-         }
-         .livro-card img {
-         width: 100%;
-         height: auto;
-         }
-         .livro-card h4 {
-         margin: 10px 0;
-         font-size: 16px;
-         color: #333;
-         }
-         .livro-card p {
-         font-size: 14px;
-         color: #777;
-         margin-bottom: 10px;
-         }
-         .progress-bar {
-         width: 100%;
-         background-color: #f1f1f1;
-         border-radius: 5px;
-         overflow: hidden;
-         margin: 10px 0;
-         height: 15px;
-         }
-         .progress-bar div {
-         height: 100%;
-         background-color: #6c63ff;
-         text-align: center;
-         color: white;
-         border-radius: 5px;
-         transition: width 0.3s;
-         }
-         .title {
-         text-align: center;
-         font-size: 24px;
-         margin-top: 20px;
-         color: #00297c;
-         }
-         .chart-container {
-         position: relative;
-         width: 240px;
-         height: 240px;
-         margin: 20px auto;
-         background: linear-gradient(145deg, #ffffff, #e6e6e6);
-         box-shadow: 20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;
-         border-radius: 50%;
-         }
-         .chart {
-         width: 100%;
-         height: 100%;
-         border-radius: 50%;
-         background: conic-gradient(
-         #6c63ff calc(var(--percentage) * 1%),
-         #d1d1d1 calc(var(--percentage) * 1%)
-         );
-         mask: radial-gradient(circle, transparent 50%, white 51%);
-         -webkit-mask: radial-gradient(circle, transparent 50%, white 51%);
-         transform: rotate(-90deg);
-         }
-         .chart-text {
-         position: absolute;
-         top: 50%;
-         left: 50%;
-         transform: translate(-50%, -50%);
-         text-align: center;
-         }
-         .chart-text .number {
-         font-size: 36px;
-         font-weight: 600;
-         color: #333;
-         }
-         .chart-text .goal {
-         font-size: 16px;
-         color: #777;
-         font-weight: 500;
-         }
-         .buttons {
-         display: flex;
-         justify-content: center;
-         gap: 15px;
-         margin-top: 20px;
-         }
-         .buttons button {
-         padding: 12px 20px;
-         font-size: 16px;
-         font-weight: 500;
-         border: none;
-         border-radius: 25px;
-         cursor: pointer;
-         transition: all 0.3s ease-in-out;
-         box-shadow: 5px 5px 15px #d4d4d4, -5px -5px 15px #ffffff;
-         }
-         .buttons button.add {
-         background-color: #6c63ff;
-         color: white;
-         }
-         .buttons button.add:hover {
-         background-color: #5848d8;
-         box-shadow: 2px 2px 10px #b0b0b0, -2px -2px 10px #ffffff;
-         }
-         .buttons button.remove {
-         background-color: #ff6c6c;
-         color: white;
-         }
-         .buttons button.remove:hover {
-         background-color: #d85858;
-         box-shadow: 2px 2px 10px #b0b0b0, -2px -2px 10px #ffffff;
-         }
-         .message {
-         text-align: center;
-         font-size: 20px;
-         font-weight: bold;
-         color: #6c63ff;
-         display: none;
-         }
-      </style>
-   </head>
-   <body>
-      <!-- Aqui o menu será carregado dinamicamente -->
-      <div id="menu-container"></div>
-      <!-- Conteúdo Principal -->
-      <div class="container">
-         <h2>Quantidade de Livros Lidos por Mês em 2024</h2>
-         <canvas id="livrosLidosChart"></canvas>
-         <div id="capaLivroContainer"></div>
-         <h2>Livros que Você Está Lendo</h2>
-         <div class="livros-lendo" id="livrosLendoContainer"></div>
-         <!-- Gráfico de Metas -->
-         <div class="title">Meta de Leitura</div>
-         <div class="chart-container">
-            <div class="chart" style="--percentage: 20;"></div>
-            <div class="chart-text">
-               <div class="number" id="number">5/25</div>
-               <div class="goal" id="goal">Livros Lidos</div>
-            </div>
-         </div>
-         <div class="buttons">
-            <button class="add" onclick="addBook()">+ Adicionar Livro</button>
-            <button class="remove" onclick="removeBook()">- Remover Livro</button>
-         </div>
-         <div class="message" id="congrats">🎉 Parabéns! Você atingiu sua meta! 🎉</div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca Pessoal - Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+  <style>
+    /* Estilos existentes */
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    .container {
+      padding: 20px;
+      margin-left: 60px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #00297c;
+      margin-bottom: 20px;
+    }
+
+    #livrosLidosChart {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .chart-container {
+      position: relative;
+      width: 240px;
+      height: 240px;
+      margin: 20px auto;
+    }
+
+    .chart {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: conic-gradient(
+        #6c63ff calc(var(--percentage) * 1%),
+        #d1d1d1 calc(var(--percentage) * 1%)
+      );
+      transform: rotate(-90deg);
+    }
+
+    .chart-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .chart-text .number {
+      font-size: 36px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .chart-text .goal {
+      font-size: 16px;
+      color: #777;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .buttons button {
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: 500;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      box-shadow: 5px 5px 15px #d4d4d4, -5px -5px 15px #ffffff;
+    }
+
+    .buttons button.add {
+      background-color: #6c63ff;
+      color: white;
+    }
+
+    .buttons button.remove {
+      background-color: #ff6c6c;
+      color: white;
+    }
+
+    .message {
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      color: #6c63ff;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Quantidade de Livros Lidos por Mês em 2024</h2>
+    <canvas id="livrosLidosChart"></canvas>
+    <h2>Meta de Leitura</h2>
+    <div class="chart-container">
+      <div class="chart" style="--percentage: 0;"></div>
+      <div class="chart-text">
+        <div class="number" id="number">0/0</div>
+        <div class="goal" id="goal">Livros Lidos</div>
       </div>
-      <!-- Script para carregar o menu -->
-      <script>
-         async function carregarMenu() {
-           try {
-             const response = await fetch("menu.html");
-             if (!response.ok) throw new Error(`Erro ao carregar o menu: ${response.status}`);
-             const menuHtml = await response.text();
-             document.getElementById("menu-container").innerHTML = menuHtml;
-         
-             const sidebar = document.querySelector('.sidebar');
-             const toggleBtn = document.getElementById('toggle-btn');
-             const themeToggle = document.getElementById('theme-toggle');
-             const body = document.body;
-         
-             toggleBtn.addEventListener('click', () => {
-               sidebar.classList.toggle('active');
-             });
-         
-             themeToggle.addEventListener('click', () => {
-               const currentTheme = body.getAttribute('data-theme');
-               const isDark = currentTheme === 'dark';
-               body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-         
-               const icon = themeToggle.querySelector('ion-icon');
-               icon.setAttribute('name', isDark ? 'moon-outline' : 'sunny-outline');
-               themeToggle.querySelector('span').textContent = isDark ? 'Dark Mode' : 'Light Mode';
-             });
-         
-             const script = document.createElement('script');
-             script.src = "https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js";
-             document.body.appendChild(script);
-           } catch (error) {
-             console.error("Erro ao carregar o menu:", error);
-             document.getElementById("menu-container").innerHTML = "<p>Erro ao carregar o menu.</p>";
-           }
-         }
-         
-         carregarMenu();
-      </script>
-      <!-- Script para carregar dados do Google Sheets -->
-      <script>
-         const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc"; 
-         const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs";
-         
-         let livrosLidos = 0;
-         let meta = 0;
-         
-         async function carregarVariaveis() {
-           const endpoint = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Variáveis!A1:B?key=${apiKey}`;
-           try {
-             const response = await fetch(endpoint);
-             const data = await response.json();
-             const rows = data.values;
-         
-             rows.forEach(row => {
-               const nomeVariavel = row[0];
-               const valor = parseInt(row[1], 10);
-         
-               if (nomeVariavel === "livrosLidos") {
-                 livrosLidos = valor;
-               } else if (nomeVariavel === "meta") {
-                 meta = valor;
-               }
-             });
-         
-             atualizarGraficoMeta();
-           } catch (error) {
-             console.error("Erro ao carregar variáveis do Google Sheets:", error);
-           }
-         }
-         
-         async function atualizarVariavel(nomeVariavel, valor) {
-         const endpoint = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Variáveis!A1:B?valueInputOption=RAW&key=${apiKey}`;
-         
-         const requestBody = {
-         range: "Variáveis!A2:B", // Ajusta o intervalo para apontar os valores
-         majorDimension: "ROWS",
-         values: [[nomeVariavel, valor]]
-         };
-         
-         try {
-         const response = await fetch(endpoint, {
-           method: "PUT",
-           headers: {
-             "Content-Type": "application/json"
-           },
-           body: JSON.stringify(requestBody)
-         });
-         
-         if (!response.ok) {
-           console.error("Erro ao atualizar a aba Variáveis:", response.statusText);
-         } else {
-           console.log(`${nomeVariavel} atualizado com sucesso para ${valor}.`);
-         }
-         } catch (error) {
-         console.error("Erro ao conectar com a API do Google Sheets:", error);
-         }
-         }
-         
-         
-         
-         function atualizarGraficoMeta() {
-           const percentage = (livrosLidos / meta) * 100;
-         
-           const chart = document.querySelector('.chart');
-           const numberElement = document.getElementById('number');
-           const congratsMessage = document.getElementById('congrats');
-         
-           chart.style.setProperty('--percentage', percentage);
-           numberElement.textContent = `${livrosLidos}/${meta}`;
-           congratsMessage.style.display = livrosLidos >= meta ? "block" : "none";
-         }
-         
-         function addBook() {
-           if (livrosLidos < meta) {
-             livrosLidos++;
-             atualizarGraficoMeta();
-             atualizarVariavel("livrosLidos", livrosLidos);
-           }
-         }
-         
-         function removeBook() {
-           if (livrosLidos > 0) {
-             livrosLidos--;
-             atualizarGraficoMeta();
-             atualizarVariavel("livrosLidos", livrosLidos);
-           }
-         }
-         
-         document.addEventListener("DOMContentLoaded", () => {
-           carregarVariaveis();
-         });
-      </script>
-   </body>
+    </div>
+    <div class="buttons">
+      <button class="add" onclick="addBook()">+ Adicionar Livro</button>
+      <button class="remove" onclick="removeBook()">- Remover Livro</button>
+    </div>
+    <div class="message" id="congrats">🎉 Parabéns! Você atingiu sua meta! 🎉</div>
+  </div>
+
+  <script>
+    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc";
+    const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs";
+
+    let livrosLidos = 0;
+    let meta = 0;
+
+    async function carregarVariaveis() {
+      const endpoint = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Variáveis!A1:B?key=${apiKey}`;
+      try {
+        const response = await fetch(endpoint);
+        const data = await response.json();
+        const rows = data.values;
+
+        rows.forEach(row => {
+          const nomeVariavel = row[0];
+          const valor = parseInt(row[1], 10);
+
+          if (nomeVariavel === "livrosLidos") {
+            livrosLidos = valor;
+          } else if (nomeVariavel === "meta") {
+            meta = valor;
+          }
+        });
+
+        atualizarGraficoMeta();
+      } catch (error) {
+        console.error("Erro ao carregar variáveis do Google Sheets:", error);
+      }
+    }
+
+    async function atualizarVariavel(nomeVariavel, valor) {
+      const endpoint = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Variáveis!A2:B?valueInputOption=USER_ENTERED&key=${apiKey}`;
+      const requestBody = {
+        values: [[nomeVariavel, valor]]
+      };
+
+      try {
+        const response = await fetch(endpoint, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(requestBody)
+        });
+
+        if (!response.ok) {
+          console.error("Erro ao atualizar a aba Variáveis:", response.statusText);
+        } else {
+          console.log(`${nomeVariavel} atualizado com sucesso para ${valor}.`);
+        }
+      } catch (error) {
+        console.error("Erro ao conectar com a API do Google Sheets:", error);
+      }
+    }
+
+    function atualizarGraficoMeta() {
+      const percentage = (livrosLidos / meta) * 100;
+
+      const chart = document.querySelector('.chart');
+      const numberElement = document.getElementById('number');
+      const congratsMessage = document.getElementById('congrats');
+
+      chart.style.setProperty('--percentage', percentage);
+      numberElement.textContent = `${livrosLidos}/${meta}`;
+      congratsMessage.style.display = livrosLidos >= meta ? "block" : "none";
+    }
+
+    function addBook() {
+      if (livrosLidos < meta) {
+        livrosLidos++;
+        atualizarGraficoMeta();
+        atualizarVariavel("livrosLidos", livrosLidos);
+      }
+    }
+
+    function removeBook() {
+      if (livrosLidos > 0) {
+        livrosLidos--;
+        atualizarGraficoMeta();
+        atualizarVariavel("livrosLidos", livrosLidos);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", carregarVariaveis);
+  </script>
+</body>
 </html>
