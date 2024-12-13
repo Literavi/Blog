@@ -141,9 +141,6 @@
     const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs"; // Substitua pela sua chave de API
     const sheetName = "Variavel"; // Nome da aba da planilha
 
-    // URL da API para escrita
-    const updateUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!B2?valueInputOption=USER_ENTERED&key=${apiKey}`;
-
     async function fetchSheetData() {
       const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
 
@@ -179,15 +176,16 @@
 
     async function removeBook() {
       try {
-        // Busca o valor atual de livrosLidos
         const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
         const response = await fetch(url);
         const data = await response.json();
         const livrosLidos = parseInt(data.values.find(row => row[0] === "livrosLidos")?.[1] || 0, 10);
+        const meta = parseInt(data.values.find(row => row[0] === "meta")?.[1] || 0, 10);
 
         if (livrosLidos > 0) {
-          // Subtração de 1 e envio para a planilha
           const updatedValue = livrosLidos - 1;
+
+          const updateUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!B2?valueInputOption=USER_ENTERED&key=${apiKey}`;
 
           const updateResponse = await fetch(updateUrl, {
             method: "PUT",
@@ -215,17 +213,45 @@
       }
     }
 
-    let livrosLidos = 0;
-    let meta = 0;
+    async function addBook() {
+      try {
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        const livrosLidos = parseInt(data.values.find(row => row[0] === "livrosLidos")?.[1] || 0, 10);
+        const meta = parseInt(data.values.find(row => row[0] === "meta")?.[1] || 0, 10);
 
-    function addBook() {
-      if (livrosLidos < meta) {
-        livrosLidos++;
-        atualizarGraficoMeta(livrosLidos, meta);
+        if (livrosLidos < meta) {
+          const updatedValue = livrosLidos + 1;
+
+          const updateUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}!B2?valueInputOption=USER_ENTERED&key=${apiKey}`;
+
+          const updateResponse = await fetch(updateUrl, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              range: `${sheetName}!B2`,
+              majorDimension: "ROWS",
+              values: [[updatedValue]]
+            })
+          });
+
+          if (updateResponse.ok) {
+            console.log("Valor atualizado na planilha.");
+            atualizarGraficoMeta(updatedValue, meta);
+          } else {
+            console.error("Erro ao atualizar a planilha:", await updateResponse.text());
+          }
+        } else {
+          console.log("Meta atingida. Não é possível adicionar mais livros.");
+        }
+      } catch (error) {
+        console.error("Erro ao adicionar livro:", error);
       }
     }
 
-    // Carregar dados da planilha ao iniciar
     fetchSheetData();
   </script>
 </body>
