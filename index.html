@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesquisa de Livros</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        li:last-child {
+            border-bottom: none;
+        }
+
+        .no-results {
+            text-align: center;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Pesquisar Livros</h1>
+        <input type="text" id="searchInput" placeholder="Digite o título ou autor do livro">
+        <ul id="bookList">
+            <!-- Lista de livros será carregada dinamicamente -->
+        </ul>
+        <p class="no-results" id="noResults" style="display: none;">Nenhum livro encontrado.</p>
+    </div>
+
+    <script>
+        const books = [
+            { title: "Orgulho e Preconceito", author: "Jane Austen" },
+            { title: "Dom Casmurro", author: "Machado de Assis" },
+            { title: "1984", author: "George Orwell" },
+            { title: "O Pequeno Príncipe", author: "Antoine de Saint-Exupéry" },
+            { title: "O Senhor dos Anéis", author: "J.R.R. Tolkien" }
+        ];
+
+        const searchInput = document.getElementById('searchInput');
+        const bookList = document.getElementById('bookList');
+        const noResults = document.getElementById('noResults');
+
+        function renderBooks(filteredBooks) {
+            bookList.innerHTML = '';
+            if (filteredBooks.length === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+                filteredBooks.forEach(book => {
+                    const li = document.createElement('li');
+                    li.textContent = `${book.title} - ${book.author}`;
+                    bookList.appendChild(li);
+                });
+            }
+        }
+
+        searchInput.addEventListener('input', () => {
+            const query = searchInput.value.toLowerCase();
+            const filteredBooks = books.filter(book =>
+                book.title.toLowerCase().includes(query) ||
+                book.author.toLowerCase().includes(query)
+            );
+            renderBooks(filteredBooks);
+        });
+
+        // Renderiza todos os livros inicialmente
+        renderBooks(books);
+    </script>
+</body>
+</html>
