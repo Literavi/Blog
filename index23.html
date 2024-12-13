@@ -146,6 +146,8 @@
      const response = await fetch(url);
      const data = await response.json();
 
+     console.log(data.values); // Adicione esta linha para verificar os dados retornados pela API
+
      // Verifica se os dados existem
      if (data.values && data.values.length > 1) {
       const rows = data.values;
