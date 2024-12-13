@@ -8,7 +8,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
- <style>
+  <style>
     body {
       font-family: 'Roboto', sans-serif;
       margin: 0;
@@ -26,7 +26,7 @@
 
     .container {
       padding: 20px;
-      margin-left: 60px; /* Espaço para o menu lateral */
+      margin-left: 60px;
     }
 
     h2 {
@@ -228,9 +228,9 @@
     <!-- Gráfico de Metas -->
     <div class="title">Meta de Leitura</div>
     <div class="chart-container">
-      <div class="chart" style="--percentage: 0;"></div>
+      <div class="chart" style="--percentage: 20;"></div>
       <div class="chart-text">
-        <div class="number" id="number">0/0</div>
+        <div class="number" id="number">5/25</div>
         <div class="goal" id="goal">Livros Lidos</div>
       </div>
     </div>
@@ -239,16 +239,57 @@
       <button class="remove" onclick="removeBook()">- Remover Livro</button>
     </div>
     <div class="message" id="congrats">🎉 Parabéns! Você atingiu sua meta! 🎉</div>
+
   </div>
 
+  <!-- Script para carregar o menu -->
   <script>
-    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc"; // Seu Spreadsheet ID
-    const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs"; // Sua chave de API
+    async function carregarMenu() {
+      try {
+        const response = await fetch("menu.html");
+        if (!response.ok) throw new Error(`Erro ao carregar o menu: ${response.status}`);
+        const menuHtml = await response.text();
+        document.getElementById("menu-container").innerHTML = menuHtml;
+
+        const sidebar = document.querySelector('.sidebar');
+        const toggleBtn = document.getElementById('toggle-btn');
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        toggleBtn.addEventListener('click', () => {
+          sidebar.classList.toggle('active');
+        });
+
+        themeToggle.addEventListener('click', () => {
+          const currentTheme = body.getAttribute('data-theme');
+          const isDark = currentTheme === 'dark';
+          body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+
+          const icon = themeToggle.querySelector('ion-icon');
+          icon.setAttribute('name', isDark ? 'moon-outline' : 'sunny-outline');
+          themeToggle.querySelector('span').textContent = isDark ? 'Dark Mode' : 'Light Mode';
+        });
+
+        const script = document.createElement('script');
+        script.src = "https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js";
+        document.body.appendChild(script);
+      } catch (error) {
+        console.error("Erro ao carregar o menu:", error);
+        document.getElementById("menu-container").innerHTML = "<p>Erro ao carregar o menu.</p>";
+      }
+    }
+
+    carregarMenu();
+  </script>
+
+  <!-- Script para carregar dados do Google Sheets -->
+  <script>
+    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc"; 
+    const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs";
 
     let livrosLidos = 0;
     let meta = 0;
 
-    // Função para carregar variáveis da aba "Variáveis"
     async function carregarVariaveis() {
       const endpoint = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Variáveis!A1:B?key=${apiKey}`;
       try {
@@ -273,7 +314,6 @@
       }
     }
 
-    // Função para atualizar uma variável na aba "Variáveis"
     async function atualizarVariavel(nomeVariavel, valor) {
       const endpoint = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Variáveis!A1:B?valueInputOption=USER_ENTERED&key=${apiKey}`;
       const requestBody = {
@@ -300,7 +340,6 @@
       }
     }
 
-    // Atualizar gráfico com os valores das variáveis
     function atualizarGraficoMeta() {
       const percentage = (livrosLidos / meta) * 100;
 
@@ -313,7 +352,6 @@
       congratsMessage.style.display = livrosLidos >= meta ? "block" : "none";
     }
 
-    // Adicionar livro e atualizar o Google Sheets
     function addBook() {
       if (livrosLidos < meta) {
         livrosLidos++;
@@ -322,7 +360,6 @@
       }
     }
 
-    // Remover livro e atualizar o Google Sheets
     function removeBook() {
       if (livrosLidos > 0) {
         livrosLidos--;
@@ -331,11 +368,8 @@
       }
     }
 
-    // Inicializar ao carregar a página
     document.addEventListener("DOMContentLoaded", () => {
       carregarVariaveis();
-      carregarLivrosLendo();
-      carregarDadosEExibirGrafico();
     });
   </script>
 </body>
