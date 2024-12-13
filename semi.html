@@ -1,125 +1,211 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gráfico Semicircular</title>
+  <title>Biblioteca Pessoal - Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
   <style>
+    /* Estilos */
     body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+      font-family: 'Roboto', sans-serif;
       margin: 0;
-      background-color: #f4f4f4;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
     }
-    .chart-container {
-      position: relative;
-      width: 200px;
-      height: 100px;
+
+    .container {
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #00297c;
       margin-bottom: 20px;
     }
+
+    .chart-container {
+      position: relative;
+      width: 240px;
+      height: 240px;
+      margin: 20px auto;
+    }
+
     .chart {
       width: 100%;
       height: 100%;
-      border-radius: 100px 100px 0 0;
+      border-radius: 50%;
       background: conic-gradient(
-        #4caf50 calc(var(--percentage) * 1%),
-        #ddd calc(var(--percentage) * 1%)
+        #6c63ff calc(var(--percentage) * 1%),
+        #d1d1d1 calc(var(--percentage) * 1%)
       );
+      mask: radial-gradient(circle, transparent 50%, white 51%);
+      -webkit-mask: radial-gradient(circle, transparent 50%, white 51%);
       transform: rotate(-90deg);
     }
-    .label {
+
+    .chart-text {
       position: absolute;
-      bottom: 10px;
+      top: 50%;
       left: 50%;
-      transform: translateX(-50%);
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .chart-text .number {
+      font-size: 36px;
+      font-weight: 600;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .buttons button {
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: 500;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .message {
+      text-align: center;
       font-size: 20px;
       font-weight: bold;
-      color: #333;
-    }
-    .controls {
-      display: flex;
-      gap: 10px;
-    }
-    .controls button {
-      padding: 10px 15px;
-      font-size: 16px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .controls button:active {
-      transform: scale(0.98);
-    }
-    .congrats {
-      margin-top: 20px;
-      font-size: 24px;
-      font-weight: bold;
-      color: #4caf50;
-      opacity: 0;
-      animation: fade-in 1s forwards;
-    }
-    @keyframes fade-in {
-      from {
-        opacity: 0;
-        transform: scale(0.8);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
+      color: #6c63ff;
+      display: none;
     }
   </style>
 </head>
 <body>
-  <div class="chart-container">
-    <div class="chart" style="--percentage: 20;"></div>
-    <div class="label" id="chart-label">5/25</div>
+  <div class="container">
+    <h2>Quantidade de Livros Lidos por Mês em 2024</h2>
+    <div class="chart-container">
+      <div class="chart" style="--percentage: 0;"></div>
+      <div class="chart-text">
+        <div class="number" id="number">0/0</div>
+      </div>
+    </div>
+    <div class="buttons">
+      <button class="add" onclick="addBook()">+ Adicionar Livro</button>
+      <button class="remove" onclick="removeBook()">- Remover Livro</button>
+    </div>
+    <div class="message" id="congrats">🎉 Parabéns! Você atingiu sua meta! 🎉</div>
   </div>
-  <div class="controls">
-    <button id="decrement">-1 Livro</button>
-    <button id="increment">+1 Livro</button>
-  </div>
-  <div id="congrats-message" class="congrats">Parabéns! Meta concluída!</div>
 
   <script>
-    const totalBooks = 25;
-    let readBooks = 5;
+    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc";
+    const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs";
 
-    const chart = document.querySelector('.chart');
-    const label = document.getElementById('chart-label');
-    const congratsMessage = document.getElementById('congrats-message');
+    let livrosLidos = 0;
+    let meta = 0;
 
-    function updateChart() {
-      const percentage = (readBooks / totalBooks) * 100;
-      chart.style.setProperty('--percentage', percentage);
-      label.textContent = `${readBooks}/${totalBooks}`;
+    async function carregarVariaveis() {
+      const endpoint = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Variáveis!A1:B?key=${apiKey}`;
+      try {
+        const response = await fetch(endpoint);
+        const data = await response.json();
+        const rows = data.values;
 
-      if (readBooks === totalBooks) {
-        congratsMessage.style.opacity = 1;
-      } else {
-        congratsMessage.style.opacity = 0;
+        rows.forEach(row => {
+          const nomeVariavel = row[0];
+          const valor = parseInt(row[1], 10);
+
+          if (nomeVariavel === "livrosLidos") {
+            livrosLidos = valor;
+          } else if (nomeVariavel === "meta") {
+            meta = valor;
+          }
+        });
+
+        atualizarGraficoMeta();
+      } catch (error) {
+        console.error("Erro ao carregar variáveis do Google Sheets:", error);
       }
     }
 
-    document.getElementById('increment').addEventListener('click', () => {
-      if (readBooks < totalBooks) {
-        readBooks++;
-        updateChart();
+    async function atualizarVariavel(nomeVariavel, valor) {
+      let range;
+      if (nomeVariavel === "livrosLidos") {
+        range = "Variáveis!B2";
+      } else if (nomeVariavel === "meta") {
+        range = "Variáveis!B3";
+      } else {
+        console.error(`Variável desconhecida: ${nomeVariavel}`);
+        return;
       }
-    });
 
-    document.getElementById('decrement').addEventListener('click', () => {
-      if (readBooks > 0) {
-        readBooks--;
-        updateChart();
+      const endpoint = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${range}?valueInputOption=RAW&key=${apiKey}`;
+      const requestBody = {
+        range: range,
+        majorDimension: "ROWS",
+        values: [[valor]],
+      };
+
+      try {
+        const response = await fetch(endpoint, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestBody),
+        });
+
+        const responseData = await response.json();
+        if (!response.ok) {
+          console.error(`Erro ao atualizar "${nomeVariavel}" no intervalo ${range}:`, responseData.error.message);
+        } else {
+          console.log(`Variável "${nomeVariavel}" atualizada para ${valor}.`);
+        }
+      } catch (error) {
+        console.error("Erro ao conectar com a API do Google Sheets:", error);
       }
-    });
+    }
 
-    updateChart();
+    function atualizarGraficoMeta() {
+      if (meta === 0) {
+        console.error("Meta não pode ser zero.");
+        return;
+      }
+
+      const percentage = Math.min((livrosLidos / meta) * 100, 100);
+
+      const chart = document.querySelector('.chart');
+      const numberElement = document.getElementById('number');
+      const congratsMessage = document.getElementById('congrats');
+
+      chart.style.setProperty('--percentage', percentage);
+      numberElement.textContent = `${livrosLidos}/${meta}`;
+      congratsMessage.style.display = livrosLidos >= meta ? "block" : "none";
+    }
+
+    function addBook() {
+      if (livrosLidos < meta) {
+        livrosLidos++;
+        atualizarGraficoMeta();
+        atualizarVariavel("livrosLidos", livrosLidos);
+      }
+    }
+
+    function removeBook() {
+      if (livrosLidos > 0) {
+        livrosLidos--;
+        atualizarGraficoMeta();
+        atualizarVariavel("livrosLidos", livrosLidos);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", carregarVariaveis);
   </script>
 </body>
 </html>
