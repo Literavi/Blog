@@ -4,26 +4,93 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Biblioteca Pessoal - Home</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
   <style>
-    /* Todo o estilo original está mantido aqui */
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+
+    .container {
+      padding: 20px;
+      margin: auto;
+      max-width: 800px;
+      text-align: center;
+    }
+
+    .chart-container {
+      position: relative;
+      width: 240px;
+      height: 240px;
+      margin: 20px auto;
+    }
+
+    .chart {
+      width: 100%;
+      height: 100%;
+      background: conic-gradient(
+        #6c63ff calc(var(--percentage) * 1%),
+        #d1d1d1 calc(var(--percentage) * 1%)
+      );
+      border-radius: 50%;
+      transform: rotate(-90deg);
+    }
+
+    .chart-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .chart-text .number {
+      font-size: 36px;
+      font-weight: 600;
+    }
+
+    .chart-text .goal {
+      font-size: 16px;
+      color: #777;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .buttons button {
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: 500;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      background-color: #6c63ff;
+      color: white;
+    }
+
+    .buttons button:hover {
+      background-color: #5848d8;
+    }
+
+    .message {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #6c63ff;
+      display: none;
+    }
   </style>
 </head>
 <body>
-  <div id="menu-container"></div>
-
   <div class="container">
-    <h2>Quantidade de Livros Lidos por Mês em 2024</h2>
-    <canvas id="livrosLidosChart"></canvas>
-    <div id="capaLivroContainer"></div>
-
-    <h2>Livros que Você Está Lendo</h2>
-    <div class="livros-lendo" id="livrosLendoContainer"></div>
-
-    <div class="title">Meta de Leitura</div>
+    <h2>Meta de Leitura</h2>
     <div class="chart-container">
       <div class="chart" style="--percentage: 20;"></div>
       <div class="chart-text">
@@ -32,8 +99,8 @@
       </div>
     </div>
     <div class="buttons">
-      <button class="add" onclick="addBook()">+ Adicionar Livro</button>
-      <button class="remove" onclick="removeBook()">- Remover Livro</button>
+      <button onclick="addBook()">+ Adicionar Livro</button>
+      <button onclick="removeBook()">- Remover Livro</button>
     </div>
     <div class="message" id="congrats">🎉 Parabéns! Você atingiu sua meta! 🎉</div>
   </div>
@@ -41,7 +108,6 @@
   <script>
     const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc";
     const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs";
-
     let livrosLidos = 0;
     let meta = 0;
 
@@ -90,18 +156,17 @@
         });
 
         if (!response.ok) {
-          console.error(`Erro ao atualizar a variável "${nomeVariavel}":`, response.statusText);
+          console.error("Erro ao atualizar a variável:", await response.text());
         } else {
-          console.log(`Variável "${nomeVariavel}" atualizada com sucesso para ${valor}.`);
+          console.log("Atualização bem-sucedida.");
         }
       } catch (error) {
-        console.error("Erro ao conectar com a API do Google Sheets:", error);
+        console.error("Erro ao conectar com a API:", error);
       }
     }
 
     function atualizarGraficoMeta() {
       const percentage = (livrosLidos / meta) * 100;
-
       const chart = document.querySelector('.chart');
       const numberElement = document.getElementById('number');
       const congratsMessage = document.getElementById('congrats');
