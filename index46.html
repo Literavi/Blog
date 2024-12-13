@@ -9,10 +9,11 @@
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
   <style>
-    /* Seus estilos existentes aqui */
+    /* Todo o seu estilo existente */
   </style>
 </head>
 <body>
+
   <!-- Aqui o menu será carregado dinamicamente -->
   <div id="menu-container"></div>
 
@@ -28,7 +29,7 @@
     <!-- Gráfico de Metas -->
     <div class="title">Meta de Leitura</div>
     <div class="chart-container">
-      <div class="chart" style="--percentage: 20;"></div>
+      <div class="chart" style="--percentage: 0;"></div>
       <div class="chart-text">
         <div class="number" id="number">0/0</div>
         <div class="goal" id="goal">Livros Lidos</div>
@@ -48,9 +49,9 @@
     let livrosLidos = 0;
     let meta = 0;
 
+    // Função para carregar variáveis da aba "Variáveis"
     async function carregarVariaveis() {
       const endpoint = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Variáveis!A1:B?key=${apiKey}`;
-
       try {
         const response = await fetch(endpoint);
         const data = await response.json();
@@ -73,6 +74,7 @@
       }
     }
 
+    // Função para atualizar uma variável na aba "Variáveis"
     async function atualizarVariavel(nomeVariavel, valor) {
       const endpoint = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Variáveis!A1:B?valueInputOption=USER_ENTERED&key=${apiKey}`;
       const requestBody = {
@@ -92,13 +94,14 @@
         if (!response.ok) {
           console.error("Erro ao atualizar a aba Variáveis:", response.statusText);
         } else {
-          console.log(`${nomeVariavel} atualizada com sucesso.`);
+          console.log(`${nomeVariavel} atualizado com sucesso.`);
         }
       } catch (error) {
         console.error("Erro ao conectar com a API do Google Sheets:", error);
       }
     }
 
+    // Atualizar gráfico com os valores das variáveis
     function atualizarGraficoMeta() {
       const percentage = (livrosLidos / meta) * 100;
 
@@ -111,6 +114,7 @@
       congratsMessage.style.display = livrosLidos >= meta ? "block" : "none";
     }
 
+    // Adicionar livro e atualizar o Google Sheets
     function addBook() {
       if (livrosLidos < meta) {
         livrosLidos++;
@@ -119,6 +123,7 @@
       }
     }
 
+    // Remover livro e atualizar o Google Sheets
     function removeBook() {
       if (livrosLidos > 0) {
         livrosLidos--;
@@ -127,7 +132,12 @@
       }
     }
 
-    document.addEventListener("DOMContentLoaded", carregarVariaveis);
+    // Inicializar ao carregar a página
+    document.addEventListener("DOMContentLoaded", () => {
+      carregarVariaveis();
+      carregarLivrosLendo();
+      carregarDadosEExibirGrafico();
+    });
   </script>
 </body>
 </html>
