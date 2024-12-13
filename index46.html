@@ -8,7 +8,7 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-  <style>
+  <style>F
     body {
       font-family: 'Roboto', sans-serif;
       margin: 0;
@@ -315,30 +315,34 @@
     }
 
     async function atualizarVariavel(nomeVariavel, valor) {
-      const endpoint = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Variáveis!A1:B?valueInputOption=USER_ENTERED&key=${apiKey}`;
-      const requestBody = {
-        range: "Variáveis!A1:B",
-        values: [[nomeVariavel, valor]]
-      };
+  const endpoint = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Variáveis!A1:B?valueInputOption=RAW&key=${apiKey}`;
 
-      try {
-        const response = await fetch(endpoint, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(requestBody)
-        });
+  const requestBody = {
+    range: "Variáveis!A2:B", // Ajusta o intervalo para apontar os valores
+    majorDimension: "ROWS",
+    values: [[nomeVariavel, valor]]
+  };
 
-        if (!response.ok) {
-          console.error("Erro ao atualizar a aba Variáveis:", response.statusText);
-        } else {
-          console.log(`${nomeVariavel} atualizado com sucesso.`);
-        }
-      } catch (error) {
-        console.error("Erro ao conectar com a API do Google Sheets:", error);
-      }
+  try {
+    const response = await fetch(endpoint, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(requestBody)
+    });
+
+    if (!response.ok) {
+      console.error("Erro ao atualizar a aba Variáveis:", response.statusText);
+    } else {
+      console.log(`${nomeVariavel} atualizado com sucesso para ${valor}.`);
     }
+  } catch (error) {
+    console.error("Erro ao conectar com a API do Google Sheets:", error);
+  }
+}
+
+    
 
     function atualizarGraficoMeta() {
       const percentage = (livrosLidos / meta) * 100;
