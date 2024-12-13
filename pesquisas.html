@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca Pessoal - Pesquisar Livros</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</head>
+<body>
+
+  <!-- Menu dinâmico -->
+  <div id="menu-container"></div>
+
+  <!-- Conteúdo Principal -->
+  <div class="container">
+    <h2>Pesquisar por Autor e Status</h2>
+    <div class="search-container">
+      <input type="text" id="author-name" class="search-box" placeholder="Digite o nome do autor ou título">
+      <select id="status" class="dropdown">
+        <option value="">Selecione o status</option>
+        <option value="lendo">Lendo</option>
+        <option value="para ler">Para Ler</option>
+        <option value="lido">Lido</option>
+      </select>
+      <button class="button" onclick="buscarAutor()">Pesquisar</button>
+    </div>
+
+    <h3>Resultados da Pesquisa</h3>
+    <div id="book-list"></div>
+    <p id="error-message"></p>
+  </div>
+
+  <!-- Modal para exibir a sinopse -->
+  <div id="synopsis-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="fecharModal()">&times;</span>
+      <h4 id="modal-title"></h4>
+      <p id="modal-synopsis"></p>
+    </div>
+  </div>
+
+  <!-- Script para carregar o menu -->
+  <script>
+    fetch("menu.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("menu-container").innerHTML = data;
+
+        const sidebar = document.querySelector('.sidebar');
+        const toggleBtn = document.getElementById('toggle-btn');
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        toggleBtn.addEventListener('click', () => {
+          sidebar.classList.toggle('active');
+        });
+
+        themeToggle.addEventListener('click', () => {
+          const currentTheme = body.getAttribute('data-theme');
+          const isDark = currentTheme === 'dark';
+          body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+
+          const icon = themeToggle.querySelector('ion-icon');
+          icon.setAttribute('name', isDark ? 'moon-outline' : 'sunny-outline');
+          themeToggle.querySelector('span').textContent = isDark ? 'Dark Mode' : 'Light Mode';
+        });
+      });
+  </script>
+
+  <!-- Script para acessar a API do Google Sheets -->
+  <script>
+    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc"; // Seu Spreadsheet ID
+    const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs"; // Sua chave de API
+    const sheetName = "Biblioteca_Pessoal"; // Nome da aba da planilha
+
+    const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
+    let livros = [];
+
+    function carregarLivros() {
+      fetch(googleSheetsApiUrl)
+        .then(response => response.json())
+        .then(data => {
+          const rows = data.values;
+          const headers = rows[0];
+          livros = rows.slice(1).map(row => {
+            let livro = {};
+            headers.forEach((header, index) => {
+              livro[header.trim()] = row[index] || "";
+            });
+            return livro;
+          });
+          buscarAutor();
+        })
+        .catch(error => {
+          console.error("Erro ao carregar dados da API do Google Sheets:", error);
+          mostrarMensagem("erro", "Erro ao carregar dados da API do Google Sheets.");
+        });
+    }
+
+    function buscarAutor() {
+      const nomeAutorOuTitulo = document.getElementById("author-name").value.toLowerCase();
+      const statusSelecionado = document.getElementById("status").value.toLowerCase();
+
+      const resultados = livros.filter(livro => {
+        const autorMatch = livro["Autor"]?.toLowerCase().includes(nomeAutorOuTitulo) || false;
+        const tituloMatch = livro["Nome"]?.toLowerCase().includes(nomeAutorOuTitulo) || false;
+        const statusMatch = !statusSelecionado || (livro["Status"]?.toLowerCase() === statusSelecionado);
+        return (autorMatch || tituloMatch) && statusMatch;
+      });
+
+      resultados.sort((a, b) => a["Nome"].localeCompare(b["Nome"]));
+
+      const lista = document.getElementById("book-list");
+      lista.innerHTML = '';
+
+      if (resultados.length > 0) {
+        resultados.forEach(livro => {
+          const card = document.createElement("div");
+
+          const imagePath = livro["ImageFile"]
+            ? `https://github.com/Literavi/Blog/raw/main/imagens/${livro["ImageFile"]}`
+            : "https://via.placeholder.com/150";
+
+          card.innerHTML = `
+            <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}')">
+            <h4>${livro["Nome"]}</h4>
+            <p><strong>Autor:</strong> ${livro["Autor"]}</p>
+            <p><strong>Status:</strong> ${livro["Status"]}</p>
+          `;
+          lista.appendChild(card);
+        });
+      } else {
+        lista.innerHTML = '<p>Nenhum livro encontrado com o autor/título e status selecionados.</p>';
+      }
+    }
+
+    function abrirModal(titulo, sinopse) {
+      document.getElementById("modal-title").textContent = titulo;
+      document.getElementById("modal-synopsis").textContent = sinopse || "Sinopse não disponível.";
+      document.getElementById("synopsis-modal").style.display = "block";
+    }
+
+    function fecharModal() {
+      document.getElementById("synopsis-modal").style.display = "none";
+    }
+
+    function mostrarMensagem(tipo, mensagem) {
+      const errorMessage = document.getElementById("error-message");
+      errorMessage.textContent = mensagem;
+      errorMessage.style.color = tipo === "sucesso" ? "green" : "red";
+      errorMessage.style.display = "block";
+
+      setTimeout(() => {
+        errorMessage.style.display = "none";
+      }, 5000);
+    }
+
+    carregarLivros();
+  </script>
+</body>
+</html>
