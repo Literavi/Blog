@@ -5,20 +5,175 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Biblioteca Pessoal - Pesquisar Livros</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  
+
   <!-- Estilo interno -->
   <style>
     /* Configurações gerais */
-    
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f9;
+      color: #333;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    h3 {
+      color: #34495e;
+      margin-top: 1.5rem;
+    }
+
+    .search-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 1rem 0;
+      justify-content: center;
+    }
+
+    .search-box,
+    .dropdown {
+      padding: 10px;
+      width: 100%;
+      max-width: 300px;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      color: #fff;
+      background-color: #3498db;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .button:hover {
+      background-color: #2980b9;
+    }
+
+    /* Resultados da pesquisa */
+    #book-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    #book-list div {
+      background: #ecf0f1;
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      position: relative;
+    }
+
+    #book-list img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+
+    #book-list h4 {
+      font-size: 1rem;
+      color: #2c3e50;
+      margin: 0.5rem 0;
+    }
+
+    #book-list p {
+      font-size: 0.9rem;
+      color: #7f8c8d;
+    }
+
+    /* Etiquetas de status */
+    .status-tag {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: #ffffff;
+      padding: 20px;
+      width: 90%;
+      max-width: 500px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      position: relative;
+    }
+
+    .modal-content h4 {
+      color: #2c3e50;
+      margin-bottom: 1rem;
+    }
+
+    .modal-content p {
+      color: #7f8c8d;
+    }
+
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      font-size: 1.5rem;
+      color: #e74c3c;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #c0392b;
+    }
+
+    /* Mensagem de erro */
+    #error-message {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 1rem;
+      display: none;
+    }
   </style>
-  
-  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </head>
 <body>
-
-  <!-- Menu dinâmico -->
-  <div id="menu-container"></div>
 
   <!-- Conteúdo Principal -->
   <div class="container">
@@ -48,34 +203,6 @@
     </div>
   </div>
 
-  <!-- Script para carregar o menu -->
-  <script>
-    fetch("menu.html")
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById("menu-container").innerHTML = data;
-
-        const sidebar = document.querySelector('.sidebar');
-        const toggleBtn = document.getElementById('toggle-btn');
-        const themeToggle = document.getElementById('theme-toggle');
-        const body = document.body;
-
-        toggleBtn.addEventListener('click', () => {
-          sidebar.classList.toggle('active');
-        });
-
-        themeToggle.addEventListener('click', () => {
-          const currentTheme = body.getAttribute('data-theme');
-          const isDark = currentTheme === 'dark';
-          body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-
-          const icon = themeToggle.querySelector('ion-icon');
-          icon.setAttribute('name', isDark ? 'moon-outline' : 'sunny-outline');
-          themeToggle.querySelector('span').textContent = isDark ? 'Dark Mode' : 'Light Mode';
-        });
-      });
-  </script>
-
   <!-- Script para acessar a API do Google Sheets -->
   <script>
     const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc"; // Seu Spreadsheet ID
@@ -87,9 +214,21 @@
 
     function carregarLivros() {
       fetch(googleSheetsApiUrl)
-        .then(response => response.json())
+        .then(response => {
+          console.log("Status HTTP:", response.status);
+          if (!response.ok) {
+            throw new Error("Erro na requisição da API: " + response.statusText);
+          }
+          return response.json();
+        })
         .then(data => {
-          const rows = data.values;
+          console.log("Dados retornados pela API:", data);
+
+          const rows = data.values || [];
+          if (rows.length === 0) {
+            throw new Error("Nenhum dado encontrado na planilha.");
+          }
+
           const headers = rows[0];
           livros = rows.slice(1).map(row => {
             let livro = {};
@@ -98,11 +237,12 @@
             });
             return livro;
           });
-          buscarAutor(); // Exibe os livros assim que são carregados
+
+          buscarAutor();
         })
         .catch(error => {
-          console.error("Erro ao carregar dados da API do Google Sheets:", error);
-          mostrarMensagem("erro", "Erro ao carregar dados da API do Google Sheets.");
+          console.error("Erro ao carregar dados da API:", error.message);
+          mostrarMensagem("erro", "Erro ao carregar dados da API do Google Sheets. Verifique sua configuração.");
         });
     }
 
@@ -130,7 +270,6 @@
             ? `https://github.com/Literavi/Blog/raw/main/imagens/${livro["ImageFile"]}`
             : "https://via.placeholder.com/150";
 
-          // Define a cor da etiqueta com base no status
           let tagColor = "";
           switch (livro["Status"].toLowerCase()) {
             case "quero ler":
@@ -143,7 +282,7 @@
               tagColor = "#ff9800"; // Laranja
               break;
             default:
-              tagColor = "#95a5a6"; // Cinza para status indefinido
+              tagColor = "#95a5a6"; // Cinza
           }
 
           card.innerHTML = `
@@ -182,7 +321,6 @@
       }, 5000);
     }
 
-    // Carrega os livros ao iniciar a página
     carregarLivros();
   </script>
 </body>
