@@ -242,8 +242,49 @@
 
   </div>
 
+  <!-- Script para carregar o menu -->
   <script>
-    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc";
+    async function carregarMenu() {
+      try {
+        const response = await fetch("menu.html");
+        if (!response.ok) throw new Error(`Erro ao carregar o menu: ${response.status}`);
+        const menuHtml = await response.text();
+        document.getElementById("menu-container").innerHTML = menuHtml;
+
+        const sidebar = document.querySelector('.sidebar');
+        const toggleBtn = document.getElementById('toggle-btn');
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        toggleBtn.addEventListener('click', () => {
+          sidebar.classList.toggle('active');
+        });
+
+        themeToggle.addEventListener('click', () => {
+          const currentTheme = body.getAttribute('data-theme');
+          const isDark = currentTheme === 'dark';
+          body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+
+          const icon = themeToggle.querySelector('ion-icon');
+          icon.setAttribute('name', isDark ? 'moon-outline' : 'sunny-outline');
+          themeToggle.querySelector('span').textContent = isDark ? 'Dark Mode' : 'Light Mode';
+        });
+
+        const script = document.createElement('script');
+        script.src = "https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js";
+        document.body.appendChild(script);
+      } catch (error) {
+        console.error("Erro ao carregar o menu:", error);
+        document.getElementById("menu-container").innerHTML = "<p>Erro ao carregar o menu.</p>";
+      }
+    }
+
+    carregarMenu();
+  </script>
+
+  <!-- Script para carregar dados do Google Sheets -->
+  <script>
+    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc"; 
     const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs";
 
     let livrosLidos = 0;
@@ -277,7 +318,6 @@
       const endpoint = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/Variáveis!A1:B?valueInputOption=USER_ENTERED&key=${apiKey}`;
       const requestBody = {
         range: "Variáveis!A1:B",
-        majorDimension: "ROWS",
         values: [[nomeVariavel, valor]]
       };
 
