@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca Pessoal - Pesquisar Livros</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/c56d4d4542.js" crossorigin="anonymous"></script>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      padding: 20px;
+    }
+    .filter-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .filter-button {
+      cursor: pointer;
+      font-size: 24px;
+      color: gray;
+      transition: transform 0.2s, color 0.2s;
+    }
+    .filter-button:hover {
+      transform: scale(1.1);
+      color: black;
+    }
+    .status-lido { color: green; }
+    .status-quero-ler { color: orange; }
+    .status-lendo { color: blue; }
+    .status-nao-desejado { color: pink; }
+    .book-card {
+      position: relative;
+      display: inline-block;
+      width: 150px;
+      margin: 10px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.3s ease;
+    }
+    .book-card:hover {
+      transform: scale(1.05);
+    }
+    .book-card img {
+      width: 100%;
+      border-radius: 8px 8px 0 0;
+      cursor: pointer;
+    }
+    .book-card h4, p {
+      margin: 5px 0;
+    }
+    .status-icon {
+      position: absolute;
+      top: -5px;
+      right: 8px;
+      font-size: 24px;
+    }
+    #contador-livros {
+      margin: 10px 0;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Pesquisar Livros</h2>
+
+    <!-- Pesquisa -->
+    <div class="search-container">
+      <input type="text" id="author-name" placeholder="Digite o autor ou título" oninput="buscarLivros()">
+      <input type="text" id="publisher" placeholder="Digite a editora" oninput="buscarLivros()">
+      <select id="collection" onchange="buscarLivros()">
+        <option value="">Selecione a coleção</option>
+        <option value="Tenho">Tenho</option>
+        <option value="Desejado">Desejado</option>
+        <option value="Não Desejado">Não Desejado</option>
+      </select>
+      <select id="status" onchange="buscarLivros()">
+        <option value="">Selecione o status</option>
+        <option value="Lendo">Lendo</option>
+        <option value="Quero Ler">Quero Ler</option>
+        <option value="Lido">Lido</option>
+      </select>
+      <button onclick="buscarLivros()">Pesquisar</button>
+      <button onclick="resetarFiltros()">Resetar</button>
+    </div>
+
+    <!-- Filtros por Status -->
+    <div class="filter-buttons">
+      <i class="fa-solid fa-bookmark filter-button status-lendo" onclick="filtrarPorStatus('Lendo')" title="Lendo"></i>
+      <i class="fa-solid fa-bookmark filter-button status-quero-ler" onclick="filtrarPorStatus('Quero Ler')" title="Quero Ler"></i>
+      <i class="fa-solid fa-bookmark filter-button status-lido" onclick="filtrarPorStatus('Lido')" title="Lido"></i>
+      <i class="fa-solid fa-bookmark filter-button status-nao-desejado" onclick="filtrarPorStatus('Não Desejado')" title="Não Desejado"></i>
+    </div>
+
+    <!-- Contador -->
+    <p id="contador-livros">Total de livros: 0</p>
+
+    <!-- Lista de Resultados -->
+    <div id="book-list"></div>
+  </div>
+
+  <!-- Modal -->
+  <div id="overlay" style="display:none;"></div>
+  <div id="synopsis-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="modal-title"></h4>
+        <button class="close" onclick="fecharModal()">&times;</button>
+      </div>
+      <p id="modal-synopsis"></p>
+    </div>
+  </div>
+
+  <script>
+    let livros = [];
+    const apiUrl = "https://sheets.googleapis.com/v4/spreadsheets/11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc/values/Biblioteca_Pessoal?key=AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs";
+
+    function carregarLivros() {
+      fetch(apiUrl)
+        .then(res => res.json())
+        .then(data => {
+          const rows = data.values;
+          const headers = rows[0];
+          livros = rows.slice(1).map(row => Object.fromEntries(headers.map((h, i) => [h, row[i] || ""])));
+          buscarLivros();
+        });
+    }
+
+    function buscarLivros() {
+      const nome = document.getElementById("author-name").value.toLowerCase();
+      const editora = document.getElementById("publisher").value.toLowerCase();
+      const colecao = document.getElementById("collection").value;
+      const status = document.getElementById("status").value;
+
+      const resultados = livros.filter(livro =>
+        (livro["Autor"].toLowerCase().includes(nome) || livro["Nome"].toLowerCase().includes(nome)) &&
+        livro["Editora"].toLowerCase().includes(editora) &&
+        (colecao === "" || livro["Coleção"] === colecao) &&
+        (status === "" || livro["Status"] === status)
+      );
+
+      renderizarLivros(resultados);
+    }
+
+    function renderizarLivros(lista) {
+      const container = document.getElementById("book-list");
+      container.innerHTML = "";
+      lista.forEach(livro => {
+        container.innerHTML += `
+          <div class="book-card" onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}')">
+            <i class="fa-solid fa-bookmark status-icon ${getStatusClass(livro["Status"])}"></i>
+            <img src="https://via.placeholder.com/150" alt="${livro["Nome"]}">
+            <h4>${livro["Nome"]}</h4>
+            <p>Autor: ${livro["Autor"]}</p>
+            <p>Editora: ${livro["Editora"]}</p>
+          </div>`;
+      });
+      document.getElementById("contador-livros").textContent = `Total de livros: ${lista.length}`;
+    }
+
+    function filtrarPorStatus(status) {
+      renderizarLivros(livros.filter(livro => livro["Status"] === status));
+    }
+
+    function resetarFiltros() {
+      document.getElementById("author-name").value = "";
+      document.getElementById("publisher").value = "";
+      document.getElementById("collection").value = "";
+      document.getElementById("status").value = "";
+      buscarLivros();
+    }
+
+    function abrirModal(nome, sinopse) {
+      document.getElementById("modal-title").innerText = nome;
+      document.getElementById("modal-synopsis").innerText = sinopse;
+      document.getElementById("synopsis-modal").style.display = "block";
+      document.getElementById("overlay").style.display = "block";
+    }
+
+    function fecharModal() {
+      document.getElementById("synopsis-modal").style.display = "none";
+      document.getElementById("overlay").style.display = "none";
+    }
+
+    function getStatusClass(status) {
+      return {
+        "Lido": "status-lido",
+        "Quero Ler": "status-quero-ler",
+        "Lendo": "status-lendo",
+        "Não Desejado": "status-nao-desejado"
+      }[status];
+    }
+
+    carregarLivros();
+  </script>
+</body>
+</html>
