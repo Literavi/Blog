@@ -7,14 +7,57 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/c56d4d4542.js" crossorigin="anonymous"></script>
   <style>
+    /* Estilização Geral */
     body {
       font-family: 'Roboto', sans-serif;
       margin: 0;
       padding: 0;
+      background-color: #f9f9f9;
+    }
+    h2 {
+      text-align: center;
+      margin-top: 20px;
+      color: #333;
     }
     .container {
       padding: 20px;
     }
+
+    /* Menu Dinâmico */
+    #menu-container {
+      background-color: #ffffff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      text-align: center;
+    }
+
+    /* Barra de Pesquisa */
+    .search-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .search-container input,
+    .search-container select,
+    .search-container button {
+      padding: 8px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .search-container button {
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+    .search-container button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Filtros */
     .filter-buttons {
       display: flex;
       justify-content: center;
@@ -35,15 +78,22 @@
     .status-quero-ler { color: orange; }
     .status-lendo { color: blue; }
     .status-nao-desejado { color: pink; }
+
+    /* Lista de Livros */
+    #book-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
     .book-card {
       position: relative;
-      display: inline-block;
       width: 150px;
-      margin: 10px;
+      background: white;
       border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       text-align: center;
-      transition: transform 0.3s ease;
+      transition: transform 0.3s;
     }
     .book-card:hover {
       transform: scale(1.05);
@@ -51,9 +101,9 @@
     .book-card img {
       width: 100%;
       border-radius: 8px 8px 0 0;
-      cursor: pointer;
     }
-    .book-card h4, p {
+    .book-card h4,
+    .book-card p {
       margin: 5px 0;
     }
     .status-icon {
@@ -62,15 +112,50 @@
       right: 8px;
       font-size: 24px;
     }
+
+    /* Contador */
     #contador-livros {
-      margin: 10px 0;
+      text-align: center;
       font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1000;
+      background-color: white;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      max-width: 80%;
+      max-height: 80%;
+      overflow-y: auto;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
     }
   </style>
 </head>
 <body>
 
-  <!-- Menu dinâmico será carregado aqui -->
+  <!-- Menu Dinâmico -->
   <div id="menu-container"></div>
 
   <div class="container">
@@ -78,15 +163,15 @@
 
     <!-- Barra de Pesquisa -->
     <div class="search-container">
-      <input type="text" id="author-name" placeholder="Digite o autor ou título" oninput="buscarLivros()">
-      <input type="text" id="publisher" placeholder="Digite a editora" oninput="buscarLivros()">
-      <select id="collection" onchange="buscarLivros()">
+      <input type="text" id="author-name" placeholder="Digite o autor ou título">
+      <input type="text" id="publisher" placeholder="Digite a editora">
+      <select id="collection">
         <option value="">Selecione a coleção</option>
         <option value="Tenho">Tenho</option>
         <option value="Desejado">Desejado</option>
         <option value="Não Desejado">Não Desejado</option>
       </select>
-      <select id="status" onchange="buscarLivros()">
+      <select id="status">
         <option value="">Selecione o status</option>
         <option value="Lendo">Lendo</option>
         <option value="Quero Ler">Quero Ler</option>
@@ -107,100 +192,51 @@
     <!-- Contador -->
     <p id="contador-livros">Total de livros: 0</p>
 
-    <!-- Lista de Resultados -->
+    <!-- Lista de Livros -->
     <div id="book-list"></div>
   </div>
 
-  <!-- Script para carregar o menu -->
+  <!-- Modal -->
+  <div class="overlay" id="overlay" onclick="fecharModal()"></div>
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <h4 id="modal-title"></h4>
+      <button onclick="fecharModal()">×</button>
+    </div>
+    <p id="modal-content"></p>
+  </div>
+
+  <!-- Script -->
   <script>
     fetch("menu.html")
       .then(response => response.text())
-      .then(data => {
-        document.getElementById("menu-container").innerHTML = data;
-      });
-  </script>
+      .then(data => document.getElementById("menu-container").innerHTML = data);
 
-  <!-- Script para carregar os dados -->
-  <script>
-    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc";
-    const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs";
-    const sheetName = "Biblioteca_Pessoal";
-
-    const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
-    let livros = [];
-
-    function carregarLivros() {
-      fetch(googleSheetsApiUrl)
-        .then(response => response.json())
-        .then(data => {
-          const rows = data.values;
-          const headers = rows[0];
-          livros = rows.slice(1).map(row => {
-            let livro = {};
-            headers.forEach((header, index) => {
-              livro[header] = row[index] || "";
-            });
-            return livro;
-          });
-          buscarLivros();
-        })
-        .catch(error => console.error("Erro ao carregar dados:", error));
-    }
+    const livros = [
+      // Simulação de dados
+      { Nome: "O Caminho dos Reis", Autor: "Brandon Sanderson", Editora: "Trama", Status: "Lido" }
+    ];
 
     function buscarLivros() {
-      const nome = document.getElementById("author-name").value.toLowerCase();
-      const editora = document.getElementById("publisher").value.toLowerCase();
-      const colecao = document.getElementById("collection").value;
-      const status = document.getElementById("status").value;
-
-      const resultados = livros.filter(livro =>
-        (livro["Autor"]?.toLowerCase().includes(nome) || livro["Nome"]?.toLowerCase().includes(nome)) &&
-        livro["Editora"]?.toLowerCase().includes(editora) &&
-        (colecao === "" || livro["Coleção"] === colecao) &&
-        (status === "" || livro["Status"] === status)
-      );
-
-      renderizarLivros(resultados);
-    }
-
-    function renderizarLivros(lista) {
-      const container = document.getElementById("book-list");
-      container.innerHTML = "";
-      lista.forEach(livro => {
-        container.innerHTML += `
-          <div class="book-card">
-            <i class="fa-solid fa-bookmark status-icon ${getStatusClass(livro["Status"])}"></i>
-            <img src="https://via.placeholder.com/150" alt="${livro["Nome"]}">
-            <h4>${livro["Nome"]}</h4>
-            <p>Autor: ${livro["Autor"]}</p>
-            <p>Editora: ${livro["Editora"]}</p>
-          </div>`;
-      });
-      document.getElementById("contador-livros").textContent = `Total de livros: ${lista.length}`;
-    }
-
-    function filtrarPorStatus(status) {
-      renderizarLivros(livros.filter(livro => livro["Status"] === status));
-    }
-
-    function resetarFiltros() {
-      document.getElementById("author-name").value = "";
-      document.getElementById("publisher").value = "";
-      document.getElementById("collection").value = "";
-      document.getElementById("status").value = "";
-      buscarLivros();
+      const lista = document.getElementById("book-list");
+      lista.innerHTML = livros.map(livro => `
+        <div class="book-card">
+          <i class="fa-solid fa-bookmark status-icon ${getStatusClass(livro.Status)}"></i>
+          <h4>${livro.Nome}</h4>
+          <p>${livro.Autor}</p>
+        </div>
+      `).join('');
     }
 
     function getStatusClass(status) {
-      return {
-        "Lido": "status-lido",
-        "Quero Ler": "status-quero-ler",
-        "Lendo": "status-lendo",
-        "Não Desejado": "status-nao-desejado"
-      }[status];
+      return { "Lido": "status-lido" }[status];
     }
 
-    carregarLivros();
+    function fecharModal() {
+      document.getElementById("modal").style.display = "none";
+      document.getElementById("overlay").style.display = "none";
+    }
+    buscarLivros();
   </script>
 </body>
 </html>
