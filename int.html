@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Biblioteca Pessoal - Review</title>
+  <title>Biblioteca Pessoal</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/c56d4d4542.js" crossorigin="anonymous"></script>
   <style>
@@ -16,6 +16,28 @@
     .container {
       padding: 20px;
       text-align: center;
+    }
+    /* Cards */
+    .book-card {
+      position: relative;
+      display: inline-block;
+      width: 120px;
+      margin: 10px;
+      background: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .book-card:hover {
+      transform: scale(1.05);
+    }
+    .book-card img { width: 100%; }
+    .status-icon {
+      position: absolute;
+      top: -5px; right: 8px;
+      font-size: 26px;
     }
 
     /* Modal */
@@ -36,14 +58,8 @@
       background: #f9f4e8;
       border: 2px dashed #5a4631;
       padding: 20px;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
       z-index: 1000;
-    }
-    .modal-header {
-      text-align: center;
-      font-size: 22px;
-      font-weight: bold;
-      margin-bottom: 10px;
     }
     .modal-content {
       display: flex;
@@ -57,28 +73,20 @@
       width: 150px;
       height: auto;
       border: 1px solid #5a4631;
-      border-radius: 4px;
-    }
-    .left-section p {
-      margin: 5px 0;
-      font-size: 14px;
     }
     .right-section {
       flex: 2;
+      text-align: left;
     }
     .section-title {
       font-weight: bold;
-      margin-top: 10px;
+      margin-bottom: 5px;
     }
-    .notes, .review, .quotes {
+    .box {
       border: 1px dashed #5a4631;
       padding: 10px;
       margin-bottom: 10px;
       border-radius: 4px;
-    }
-    .lines {
-      border-top: 1px dashed #5a4631;
-      margin: 5px 0;
     }
     .close-modal {
       position: absolute;
@@ -91,41 +99,38 @@
 <body>
   <div class="container">
     <h2>Minha Biblioteca</h2>
-    <button onclick="abrirModal()">Abrir Review do Livro</button>
+    <!-- Cards de Livros -->
+    <div class="book-card" onclick="abrirModal('Livro 1', 'Autor A', 'Tenho', 'Lido', 'Uma citação favorita do Livro 1', 'https://via.placeholder.com/150')">
+      <i class="fa-solid fa-bookmark status-icon" style="color: green;"></i>
+      <img src="https://via.placeholder.com/120x180" alt="Livro 1">
+    </div>
+    <div class="book-card" onclick="abrirModal('Livro 2', 'Autor B', 'Desejado', 'Quero Ler', 'Outra citação inspiradora!', 'https://via.placeholder.com/150')">
+      <i class="fa-solid fa-bookmark status-icon" style="color: orange;"></i>
+      <img src="https://via.placeholder.com/120x180" alt="Livro 2">
+    </div>
   </div>
 
-  <!-- Overlay e Modal -->
+  <!-- Modal -->
   <div class="overlay" id="overlay" onclick="fecharModal()"></div>
   <div class="modal" id="modal">
     <span class="close-modal" onclick="fecharModal()">&times;</span>
-    <div class="modal-header">Book Review</div>
     <div class="modal-content">
       <!-- Lado Esquerdo -->
       <div class="left-section">
-        <img src="https://via.placeholder.com/150" id="modal-image" alt="Capa do Livro">
-        <p><strong>Título:</strong> Livro Exemplo</p>
-        <p><strong>Autor:</strong> Autor Exemplo</p>
-        <p><strong>Coleção:</strong> Tenho</p>
-        <p><strong>Status:</strong> Lido</p>
+        <img id="modal-image" src="" alt="Capa do Livro">
+        <p><strong>Autor:</strong> <span id="modal-author"></span></p>
+        <p><strong>Coleção:</strong> <span id="modal-collection"></span></p>
+        <p><strong>Status:</strong> <span id="modal-status"></span></p>
       </div>
       <!-- Lado Direito -->
       <div class="right-section">
-        <div class="quotes">
+        <div class="box">
           <p class="section-title">Citação Favorita</p>
-          <p>"Aqui vai uma citação importante do livro."</p>
+          <p id="modal-quote"></p>
         </div>
-        <div class="notes">
-          <p class="section-title">Notas</p>
-          <div class="lines"></div>
-          <div class="lines"></div>
-          <div class="lines"></div>
-        </div>
-        <div class="review">
+        <div class="box">
           <p class="section-title">Review</p>
-          <div class="lines"></div>
-          <div class="lines"></div>
-          <div class="lines"></div>
-          <div class="lines"></div>
+          <p>Adicione sua avaliação aqui...</p>
         </div>
       </div>
     </div>
@@ -133,7 +138,12 @@
 
   <!-- Script -->
   <script>
-    function abrirModal() {
+    function abrirModal(titulo, autor, colecao, status, quote, imagem) {
+      document.getElementById('modal-author').innerText = autor;
+      document.getElementById('modal-collection').innerText = colecao;
+      document.getElementById('modal-status').innerText = status;
+      document.getElementById('modal-quote').innerText = quote;
+      document.getElementById('modal-image').src = imagem;
       document.getElementById('modal').style.display = 'block';
       document.getElementById('overlay').style.display = 'block';
     }
