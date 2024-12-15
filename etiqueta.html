@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Biblioteca Pessoal</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Link para FontAwesome -->
+  <script src="https://kit.fontawesome.com/SEU_CODIGO_FONT_AWESOME.js" crossorigin="anonymous"></script>
   <style>
     body {
       font-family: 'Roboto', sans-serif;
@@ -31,47 +33,42 @@
       height: auto;
       display: block;
     }
-
-    /* Estilo do marcador peculiar - fita dobrada */
-    .status-marker {
+    /* Estilização do ícone no canto superior direito */
+    .status-icon {
       position: absolute;
-      top: 0;
-      right: 0;
-      width: 40px;
-      height: 40px;
-      background-color: orange;
-      clip-path: polygon(0 0, 100% 0, 50% 50%, 100% 100%, 0 100%, 50% 50%);
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      top: 8px;
+      right: 8px;
+      color: #ffcc00; /* Cor padrão */
+      font-size: 20px;
     }
-
-    .status-lido { background-color: green; }
-    .status-quero-ler { background-color: orange; }
-    .status-lendo { background-color: blue; }
-    .status-nao-desejado { background-color: pink; }
+    .status-lido { color: green; }
+    .status-quero-ler { color: orange; }
+    .status-lendo { color: blue; }
+    .status-nao-desejado { color: pink; }
   </style>
 </head>
 <body>
   <div class="container">
     <h2>Minha Biblioteca</h2>
 
-    <!-- Exemplo de Cards com Marcador Peculiar -->
+    <!-- Cards de Livros -->
     <div class="book-card">
-      <div class="status-marker status-lido"></div>
+      <i class="fa-solid fa-bookmark status-icon status-lido"></i>
       <img src="https://via.placeholder.com/120x180" alt="Livro Lido">
     </div>
 
     <div class="book-card">
-      <div class="status-marker status-quero-ler"></div>
+      <i class="fa-solid fa-bookmark status-icon status-quero-ler"></i>
       <img src="https://via.placeholder.com/120x180" alt="Livro Quero Ler">
     </div>
 
     <div class="book-card">
-      <div class="status-marker status-lendo"></div>
+      <i class="fa-solid fa-bookmark status-icon status-lendo"></i>
       <img src="https://via.placeholder.com/120x180" alt="Livro Lendo">
     </div>
 
     <div class="book-card">
-      <div class="status-marker status-nao-desejado"></div>
+      <i class="fa-solid fa-bookmark status-icon status-nao-desejado"></i>
       <img src="https://via.placeholder.com/120x180" alt="Livro Não Desejado">
     </div>
   </div>
