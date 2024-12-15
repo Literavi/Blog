@@ -81,9 +81,10 @@
     }
     .status-badge {
       display: inline-block;
-      padding: 5px 10px;
-      border-radius: 5px;
+      padding: 3px 8px;
+      border-radius: 4px;
       font-weight: bold;
+      font-size: 12px;
       color: white;
       text-align: center;
     }
@@ -125,6 +126,7 @@
       font-size: 20px;
       color: #555;
       cursor: pointer;
+      z-index: 1001;
     }
   </style>
 </head>
@@ -154,7 +156,9 @@
     <div class="modal-right">
       <h3 id="modal-title"></h3>
       <p id="modal-content"></p>
-      <span class="arrow-button" onclick="alternarConteudo()"><i class="fa-thin fa-caret-right"></i></span>
+      <span class="arrow-button" onclick="alternarConteudo()">
+        <i class="fa-solid fa-caret-right"></i>
+      </span>
     </div>
   </div>
 
@@ -185,11 +189,7 @@
 
     function alternarConteudo() {
       const content = document.getElementById('modal-content');
-      if (mostrandoSinopse) {
-        content.innerText = window.resenha;
-      } else {
-        content.innerText = window.sinopse;
-      }
+      content.innerText = mostrandoSinopse ? window.resenha : window.sinopse;
       mostrandoSinopse = !mostrandoSinopse;
     }
 
