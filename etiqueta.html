@@ -21,26 +21,25 @@
       display: inline-block;
       width: 120px;
       margin: 10px;
-      text-align: left;
       background: white;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       border-radius: 8px;
       overflow: hidden;
     }
     .book-card img {
       width: 100%;
       height: auto;
+      display: block;
     }
-    .status-tag {
+    /* Estilo do marcador */
+    .status-marker {
       position: absolute;
-      top: 8px;
-      left: 8px;
+      top: 0;
+      left: 0;
+      width: 20px;
+      height: 30px;
       background-color: #ffcc00;
-      color: white;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 12px;
-      font-weight: bold;
+      clip-path: polygon(0 0, 100% 0, 100% 75%, 50% 100%, 0 75%);
     }
     .status-lido {
       background-color: green;
@@ -53,17 +52,6 @@
     }
     .status-nao-desejado {
       background-color: pink;
-      color: black;
-    }
-    .book-title {
-      font-size: 14px;
-      margin: 8px;
-      font-weight: bold;
-    }
-    .book-author {
-      font-size: 12px;
-      margin: 0 8px 8px;
-      color: #555;
     }
   </style>
 </head>
@@ -71,26 +59,25 @@
   <div class="container">
     <h2>Minha Biblioteca</h2>
 
-    <!-- Exemplo de Card com Etiqueta -->
+    <!-- Exemplo de Card com Marcador -->
     <div class="book-card">
-      <span class="status-tag status-lido">Lido</span>
+      <div class="status-marker status-lido"></div>
       <img src="https://via.placeholder.com/120x180" alt="Capa do Livro">
-      <div class="book-title">Anna Kariênina</div>
-      <div class="book-author">Liev Tolstói</div>
     </div>
 
     <div class="book-card">
-      <span class="status-tag status-quero-ler">Quero Ler</span>
+      <div class="status-marker status-quero-ler"></div>
       <img src="https://via.placeholder.com/120x180" alt="Capa do Livro">
-      <div class="book-title">O Morro dos Ventos</div>
-      <div class="book-author">Emily Brontë</div>
     </div>
 
     <div class="book-card">
-      <span class="status-tag status-lendo">Lendo</span>
+      <div class="status-marker status-lendo"></div>
       <img src="https://via.placeholder.com/120x180" alt="Capa do Livro">
-      <div class="book-title">1984</div>
-      <div class="book-author">George Orwell</div>
+    </div>
+
+    <div class="book-card">
+      <div class="status-marker status-nao-desejado"></div>
+      <img src="https://via.placeholder.com/120x180" alt="Capa do Livro">
     </div>
   </div>
 </body>
