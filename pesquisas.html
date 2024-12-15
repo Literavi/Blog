@@ -23,9 +23,9 @@
       <input type="text" id="author-name" class="search-box" placeholder="Digite o nome do autor ou título">
       <select id="status" class="dropdown">
         <option value="">Selecione o status</option>
-        <option value="currently-reading">Lendo</option>
-        <option value="to-read">Para Ler</option>
-        <option value="read">Lido</option>
+        <option value="Lendo">Lendo</option>
+        <option value="Para Ler">Para Ler</option>
+        <option value="Lido">Lido</option>
       </select>
       <button class="button" onclick="buscarAutor()">Pesquisar</button>
     </div>
@@ -113,13 +113,13 @@
       const statusSelecionado = document.getElementById("status").value;
 
       const resultados = livros.filter(livro => {
-        const autorMatch = livro["Author"] && livro["Author"].toLowerCase().includes(nomeAutorOuTitulo);
-        const tituloMatch = livro["Title"] && livro["Title"].toLowerCase().includes(nomeAutorOuTitulo);
-        const statusMatch = livro["Exclusive Shelf"] && livro["Exclusive Shelf"] === statusSelecionado;
+        const autorMatch = livro["Autor"] && livro["Autor"].toLowerCase().includes(nomeAutorOuTitulo);
+        const tituloMatch = livro["Nome"] && livro["Nome"].toLowerCase().includes(nomeAutorOuTitulo);
+        const statusMatch = livro["Status"] && livro["Status"] === statusSelecionado;
         return (autorMatch || tituloMatch) && (statusSelecionado === "" || statusMatch);
       });
 
-      resultados.sort((a, b) => a["Title"].localeCompare(b["Title"]));
+      resultados.sort((a, b) => a["Nome"].localeCompare(b["Nome"]));
 
       const lista = document.getElementById("book-list");
       lista.innerHTML = '';
@@ -133,10 +133,10 @@
             : "https://via.placeholder.com/150";
 
           card.innerHTML = `
-            <img src="${imagePath}" alt="${livro["Title"]}" style="width:100%; border-radius: 8px; cursor: pointer;" onclick="abrirModal('${livro["Title"]}', '${livro["Synopsis"]}')">
-            <h4>${livro["Title"]}</h4>
-            <p><strong>Autor:</strong> ${livro["Author"]}</p>
-            <p><strong>Status:</strong> ${livro["Exclusive Shelf"]}</p>
+            <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}')">
+            <h4>${livro["Nome"]}</h4>
+            <p><strong>Autor:</strong> ${livro["Autor"]}</p>
+            <p><strong>Status:</strong> ${livro["Status"]}</p>
           `;
           lista.appendChild(card);
         });
@@ -145,8 +145,8 @@
       }
     }
 
-    function abrirModal(titulo, sinopse) {
-      document.getElementById("modal-title").textContent = titulo;
+    function abrirModal(nome, sinopse) {
+      document.getElementById("modal-title").textContent = nome;
       document.getElementById("modal-synopsis").textContent = sinopse;
       document.getElementById("synopsis-modal").style.display = "block";
     }
