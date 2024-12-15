@@ -52,18 +52,15 @@
       .then(data => {
         document.getElementById("menu-container").innerHTML = data;
 
-        // Ativação do menu interativo após carregá-lo
         const sidebar = document.querySelector('.sidebar');
         const toggleBtn = document.getElementById('toggle-btn');
         const themeToggle = document.getElementById('theme-toggle');
         const body = document.body;
 
-        // Toggle Sidebar
         toggleBtn.addEventListener('click', () => {
           sidebar.classList.toggle('active');
         });
 
-        // Toggle Theme
         themeToggle.addEventListener('click', () => {
           const currentTheme = body.getAttribute('data-theme');
           const isDark = currentTheme === 'dark';
@@ -78,14 +75,13 @@
 
   <!-- Script para acessar a API do Google Sheets -->
   <script>
-    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc";  // Seu Spreadsheet ID
-    const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs";  // Sua chave de API
-    const sheetName = "Biblioteca_Pessoal"; // Nome da aba da planilha
+    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc";
+    const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs";
+    const sheetName = "Biblioteca_Pessoal";
 
     const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
     let livros = [];
 
-    // Função para carregar dados usando a API do Google Sheets
     function carregarLivros() {
       fetch(googleSheetsApiUrl)
         .then(response => response.json())
@@ -99,7 +95,7 @@
             });
             return livro;
           });
-          buscarAutor(); // Exibe os livros assim que são carregados
+          buscarAutor();
         })
         .catch(error => {
           console.error("Erro ao carregar dados da API do Google Sheets:", error);
@@ -107,7 +103,6 @@
         });
     }
 
-    // Função para buscar livros
     function buscarAutor() {
       const nomeAutorOuTitulo = document.getElementById("author-name").value.toLowerCase();
       const statusSelecionado = document.getElementById("status").value;
@@ -166,7 +161,6 @@
       }, 5000);
     }
 
-    // Carrega os livros ao iniciar a página
     carregarLivros();
   </script>
 
