@@ -57,7 +57,6 @@
       background: #fff;
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
       border-radius: 8px;
-      overflow: hidden;
       z-index: 1000;
       display: flex;
       flex-direction: row;
@@ -65,31 +64,27 @@
     .modal-left {
       padding: 20px;
       width: 40%;
-      text-align: center;
+      text-align: left;
       border-right: 1px solid #ddd;
       background-color: #f1f1f1;
     }
     .modal-left img {
-      width: 100px;
+      width: 120px;
       height: auto;
       border-radius: 8px;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
     }
     .modal-left p {
       margin: 8px 0;
       font-size: 14px;
       color: #333;
-      text-align: left;
-      padding-left: 10px;
     }
     .status-badge {
       display: inline-block;
       padding: 5px 10px;
       border-radius: 5px;
-      font-size: 12px;
       font-weight: bold;
       color: white;
-      text-align: center;
     }
     .status-lido { background-color: green; }
     .status-quero-ler { background-color: orange; }
@@ -164,10 +159,11 @@
 
       const statusElement = document.getElementById('modal-status');
       statusElement.innerText = status;
-      statusElement.className = `status-badge ${getStatusClass(status)}`;
+      statusElement.className = 'status-badge ' + getStatusClass(status);
 
       document.getElementById('modal-synopsis').innerText = sinopse;
       document.getElementById('modal-image').src = imagem;
+
       document.getElementById('modal').style.display = 'flex';
       document.getElementById('overlay').style.display = 'block';
     }
