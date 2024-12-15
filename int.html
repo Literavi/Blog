@@ -3,240 +3,143 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Biblioteca Pessoal - Pesquisar Livros</title>
+  <title>Biblioteca Pessoal</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/c56d4d4542.js" crossorigin="anonymous"></script>
   <style>
-    /* Estilização Geral */
     body {
       font-family: 'Roboto', sans-serif;
       margin: 0;
-      padding: 0;
       background-color: #f9f9f9;
-    }
-    h2 {
-      text-align: center;
-      margin-top: 20px;
-      color: #333;
     }
     .container {
       padding: 20px;
-    }
-
-    /* Menu Dinâmico */
-    #menu-container {
-      background-color: #ffffff;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      padding: 10px;
       text-align: center;
     }
 
-    /* Barra de Pesquisa */
-    .search-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    .search-container input,
-    .search-container select,
-    .search-container button {
-      padding: 8px;
-      font-size: 14px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    .search-container button {
-      background-color: #007bff;
-      color: white;
-      cursor: pointer;
-      border: none;
-    }
-    .search-container button:hover {
-      background-color: #0056b3;
-    }
-
-    /* Filtros */
-    .filter-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    .filter-button {
-      cursor: pointer;
-      font-size: 24px;
-      color: gray;
-      transition: transform 0.2s, color 0.2s;
-    }
-    .filter-button:hover {
-      transform: scale(1.1);
-      color: black;
-    }
-    .status-lido { color: green; }
-    .status-quero-ler { color: orange; }
-    .status-lendo { color: blue; }
-    .status-nao-desejado { color: pink; }
-
-    /* Lista de Livros */
-    #book-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      justify-content: center;
-    }
+    /* Cards */
     .book-card {
       position: relative;
-      width: 150px;
+      display: inline-block;
+      width: 120px;
+      margin: 10px;
       background: white;
-      border-radius: 8px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      text-align: center;
+      border-radius: 8px;
+      overflow: hidden;
       transition: transform 0.3s;
+      cursor: pointer;
     }
     .book-card:hover {
       transform: scale(1.05);
     }
-    .book-card img {
-      width: 100%;
-      border-radius: 8px 8px 0 0;
-    }
-    .book-card h4,
-    .book-card p {
-      margin: 5px 0;
-    }
+    .book-card img { width: 100%; }
     .status-icon {
       position: absolute;
       top: -5px;
       right: 8px;
-      font-size: 24px;
-    }
-
-    /* Contador */
-    #contador-livros {
-      text-align: center;
-      font-weight: bold;
-      margin-bottom: 20px;
+      font-size: 26px;
     }
 
     /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 1000;
-      background-color: white;
-      padding: 20px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      border-radius: 8px;
-      max-width: 80%;
-      max-height: 80%;
-      overflow-y: auto;
-    }
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
     .overlay {
       display: none;
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5);
       z-index: 999;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%; max-width: 500px;
+      background: #fff;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      overflow: hidden;
+      z-index: 1000;
+    }
+    .modal-header {
+      background-color: #007BFF;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .modal-content {
+      padding: 20px;
+      text-align: center;
+    }
+    .modal-content img {
+      width: 150px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+    .modal-content p {
+      margin: 5px 0;
+      font-size: 16px;
+      color: #333;
+    }
+    .close-modal {
+      position: absolute;
+      top: 10px; right: 15px;
+      font-size: 20px;
+      color: white;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-
-  <!-- Menu Dinâmico -->
-  <div id="menu-container"></div>
-
   <div class="container">
-    <h2>Pesquisar Livros</h2>
+    <h2>Minha Biblioteca</h2>
+    <!-- Cards de Livros -->
+    <div id="book-container">
+      <div class="book-card" onclick="abrirModal('Livro 1', 'Autor A', 'Sinopse incrível do Livro 1', 'https://via.placeholder.com/150')">
+        <i class="fa-solid fa-bookmark status-icon status-lido" style="color: green;"></i>
+        <img src="https://via.placeholder.com/120x180" alt="Livro 1">
+      </div>
 
-    <!-- Barra de Pesquisa -->
-    <div class="search-container">
-      <input type="text" id="author-name" placeholder="Digite o autor ou título">
-      <input type="text" id="publisher" placeholder="Digite a editora">
-      <select id="collection">
-        <option value="">Selecione a coleção</option>
-        <option value="Tenho">Tenho</option>
-        <option value="Desejado">Desejado</option>
-        <option value="Não Desejado">Não Desejado</option>
-      </select>
-      <select id="status">
-        <option value="">Selecione o status</option>
-        <option value="Lendo">Lendo</option>
-        <option value="Quero Ler">Quero Ler</option>
-        <option value="Lido">Lido</option>
-      </select>
-      <button onclick="buscarLivros()">Pesquisar</button>
-      <button onclick="resetarFiltros()">Resetar</button>
+      <div class="book-card" onclick="abrirModal('Livro 2', 'Autor B', 'Sinopse envolvente do Livro 2', 'https://via.placeholder.com/150')">
+        <i class="fa-solid fa-bookmark status-icon status-quero-ler" style="color: orange;"></i>
+        <img src="https://via.placeholder.com/120x180" alt="Livro 2">
+      </div>
     </div>
-
-    <!-- Filtros por Status -->
-    <div class="filter-buttons">
-      <i class="fa-solid fa-bookmark filter-button status-lendo" onclick="filtrarPorStatus('Lendo')" title="Lendo"></i>
-      <i class="fa-solid fa-bookmark filter-button status-quero-ler" onclick="filtrarPorStatus('Quero Ler')" title="Quero Ler"></i>
-      <i class="fa-solid fa-bookmark filter-button status-lido" onclick="filtrarPorStatus('Lido')" title="Lido"></i>
-      <i class="fa-solid fa-bookmark filter-button status-nao-desejado" onclick="filtrarPorStatus('Não Desejado')" title="Não Desejado"></i>
-    </div>
-
-    <!-- Contador -->
-    <p id="contador-livros">Total de livros: 0</p>
-
-    <!-- Lista de Livros -->
-    <div id="book-list"></div>
   </div>
 
   <!-- Modal -->
   <div class="overlay" id="overlay" onclick="fecharModal()"></div>
   <div class="modal" id="modal">
     <div class="modal-header">
-      <h4 id="modal-title"></h4>
-      <button onclick="fecharModal()">×</button>
+      <span id="modal-title">Detalhes do Livro</span>
+      <span class="close-modal" onclick="fecharModal()">&times;</span>
     </div>
-    <p id="modal-content"></p>
+    <div class="modal-content">
+      <img id="modal-image" src="" alt="Capa do Livro">
+      <p><strong>Autor:</strong> <span id="modal-author"></span></p>
+      <p><strong>Sinopse:</strong></p>
+      <p id="modal-synopsis"></p>
+    </div>
   </div>
 
   <!-- Script -->
   <script>
-    fetch("menu.html")
-      .then(response => response.text())
-      .then(data => document.getElementById("menu-container").innerHTML = data);
-
-    const livros = [
-      // Simulação de dados
-      { Nome: "O Caminho dos Reis", Autor: "Brandon Sanderson", Editora: "Trama", Status: "Lido" }
-    ];
-
-    function buscarLivros() {
-      const lista = document.getElementById("book-list");
-      lista.innerHTML = livros.map(livro => `
-        <div class="book-card">
-          <i class="fa-solid fa-bookmark status-icon ${getStatusClass(livro.Status)}"></i>
-          <h4>${livro.Nome}</h4>
-          <p>${livro.Autor}</p>
-        </div>
-      `).join('');
-    }
-
-    function getStatusClass(status) {
-      return { "Lido": "status-lido" }[status];
+    function abrirModal(titulo, autor, sinopse, imagem) {
+      document.getElementById('modal-title').innerText = titulo;
+      document.getElementById('modal-author').innerText = autor;
+      document.getElementById('modal-synopsis').innerText = sinopse;
+      document.getElementById('modal-image').src = imagem;
+      document.getElementById('modal').style.display = 'block';
+      document.getElementById('overlay').style.display = 'block';
     }
 
     function fecharModal() {
-      document.getElementById("modal").style.display = "none";
-      document.getElementById("overlay").style.display = "none";
+      document.getElementById('modal').style.display = 'none';
+      document.getElementById('overlay').style.display = 'none';
     }
-    buscarLivros();
   </script>
 </body>
 </html>
