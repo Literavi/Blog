@@ -23,9 +23,9 @@
       <input type="text" id="author-name" class="search-box" placeholder="Digite o nome do autor ou título">
       <select id="status" class="dropdown">
         <option value="">Selecione o status</option>
-        <option value="currently-reading">Lendo</option>
-        <option value="to-read">Para Ler</option>
-        <option value="read">Lido</option>
+        <option value="Lendo">Lendo</option>
+        <option value="Para Ler">Para Ler</option>
+        <option value="Lido">Lido</option>
       </select>
       <button class="button" onclick="buscarAutor()">Pesquisar</button>
     </div>
@@ -33,15 +33,6 @@
     <h3>Resultados da Pesquisa</h3>
     <div id="book-list"></div>
     <p id="error-message"></p>
-
-    <!-- Botões para Adicionar/Remover Livros -->
-    <div class="buttons">
-      <button id="add-book" onclick="adicionarLivro()">Adicionar Livro</button>
-      <button id="remove-book" onclick="removerLivro()">Remover Livro</button>
-    </div>
-
-    <!-- Mensagem de Parabéns -->
-    <p id="congratulations" style="display:none; color: green; font-weight: bold;">Parabéns! Você atingiu sua meta de leitura!</p>
   </div>
 
   <!-- Modal para exibir a sinopse -->
@@ -66,77 +57,31 @@
         const themeToggle = document.getElementById('theme-toggle');
         const body = document.body;
 
-        // Toggle Sidebar
         toggleBtn.addEventListener('click', () => {
           sidebar.classList.toggle('active');
         });
 
-        // Toggle Theme
         themeToggle.addEventListener('click', () => {
           const currentTheme = body.getAttribute('data-theme');
           const isDark = currentTheme === 'dark';
           body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+
           const icon = themeToggle.querySelector('ion-icon');
           icon.setAttribute('name', isDark ? 'moon-outline' : 'sunny-outline');
           themeToggle.querySelector('span').textContent = isDark ? 'Dark Mode' : 'Light Mode';
         });
       });
-
-    // Variáveis para controle dos livros lidos
-    let livrosLidos = 0;
-    const metaLivros = 25;
-
-    function atualizarMensagem() {
-      const congratulations = document.getElementById("congratulations");
-      if (livrosLidos >= metaLivros) {
-        congratulations.style.display = "block";
-      } else {
-        congratulations.style.display = "none";
-      }
-    }
-
-    function adicionarLivro() {
-      if (livrosLidos < metaLivros) {
-        livrosLidos++;
-        mostrarMensagem("sucesso", `Você leu ${livrosLidos} livro(s). Continue assim!`);
-        atualizarMensagem();
-      } else {
-        mostrarMensagem("erro", "Você já atingiu a meta de leitura!");
-      }
-    }
-
-    function removerLivro() {
-      if (livrosLidos > 0) {
-        livrosLidos--;
-        mostrarMensagem("sucesso", `Você ajustou para ${livrosLidos} livro(s) lido(s).`);
-        atualizarMensagem();
-      } else {
-        mostrarMensagem("erro", "Não há livros para remover.");
-      }
-    }
-
-    function mostrarMensagem(tipo, mensagem) {
-      const errorMessage = document.getElementById("error-message");
-      errorMessage.textContent = mensagem;
-      errorMessage.style.color = tipo === "sucesso" ? "green" : "red";
-      errorMessage.style.display = "block";
-
-      setTimeout(() => {
-        errorMessage.style.display = "none";
-      }, 5000);
-    }
   </script>
 
   <!-- Script para acessar a API do Google Sheets -->
   <script>
-    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc";  // Seu Spreadsheet ID
-    const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs";  // Sua chave de API
-    const sheetName = "Biblioteca_Pessoal"; // Nome da aba da planilha
+    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc";
+    const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs";
+    const sheetName = "Biblioteca_Pessoal";
 
     const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
     let livros = [];
 
-    // Função para carregar dados usando a API do Google Sheets
     function carregarLivros() {
       fetch(googleSheetsApiUrl)
         .then(response => response.json())
@@ -150,7 +95,7 @@
             });
             return livro;
           });
-          buscarAutor(); // Exibe os livros assim que são carregados
+          buscarAutor();
         })
         .catch(error => {
           console.error("Erro ao carregar dados da API do Google Sheets:", error);
@@ -158,19 +103,18 @@
         });
     }
 
-    // Função para buscar livros
     function buscarAutor() {
       const nomeAutorOuTitulo = document.getElementById("author-name").value.toLowerCase();
       const statusSelecionado = document.getElementById("status").value;
 
       const resultados = livros.filter(livro => {
-        const autorMatch = livro["Author"] && livro["Author"].toLowerCase().includes(nomeAutorOuTitulo);
-        const tituloMatch = livro["Title"] && livro["Title"].toLowerCase().includes(nomeAutorOuTitulo);
-        const statusMatch = livro["Exclusive Shelf"] && livro["Exclusive Shelf"] === statusSelecionado;
+        const autorMatch = livro["Autor"] && livro["Autor"].toLowerCase().includes(nomeAutorOuTitulo);
+        const tituloMatch = livro["Nome"] && livro["Nome"].toLowerCase().includes(nomeAutorOuTitulo);
+        const statusMatch = livro["Status"] && livro["Status"] === statusSelecionado;
         return (autorMatch || tituloMatch) && (statusSelecionado === "" || statusMatch);
       });
 
-      resultados.sort((a, b) => a["Title"].localeCompare(b["Title"]));
+      resultados.sort((a, b) => a["Nome"].localeCompare(b["Nome"]));
 
       const lista = document.getElementById("book-list");
       lista.innerHTML = '';
@@ -184,10 +128,10 @@
             : "https://via.placeholder.com/150";
 
           card.innerHTML = `
-            <img src="${imagePath}" alt="${livro["Title"]}" style="width:100%; border-radius: 8px; cursor: pointer;" onclick="abrirModal('${livro["Title"]}', '${livro["Synopsis"]}')">
-            <h4>${livro["Title"]}</h4>
-            <p><strong>Autor:</strong> ${livro["Author"]}</p>
-            <p><strong>Status:</strong> ${livro["Exclusive Shelf"]}</p>
+            <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}')">
+            <h4>${livro["Nome"]}</h4>
+            <p><strong>Autor:</strong> ${livro["Autor"]}</p>
+            <p><strong>Status:</strong> ${livro["Status"]}</p>
           `;
           lista.appendChild(card);
         });
@@ -196,8 +140,8 @@
       }
     }
 
-    function abrirModal(titulo, sinopse) {
-      document.getElementById("modal-title").textContent = titulo;
+    function abrirModal(nome, sinopse) {
+      document.getElementById("modal-title").textContent = nome;
       document.getElementById("modal-synopsis").textContent = sinopse;
       document.getElementById("synopsis-modal").style.display = "block";
     }
@@ -206,7 +150,17 @@
       document.getElementById("synopsis-modal").style.display = "none";
     }
 
-    // Carrega os livros ao iniciar a página
+    function mostrarMensagem(tipo, mensagem) {
+      const errorMessage = document.getElementById("error-message");
+      errorMessage.textContent = mensagem;
+      errorMessage.style.color = tipo === "sucesso" ? "green" : "red";
+      errorMessage.style.display = "block";
+
+      setTimeout(() => {
+        errorMessage.style.display = "none";
+      }, 5000);
+    }
+
     carregarLivros();
   </script>
 
