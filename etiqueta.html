@@ -18,28 +18,6 @@
       padding: 20px;
       text-align: center;
     }
-    /* Bandeirinhas de filtro */
-    .filter-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin-bottom: 20px;
-    }
-    .filter-button {
-      cursor: pointer;
-      font-size: 24px;
-      color: gray;
-      transition: transform 0.2s, color 0.2s;
-    }
-    .filter-button:hover {
-      transform: scale(1.1);
-      color: black;
-    }
-    .status-lido { color: green; }
-    .status-quero-ler { color: orange; }
-    .status-lendo { color: blue; }
-    .status-nao-desejado { color: pink; }
-
     /* Cards de livros */
     .book-card {
       position: relative;
@@ -54,61 +32,45 @@
     .book-card img {
       width: 100%;
       height: auto;
+      display: block;
     }
+    /* Ícone maior e mais no topo */
     .status-icon {
       position: absolute;
-      top: 8px;
+      top: -5px; /* Move o ícone mais para cima */
       right: 8px;
-      font-size: 20px;
+      font-size: 26px; /* Aumenta o tamanho do ícone */
     }
+    .status-lido { color: green; }
+    .status-quero-ler { color: orange; }
+    .status-lendo { color: blue; }
+    .status-nao-desejado { color: pink; }
   </style>
 </head>
 <body>
   <div class="container">
     <h2>Minha Biblioteca</h2>
 
-    <!-- Bandeirinhas de Filtro -->
-    <div class="filter-buttons">
-      <i class="fa-solid fa-bookmark filter-button status-lendo" onclick="filtrarLivros('Lendo')" title="Lendo"></i>
-      <i class="fa-solid fa-bookmark filter-button status-quero-ler" onclick="filtrarLivros('Quero Ler')" title="Quero Ler"></i>
-      <i class="fa-solid fa-bookmark filter-button status-lido" onclick="filtrarLivros('Lido')" title="Lido"></i>
-      <i class="fa-solid fa-bookmark filter-button status-nao-desejado" onclick="filtrarLivros('Não Desejado')" title="Não Desejado"></i>
+    <!-- Cards de Livros -->
+    <div class="book-card">
+      <i class="fa-solid fa-bookmark status-icon status-lido"></i>
+      <img src="https://via.placeholder.com/120x180" alt="Livro Lido">
     </div>
 
-    <!-- Cards de Livros -->
-    <div id="book-container">
-      <div class="book-card" data-status="Lido">
-        <i class="fa-solid fa-bookmark status-icon status-lido"></i>
-        <img src="https://via.placeholder.com/120x180" alt="Livro Lido">
-      </div>
-      <div class="book-card" data-status="Quero Ler">
-        <i class="fa-solid fa-bookmark status-icon status-quero-ler"></i>
-        <img src="https://via.placeholder.com/120x180" alt="Livro Quero Ler">
-      </div>
-      <div class="book-card" data-status="Lendo">
-        <i class="fa-solid fa-bookmark status-icon status-lendo"></i>
-        <img src="https://via.placeholder.com/120x180" alt="Livro Lendo">
-      </div>
-      <div class="book-card" data-status="Não Desejado">
-        <i class="fa-solid fa-bookmark status-icon status-nao-desejado"></i>
-        <img src="https://via.placeholder.com/120x180" alt="Livro Não Desejado">
-      </div>
+    <div class="book-card">
+      <i class="fa-solid fa-bookmark status-icon status-quero-ler"></i>
+      <img src="https://via.placeholder.com/120x180" alt="Livro Quero Ler">
+    </div>
+
+    <div class="book-card">
+      <i class="fa-solid fa-bookmark status-icon status-lendo"></i>
+      <img src="https://via.placeholder.com/120x180" alt="Livro Lendo">
+    </div>
+
+    <div class="book-card">
+      <i class="fa-solid fa-bookmark status-icon status-nao-desejado"></i>
+      <img src="https://via.placeholder.com/120x180" alt="Livro Não Desejado">
     </div>
   </div>
-
-  <!-- Script para Filtrar os Livros -->
-  <script>
-    function filtrarLivros(status) {
-      const cards = document.querySelectorAll('.book-card');
-      cards.forEach(card => {
-        const cardStatus = card.getAttribute('data-status');
-        if (status === cardStatus || !status) {
-          card.style.display = 'inline-block';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    }
-  </script>
 </body>
 </html>
