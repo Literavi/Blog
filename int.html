@@ -70,12 +70,13 @@
       background-color: #f1f1f1;
     }
     .modal-left img {
-      width: 100px;
+      width: 120px;
       height: auto;
       border-radius: 8px;
+      margin-bottom: 15px;
     }
     .modal-left p {
-      margin: 10px 0;
+      margin: 8px 0;
       font-size: 14px;
       color: #333;
     }
@@ -83,10 +84,13 @@
       padding: 20px;
       width: 60%;
     }
-    .modal-right h3 {
-      margin: 0 0 10px;
+    .modal-header {
+      background-color: #007BFF;
+      color: white;
+      padding: 10px;
       font-size: 20px;
-      color: #007BFF;
+      text-align: center;
+      margin-bottom: 15px;
     }
     .modal-right p {
       margin: 10px 0;
@@ -99,7 +103,7 @@
       top: 10px;
       right: 15px;
       font-size: 20px;
-      color: #555;
+      color: white;
       cursor: pointer;
     }
   </style>
@@ -123,7 +127,6 @@
   <!-- Modal -->
   <div class="overlay" id="overlay" onclick="fecharModal()"></div>
   <div class="modal" id="modal">
-    <span class="close-modal" onclick="fecharModal()">&times;</span>
     <div class="modal-left">
       <img id="modal-image" src="" alt="Capa do Livro">
       <p><strong>Autor:</strong> <span id="modal-author"></span></p>
@@ -132,7 +135,10 @@
       <p><strong>Status:</strong> <span id="modal-status"></span></p>
     </div>
     <div class="modal-right">
-      <h3 id="modal-title"></h3>
+      <div class="modal-header">
+        <span id="modal-title"></span>
+        <span class="close-modal" onclick="fecharModal()">&times;</span>
+      </div>
       <p id="modal-synopsis"></p>
     </div>
   </div>
