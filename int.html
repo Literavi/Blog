@@ -63,7 +63,7 @@
     }
     .modal-left {
       padding: 20px;
-      width: 30%; /* Área esquerda */
+      width: 30%;
       text-align: left;
       border-right: 1px solid #ddd;
       background-color: #f1f1f1;
@@ -102,6 +102,12 @@
       margin: 0 0 10px;
       font-size: 20px;
       color: #007BFF;
+    }
+    .modal-right h4 {
+      margin: 10px 0;
+      font-size: 16px;
+      color: #555;
+      font-weight: bold;
     }
     .modal-right p {
       margin: 10px 0;
@@ -155,6 +161,7 @@
     </div>
     <div class="modal-right">
       <h3 id="modal-title"></h3>
+      <h4 id="modal-section-title">Sinopse</h4>
       <p id="modal-content"></p>
       <span class="arrow-button" onclick="alternarConteudo()">
         <i class="fa-solid fa-caret-right"></i>
@@ -177,6 +184,7 @@
       statusElement.className = 'status-badge ' + getStatusClass(status);
 
       document.getElementById('modal-content').innerText = sinopse;
+      document.getElementById('modal-section-title').innerText = "Sinopse";
       document.getElementById('modal-image').src = imagem;
 
       document.getElementById('modal').style.display = 'flex';
@@ -189,7 +197,15 @@
 
     function alternarConteudo() {
       const content = document.getElementById('modal-content');
-      content.innerText = mostrandoSinopse ? window.resenha : window.sinopse;
+      const sectionTitle = document.getElementById('modal-section-title');
+
+      if (mostrandoSinopse) {
+        content.innerText = window.resenha;
+        sectionTitle.innerText = "Resenha";
+      } else {
+        content.innerText = window.sinopse;
+        sectionTitle.innerText = "Sinopse";
+      }
       mostrandoSinopse = !mostrandoSinopse;
     }
 
