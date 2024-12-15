@@ -3,17 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Book Review Modal</title>
+  <title>Biblioteca Pessoal - Review</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/c56d4d4542.js" crossorigin="anonymous"></script>
   <style>
     body {
       font-family: 'Roboto Mono', monospace;
       margin: 0;
-      background-color: #f4e8d8;
+      background-color: #f9f4e8;
       color: #5a4631;
     }
+    .container {
+      padding: 20px;
+      text-align: center;
+    }
 
-    /* Overlay */
+    /* Modal */
     .overlay {
       display: none;
       position: fixed;
@@ -22,56 +27,59 @@
       background: rgba(0, 0, 0, 0.5);
       z-index: 999;
     }
-
-    /* Modal */
     .modal {
       display: none;
       position: fixed;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      width: 90%; max-width: 600px;
-      background: #f4e8d8;
+      width: 90%; max-width: 700px;
+      background: #f9f4e8;
       border: 2px dashed #5a4631;
       padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
       z-index: 1000;
     }
-
-    /* Seções */
-    .modal h3 {
+    .modal-header {
       text-align: center;
-      margin: 10px 0;
-      font-size: 20px;
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 10px;
     }
-    .section {
-      border: 1px dashed #5a4631;
-      margin: 10px 0;
-      padding: 10px;
+    .modal-content {
+      display: flex;
+      gap: 20px;
+    }
+    .left-section {
+      flex: 1;
+      text-align: center;
+    }
+    .left-section img {
+      width: 150px;
+      height: auto;
+      border: 1px solid #5a4631;
       border-radius: 4px;
     }
-    .book-details p, .quotes p, .review p {
+    .left-section p {
       margin: 5px 0;
+      font-size: 14px;
     }
-
-    .quote-box {
-      background: #d8c7b6;
-      padding: 15px;
+    .right-section {
+      flex: 2;
+    }
+    .section-title {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .notes, .review, .quotes {
       border: 1px dashed #5a4631;
+      padding: 10px;
+      margin-bottom: 10px;
       border-radius: 4px;
     }
     .lines {
       border-top: 1px dashed #5a4631;
       margin: 5px 0;
     }
-
-    .stars {
-      margin: 10px 0;
-      font-size: 20px;
-      color: #ffcc00;
-    }
-
-    /* Botão de Fechar */
     .close-modal {
       position: absolute;
       top: 10px; right: 15px;
@@ -81,50 +89,49 @@
   </style>
 </head>
 <body>
-  <h2 style="text-align: center; margin-top: 30px;">Book Review</h2>
-  <button onclick="abrirModal()">Abrir Modal</button>
+  <div class="container">
+    <h2>Minha Biblioteca</h2>
+    <button onclick="abrirModal()">Abrir Review do Livro</button>
+  </div>
 
-  <!-- Overlay -->
+  <!-- Overlay e Modal -->
   <div class="overlay" id="overlay" onclick="fecharModal()"></div>
-
-  <!-- Modal -->
   <div class="modal" id="modal">
     <span class="close-modal" onclick="fecharModal()">&times;</span>
-    <h3>Book Review</h3>
-
-    <!-- Book Details -->
-    <div class="section book-details">
-      <p><strong>Title:</strong> Nome do Livro</p>
-      <p><strong>Author:</strong> Autor Exemplo</p>
-      <p><strong>Genre:</strong> Ficção</p>
-      <p><strong>Date started:</strong> 01/12/2024</p>
-      <p><strong>Date finished:</strong> 10/12/2024</p>
-    </div>
-
-    <!-- Favorite Quotes -->
-    <div class="section quotes">
-      <p><strong>Favorite Quotes:</strong></p>
-      <div class="quote-box">"Aqui vai uma citação favorita do livro!"</div>
-    </div>
-
-    <!-- Book Review -->
-    <div class="section review">
-      <p><strong>Book Review:</strong></p>
-      <div class="lines"></div>
-      <div class="lines"></div>
-      <div class="lines"></div>
-      <div class="lines"></div>
-    </div>
-
-    <!-- Notes and Rating -->
-    <div class="section">
-      <p><strong>Notes:</strong></p>
-      <div class="lines"></div>
-      <div class="lines"></div>
-      <p class="stars">★★★★★</p>
+    <div class="modal-header">Book Review</div>
+    <div class="modal-content">
+      <!-- Lado Esquerdo -->
+      <div class="left-section">
+        <img src="https://via.placeholder.com/150" id="modal-image" alt="Capa do Livro">
+        <p><strong>Título:</strong> Livro Exemplo</p>
+        <p><strong>Autor:</strong> Autor Exemplo</p>
+        <p><strong>Coleção:</strong> Tenho</p>
+        <p><strong>Status:</strong> Lido</p>
+      </div>
+      <!-- Lado Direito -->
+      <div class="right-section">
+        <div class="quotes">
+          <p class="section-title">Citação Favorita</p>
+          <p>"Aqui vai uma citação importante do livro."</p>
+        </div>
+        <div class="notes">
+          <p class="section-title">Notas</p>
+          <div class="lines"></div>
+          <div class="lines"></div>
+          <div class="lines"></div>
+        </div>
+        <div class="review">
+          <p class="section-title">Review</p>
+          <div class="lines"></div>
+          <div class="lines"></div>
+          <div class="lines"></div>
+          <div class="lines"></div>
+        </div>
+      </div>
     </div>
   </div>
 
+  <!-- Script -->
   <script>
     function abrirModal() {
       document.getElementById('modal').style.display = 'block';
