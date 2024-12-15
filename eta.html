@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca Pessoal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/c56d4d4542.js" crossorigin="anonymous"></script>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      background-color: #f9f9f9;
+    }
+    .container {
+      padding: 20px;
+      text-align: center;
+    }
+    .filter-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .filter-button {
+      cursor: pointer;
+      font-size: 30px;
+      color: gray;
+      transition: transform 0.2s, color 0.2s;
+    }
+    .filter-button:hover { transform: scale(1.2); color: black; }
+    .status-lido { color: green; }
+    .status-quero-ler { color: orange; }
+    .status-lendo { color: blue; }
+    .status-nao-desejado { color: pink; }
+
+    .book-card {
+      position: relative;
+      display: inline-block;
+      width: 120px;
+      margin: 10px;
+      background: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .book-card img { width: 100%; height: auto; }
+    .status-icon {
+      position: absolute;
+      top: -5px; right: 8px;
+      font-size: 26px;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80%; max-width: 400px;
+      background: white;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      padding: 20px;
+      z-index: 1000;
+      border-radius: 8px;
+    }
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+    .modal h3 { margin-top: 0; }
+    .close-modal {
+      position: absolute;
+      top: 10px; right: 15px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Minha Biblioteca</h2>
+
+    <!-- Campo de Pesquisa -->
+    <input type="text" id="search" placeholder="Pesquisar livros..." oninput="pesquisarLivros()" style="margin-bottom: 20px; padding: 5px; font-size: 16px;">
+
+    <!-- Bandeirinhas de Filtro -->
+    <div class="filter-buttons">
+      <i class="fa-solid fa-bookmark filter-button status-lendo" onclick="filtrarLivros('Lendo')" title="Lendo"></i>
+      <i class="fa-solid fa-bookmark filter-button status-quero-ler" onclick="filtrarLivros('Quero Ler')" title="Quero Ler"></i>
+      <i class="fa-solid fa-bookmark filter-button status-lido" onclick="filtrarLivros('Lido')" title="Lido"></i>
+      <i class="fa-solid fa-bookmark filter-button status-nao-desejado" onclick="filtrarLivros('Não Desejado')" title="Não Desejado"></i>
+    </div>
+
+    <!-- Contador de Livros -->
+    <p id="contador-livros">Total de livros: 0</p>
+
+    <!-- Botão para Resetar Filtros -->
+    <button onclick="filtrarLivros('')" style="padding: 5px 10px; font-size: 14px;">Mostrar Todos</button>
+
+    <!-- Cards de Livros -->
+    <div id="book-container"></div>
+  </div>
+
+  <!-- Modal -->
+  <div class="overlay" id="overlay" onclick="fecharModal()"></div>
+  <div class="modal" id="modal">
+    <span class="close-modal" onclick="fecharModal()">&times;</span>
+    <h3 id="modal-title"></h3>
+    <p id="modal-content"></p>
+  </div>
+
+  <!-- Script -->
+  <script>
+    const livros = [
+      { titulo: "Livro 1", status: "Lendo", autor: "Autor A", sinopse: "Sinopse do Livro 1" },
+      { titulo: "Livro 2", status: "Quero Ler", autor: "Autor B", sinopse: "Sinopse do Livro 2" },
+      { titulo: "Livro 3", status: "Lido", autor: "Autor C", sinopse: "Sinopse do Livro 3" }
+    ];
+
+    function carregarLivros() {
+      const container = document.getElementById("book-container");
+      container.innerHTML = "";
+      livros.forEach((livro, index) => {
+        container.innerHTML += `
+          <div class="book-card" data-status="${livro.status}" onclick="abrirModal('${livro.titulo}', '${livro.autor}', '${livro.sinopse}')">
+            <i class="fa-solid fa-bookmark status-icon ${getStatusClass(livro.status)}"></i>
+            <img src="https://via.placeholder.com/120x180" alt="${livro.titulo}">
+          </div>
+        `;
+      });
+      atualizarContador();
+    }
+
+    function getStatusClass(status) {
+      return {
+        "Lendo": "status-lendo",
+        "Quero Ler": "status-quero-ler",
+        "Lido": "status-lido",
+        "Não Desejado": "status-nao-desejado"
+      }[status];
+    }
+
+    function filtrarLivros(status) {
+      document.querySelectorAll(".book-card").forEach(card => {
+        card.style.display = card.getAttribute("data-status") === status || status === "" ? "inline-block" : "none";
+      });
+      atualizarContador();
+    }
+
+    function pesquisarLivros() {
+      const termo = document.getElementById("search").value.toLowerCase();
+      document.querySelectorAll(".book-card").forEach(card => {
+        card.style.display = card.innerHTML.toLowerCase().includes(termo) ? "inline-block" : "none";
+      });
+      atualizarContador();
+    }
+
+    function abrirModal(titulo, autor, sinopse) {
+      document.getElementById("modal-title").innerText = titulo;
+      document.getElementById("modal-content").innerText = `Autor: ${autor}\n\n${sinopse}`;
+      document.getElementById("modal").style.display = "block";
+      document.getElementById("overlay").style.display = "block";
+    }
+
+    function fecharModal() {
+      document.getElementById("modal").style.display = "none";
+      document.getElementById("overlay").style.display = "none";
+    }
+
+    function atualizarContador() {
+      const total = document.querySelectorAll(".book-card[style*='inline-block']").length;
+      document.getElementById("contador-livros").innerText = `Total de livros: ${total}`;
+    }
+
+    carregarLivros();
+  </script>
+</body>
+</html>
