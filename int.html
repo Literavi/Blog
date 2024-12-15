@@ -69,10 +69,14 @@
   </style>
 </head>
 <body>
+
+  <!-- Menu dinâmico será carregado aqui -->
+  <div id="menu-container"></div>
+
   <div class="container">
     <h2>Pesquisar Livros</h2>
 
-    <!-- Pesquisa -->
+    <!-- Barra de Pesquisa -->
     <div class="search-container">
       <input type="text" id="author-name" placeholder="Digite o autor ou título" oninput="buscarLivros()">
       <input type="text" id="publisher" placeholder="Digite a editora" oninput="buscarLivros()">
@@ -107,30 +111,40 @@
     <div id="book-list"></div>
   </div>
 
-  <!-- Modal -->
-  <div id="overlay" style="display:none;"></div>
-  <div id="synopsis-modal" class="modal" style="display:none;">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 id="modal-title"></h4>
-        <button class="close" onclick="fecharModal()">&times;</button>
-      </div>
-      <p id="modal-synopsis"></p>
-    </div>
-  </div>
-
+  <!-- Script -->
   <script>
+    // Carregar o Menu Dinâmico
+    fetch("menu.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("menu-container").innerHTML = data;
+      });
+
+    // Dados do Google Sheets
+    const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc";
+    const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs";
+    const sheetName = "Biblioteca_Pessoal";
+
+    const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
     let livros = [];
-    const apiUrl = "https://sheets.googleapis.com/v4/spreadsheets/11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc/values/Biblioteca_Pessoal?key=AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs";
 
     function carregarLivros() {
-      fetch(apiUrl)
-        .then(res => res.json())
+      fetch(googleSheetsApiUrl)
+        .then(response => response.json())
         .then(data => {
           const rows = data.values;
           const headers = rows[0];
-          livros = rows.slice(1).map(row => Object.fromEntries(headers.map((h, i) => [h, row[i] || ""])));
+          livros = rows.slice(1).map(row => {
+            let livro = {};
+            headers.forEach((header, index) => {
+              livro[header] = row[index] || "";
+            });
+            return livro;
+          });
           buscarLivros();
+        })
+        .catch(error => {
+          console.error("Erro ao carregar dados da API do Google Sheets:", error);
         });
     }
 
@@ -141,8 +155,8 @@
       const status = document.getElementById("status").value;
 
       const resultados = livros.filter(livro =>
-        (livro["Autor"].toLowerCase().includes(nome) || livro["Nome"].toLowerCase().includes(nome)) &&
-        livro["Editora"].toLowerCase().includes(editora) &&
+        (livro["Autor"]?.toLowerCase().includes(nome) || livro["Nome"]?.toLowerCase().includes(nome)) &&
+        livro["Editora"]?.toLowerCase().includes(editora) &&
         (colecao === "" || livro["Coleção"] === colecao) &&
         (status === "" || livro["Status"] === status)
       );
@@ -155,7 +169,7 @@
       container.innerHTML = "";
       lista.forEach(livro => {
         container.innerHTML += `
-          <div class="book-card" onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}')">
+          <div class="book-card">
             <i class="fa-solid fa-bookmark status-icon ${getStatusClass(livro["Status"])}"></i>
             <img src="https://via.placeholder.com/150" alt="${livro["Nome"]}">
             <h4>${livro["Nome"]}</h4>
@@ -176,18 +190,6 @@
       document.getElementById("collection").value = "";
       document.getElementById("status").value = "";
       buscarLivros();
-    }
-
-    function abrirModal(nome, sinopse) {
-      document.getElementById("modal-title").innerText = nome;
-      document.getElementById("modal-synopsis").innerText = sinopse;
-      document.getElementById("synopsis-modal").style.display = "block";
-      document.getElementById("overlay").style.display = "block";
-    }
-
-    function fecharModal() {
-      document.getElementById("synopsis-modal").style.display = "none";
-      document.getElementById("overlay").style.display = "none";
     }
 
     function getStatusClass(status) {
