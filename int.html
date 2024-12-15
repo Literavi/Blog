@@ -79,9 +79,23 @@
       margin: 8px 0;
       font-size: 14px;
       color: #333;
-      text-align: left; /* Alinhamento à esquerda */
+      text-align: left;
       padding-left: 10px;
     }
+    .status-badge {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-size: 12px;
+      font-weight: bold;
+      color: white;
+      text-align: center;
+    }
+    .status-lido { background-color: green; }
+    .status-quero-ler { background-color: orange; }
+    .status-lendo { background-color: blue; }
+    .status-nao-desejado { background-color: pink; color: black; }
+
     .modal-right {
       padding: 20px;
       width: 60%;
@@ -132,7 +146,7 @@
       <p><strong>Autor:</strong> <span id="modal-author"></span></p>
       <p><strong>Editora:</strong> <span id="modal-editora"></span></p>
       <p><strong>Coleção:</strong> <span id="modal-colecao"></span></p>
-      <p><strong>Status:</strong> <span id="modal-status"></span></p>
+      <p><strong>Status:</strong> <span id="modal-status" class="status-badge"></span></p>
     </div>
     <div class="modal-right">
       <h3 id="modal-title"></h3>
@@ -147,11 +161,24 @@
       document.getElementById('modal-author').innerText = autor;
       document.getElementById('modal-editora').innerText = editora;
       document.getElementById('modal-colecao').innerText = colecao;
-      document.getElementById('modal-status').innerText = status;
+
+      const statusElement = document.getElementById('modal-status');
+      statusElement.innerText = status;
+      statusElement.className = `status-badge ${getStatusClass(status)}`;
+
       document.getElementById('modal-synopsis').innerText = sinopse;
       document.getElementById('modal-image').src = imagem;
       document.getElementById('modal').style.display = 'flex';
       document.getElementById('overlay').style.display = 'block';
+    }
+
+    function getStatusClass(status) {
+      return {
+        "Lido": "status-lido",
+        "Quero Ler": "status-quero-ler",
+        "Lendo": "status-lendo",
+        "Não Desejado": "status-nao-desejado"
+      }[status];
     }
 
     function fecharModal() {
