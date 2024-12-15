@@ -27,7 +27,10 @@
       color: gray;
       transition: transform 0.2s, color 0.2s;
     }
-    .filter-button:hover { transform: scale(1.1); color: black; }
+    .filter-button:hover {
+      transform: scale(1.1);
+      color: black;
+    }
     .status-lido { color: green; }
     .status-quero-ler { color: orange; }
     .status-lendo { color: blue; }
@@ -40,13 +43,18 @@
       border-radius: 8px;
       box-shadow: 0 4px 6px rgba(0,0,0,0.1);
       text-align: center;
-      cursor: pointer;
       transition: transform 0.3s ease;
     }
-    .book-card:hover { transform: scale(1.05); }
+    .book-card:hover {
+      transform: scale(1.05);
+    }
     .book-card img {
       width: 100%;
       border-radius: 8px 8px 0 0;
+      cursor: pointer;
+    }
+    .book-card h4, p {
+      margin: 5px 0;
     }
     .status-icon {
       position: absolute;
@@ -54,57 +62,20 @@
       right: 8px;
       font-size: 24px;
     }
-    #contador-livros { margin: 10px 0; font-weight: bold; }
-
-    /* Estilo do Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 1000;
-      background-color: white;
-      padding: 20px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      border-radius: 8px;
-      max-width: 80%;
-      max-height: 80%;
-      overflow-y: auto;
-    }
-    .modal-content { text-align: left; }
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .modal-header h4 { margin: 0; }
-    .close {
-      font-size: 20px;
-      cursor: pointer;
-      background: none;
-      border: none;
-      color: #333;
-    }
-    .overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 999;
+    #contador-livros {
+      margin: 10px 0;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
 
-  <!-- Menu Dinâmico -->
+  <!-- Menu dinâmico será carregado aqui -->
   <div id="menu-container"></div>
 
   <div class="container">
     <h2>Pesquisar Livros</h2>
+
     <!-- Barra de Pesquisa -->
     <div class="search-container">
       <input type="text" id="author-name" placeholder="Digite o autor ou título" oninput="buscarLivros()">
@@ -140,26 +111,17 @@
     <div id="book-list"></div>
   </div>
 
-  <!-- Modal e Overlay -->
-  <div class="overlay" id="overlay"></div>
-  <div id="synopsis-modal" class="modal">
-    <div class="modal-header">
-      <h4 id="modal-title"></h4>
-      <button class="close" onclick="fecharModal()">&times;</button>
-    </div>
-    <div class="modal-content">
-      <p id="modal-synopsis"></p>
-    </div>
-  </div>
-
-  <!-- Script -->
+  <!-- Script para carregar o menu -->
   <script>
-    // Carregar Menu Dinâmico
     fetch("menu.html")
       .then(response => response.text())
-      .then(data => document.getElementById("menu-container").innerHTML = data);
+      .then(data => {
+        document.getElementById("menu-container").innerHTML = data;
+      });
+  </script>
 
-    // Dados do Google Sheets
+  <!-- Script para carregar os dados -->
+  <script>
     const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc";
     const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs";
     const sheetName = "Biblioteca_Pessoal";
@@ -173,9 +135,16 @@
         .then(data => {
           const rows = data.values;
           const headers = rows[0];
-          livros = rows.slice(1).map(row => Object.fromEntries(headers.map((h, i) => [h, row[i] || ""])));
+          livros = rows.slice(1).map(row => {
+            let livro = {};
+            headers.forEach((header, index) => {
+              livro[header] = row[index] || "";
+            });
+            return livro;
+          });
           buscarLivros();
-        });
+        })
+        .catch(error => console.error("Erro ao carregar dados:", error));
     }
 
     function buscarLivros() {
@@ -199,7 +168,7 @@
       container.innerHTML = "";
       lista.forEach(livro => {
         container.innerHTML += `
-          <div class="book-card" onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}')">
+          <div class="book-card">
             <i class="fa-solid fa-bookmark status-icon ${getStatusClass(livro["Status"])}"></i>
             <img src="https://via.placeholder.com/150" alt="${livro["Nome"]}">
             <h4>${livro["Nome"]}</h4>
@@ -210,16 +179,16 @@
       document.getElementById("contador-livros").textContent = `Total de livros: ${lista.length}`;
     }
 
-    function abrirModal(nome, sinopse) {
-      document.getElementById("modal-title").innerText = nome;
-      document.getElementById("modal-synopsis").innerText = sinopse;
-      document.getElementById("synopsis-modal").style.display = "block";
-      document.getElementById("overlay").style.display = "block";
+    function filtrarPorStatus(status) {
+      renderizarLivros(livros.filter(livro => livro["Status"] === status));
     }
 
-    function fecharModal() {
-      document.getElementById("synopsis-modal").style.display = "none";
-      document.getElementById("overlay").style.display = "none";
+    function resetarFiltros() {
+      document.getElementById("author-name").value = "";
+      document.getElementById("publisher").value = "";
+      document.getElementById("collection").value = "";
+      document.getElementById("status").value = "";
+      buscarLivros();
     }
 
     function getStatusClass(status) {
