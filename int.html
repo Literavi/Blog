@@ -4,19 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Biblioteca Pessoal</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/c56d4d4542.js" crossorigin="anonymous"></script>
   <style>
     body {
-      font-family: 'Roboto Mono', monospace;
+      font-family: 'Roboto', sans-serif;
       margin: 0;
-      background-color: #f9f4e8;
-      color: #5a4631;
+      background-color: #f9f9f9;
     }
     .container {
       padding: 20px;
       text-align: center;
     }
+
     /* Cards */
     .book-card {
       position: relative;
@@ -27,16 +27,15 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       border-radius: 8px;
       overflow: hidden;
-      cursor: pointer;
       transition: transform 0.3s;
+      cursor: pointer;
     }
-    .book-card:hover {
-      transform: scale(1.05);
-    }
+    .book-card:hover { transform: scale(1.05); }
     .book-card img { width: 100%; }
     .status-icon {
       position: absolute;
-      top: -5px; right: 8px;
+      top: -5px;
+      right: 8px;
       font-size: 26px;
     }
 
@@ -54,45 +53,54 @@
       position: fixed;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      width: 90%; max-width: 700px;
-      background: #f9f4e8;
-      border: 2px dashed #5a4631;
-      padding: 20px;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      width: 90%; max-width: 600px;
+      background: #fff;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      overflow: hidden;
       z-index: 1000;
-    }
-    .modal-content {
       display: flex;
-      gap: 20px;
+      flex-direction: row;
     }
-    .left-section {
-      flex: 1;
+    .modal-left {
+      padding: 20px;
+      width: 40%;
       text-align: center;
+      border-right: 1px solid #ddd;
+      background-color: #f1f1f1;
     }
-    .left-section img {
-      width: 150px;
+    .modal-left img {
+      width: 100px;
       height: auto;
-      border: 1px solid #5a4631;
+      border-radius: 8px;
     }
-    .right-section {
-      flex: 2;
-      text-align: left;
+    .modal-left p {
+      margin: 10px 0;
+      font-size: 14px;
+      color: #333;
     }
-    .section-title {
-      font-weight: bold;
-      margin-bottom: 5px;
+    .modal-right {
+      padding: 20px;
+      width: 60%;
     }
-    .box {
-      border: 1px dashed #5a4631;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 4px;
+    .modal-right h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+      color: #007BFF;
+    }
+    .modal-right p {
+      margin: 10px 0;
+      font-size: 14px;
+      color: #333;
+      text-align: justify;
     }
     .close-modal {
       position: absolute;
-      top: 10px; right: 15px;
+      top: 10px;
+      right: 15px;
+      font-size: 20px;
+      color: #555;
       cursor: pointer;
-      font-size: 18px;
     }
   </style>
 </head>
@@ -100,13 +108,15 @@
   <div class="container">
     <h2>Minha Biblioteca</h2>
     <!-- Cards de Livros -->
-    <div class="book-card" onclick="abrirModal('Livro 1', 'Autor A', 'Tenho', 'Lido', 'Uma citação favorita do Livro 1', 'https://via.placeholder.com/150')">
-      <i class="fa-solid fa-bookmark status-icon" style="color: green;"></i>
-      <img src="https://via.placeholder.com/120x180" alt="Livro 1">
-    </div>
-    <div class="book-card" onclick="abrirModal('Livro 2', 'Autor B', 'Desejado', 'Quero Ler', 'Outra citação inspiradora!', 'https://via.placeholder.com/150')">
-      <i class="fa-solid fa-bookmark status-icon" style="color: orange;"></i>
-      <img src="https://via.placeholder.com/120x180" alt="Livro 2">
+    <div id="book-container">
+      <div class="book-card" onclick="abrirModal('Livro 1', 'Autor A', 'Editora X', 'Tenho', 'Lido', 'Sinopse incrível do Livro 1', 'https://via.placeholder.com/150')">
+        <i class="fa-solid fa-bookmark status-icon" style="color: green;"></i>
+        <img src="https://via.placeholder.com/120x180" alt="Livro 1">
+      </div>
+      <div class="book-card" onclick="abrirModal('Livro 2', 'Autor B', 'Editora Y', 'Desejado', 'Quero Ler', 'Sinopse envolvente do Livro 2', 'https://via.placeholder.com/150')">
+        <i class="fa-solid fa-bookmark status-icon" style="color: orange;"></i>
+        <img src="https://via.placeholder.com/120x180" alt="Livro 2">
+      </div>
     </div>
   </div>
 
@@ -114,37 +124,30 @@
   <div class="overlay" id="overlay" onclick="fecharModal()"></div>
   <div class="modal" id="modal">
     <span class="close-modal" onclick="fecharModal()">&times;</span>
-    <div class="modal-content">
-      <!-- Lado Esquerdo -->
-      <div class="left-section">
-        <img id="modal-image" src="" alt="Capa do Livro">
-        <p><strong>Autor:</strong> <span id="modal-author"></span></p>
-        <p><strong>Coleção:</strong> <span id="modal-collection"></span></p>
-        <p><strong>Status:</strong> <span id="modal-status"></span></p>
-      </div>
-      <!-- Lado Direito -->
-      <div class="right-section">
-        <div class="box">
-          <p class="section-title">Citação Favorita</p>
-          <p id="modal-quote"></p>
-        </div>
-        <div class="box">
-          <p class="section-title">Review</p>
-          <p>Adicione sua avaliação aqui...</p>
-        </div>
-      </div>
+    <div class="modal-left">
+      <img id="modal-image" src="" alt="Capa do Livro">
+      <p><strong>Autor:</strong> <span id="modal-author"></span></p>
+      <p><strong>Editora:</strong> <span id="modal-editora"></span></p>
+      <p><strong>Coleção:</strong> <span id="modal-colecao"></span></p>
+      <p><strong>Status:</strong> <span id="modal-status"></span></p>
+    </div>
+    <div class="modal-right">
+      <h3 id="modal-title"></h3>
+      <p id="modal-synopsis"></p>
     </div>
   </div>
 
   <!-- Script -->
   <script>
-    function abrirModal(titulo, autor, colecao, status, quote, imagem) {
+    function abrirModal(titulo, autor, editora, colecao, status, sinopse, imagem) {
+      document.getElementById('modal-title').innerText = titulo;
       document.getElementById('modal-author').innerText = autor;
-      document.getElementById('modal-collection').innerText = colecao;
+      document.getElementById('modal-editora').innerText = editora;
+      document.getElementById('modal-colecao').innerText = colecao;
       document.getElementById('modal-status').innerText = status;
-      document.getElementById('modal-quote').innerText = quote;
+      document.getElementById('modal-synopsis').innerText = sinopse;
       document.getElementById('modal-image').src = imagem;
-      document.getElementById('modal').style.display = 'block';
+      document.getElementById('modal').style.display = 'flex';
       document.getElementById('overlay').style.display = 'block';
     }
 
