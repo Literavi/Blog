@@ -27,10 +27,13 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       border-radius: 8px;
       overflow: hidden;
-      transition: transform 0.3s;
+      transition: transform 0.3s, box-shadow 0.3s;
       cursor: pointer;
     }
-    .book-card:hover { transform: scale(1.05); }
+    .book-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
     .book-card img { width: 100%; }
     .status-icon {
       position: absolute;
@@ -39,7 +42,7 @@
       font-size: 26px;
     }
 
-    /* Modal */
+    /* Modal com animação */
     .overlay {
       display: none;
       position: fixed;
@@ -52,7 +55,8 @@
       display: none;
       position: fixed;
       top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%) scale(0.9);
+      opacity: 0;
       width: 90%; max-width: 600px;
       background: #fff;
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
@@ -60,25 +64,24 @@
       z-index: 1000;
       display: flex;
       flex-direction: row;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .modal.show {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
     }
     .modal-left {
       padding: 20px;
       width: 40%;
       text-align: left;
-      border-right: 1px solid #ddd;
       background-color: #f1f1f1;
     }
     .modal-left img {
       width: 120px;
-      height: auto;
-      border-radius: 8px;
       margin-bottom: 15px;
     }
-    .modal-left p {
-      margin: 8px 0;
-      font-size: 14px;
-      color: #333;
-    }
+    .modal-left p { margin: 8px 0; font-size: 14px; color: #333; }
+
     .status-badge {
       display: inline-block;
       padding: 5px 10px;
@@ -95,40 +98,50 @@
       padding: 20px;
       width: 60%;
     }
-    .modal-right h3 {
-      margin: 0 0 10px;
-      font-size: 20px;
-      color: #007BFF;
-    }
+    .modal-right h3 { margin: 0 0 10px; font-size: 20px; color: #007BFF; }
     .modal-right p {
       margin: 10px 0;
       font-size: 14px;
-      color: #333;
       text-align: justify;
+      max-height: 120px;
+      overflow-y: auto;
     }
     .close-modal {
       position: absolute;
-      top: 10px;
-      right: 15px;
-      font-size: 20px;
+      top: 10px; right: 15px;
+      font-size: 24px;
       color: #555;
       cursor: pointer;
+      transition: color 0.3s;
+    }
+    .close-modal:hover { color: red; }
+
+    /* Botões de Ação */
+    .modal-actions {
+      margin-top: 15px;
+      text-align: left;
+    }
+    .modal-actions button {
+      padding: 5px 10px;
+      margin-right: 10px;
+      border: none;
+      background-color: #007BFF;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .modal-actions button:hover {
+      background-color: #0056b3;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h2>Minha Biblioteca</h2>
-    <!-- Cards de Livros -->
-    <div id="book-container">
-      <div class="book-card" onclick="abrirModal('Livro 1', 'Autor A', 'Editora X', 'Tenho', 'Lido', 'Sinopse incrível do Livro 1', 'https://via.placeholder.com/150')">
-        <i class="fa-solid fa-bookmark status-icon" style="color: green;"></i>
-        <img src="https://via.placeholder.com/120x180" alt="Livro 1">
-      </div>
-      <div class="book-card" onclick="abrirModal('Livro 2', 'Autor B', 'Editora Y', 'Desejado', 'Quero Ler', 'Sinopse envolvente do Livro 2', 'https://via.placeholder.com/150')">
-        <i class="fa-solid fa-bookmark status-icon" style="color: orange;"></i>
-        <img src="https://via.placeholder.com/120x180" alt="Livro 2">
-      </div>
+    <div class="book-card" onclick="abrirModal('Livro 1', 'Autor A', 'Editora X', 'Tenho', 'Lido', 'Sinopse incrível do Livro 1', 'https://via.placeholder.com/150')">
+      <i class="fa-solid fa-bookmark status-icon" style="color: green;"></i>
+      <img src="https://via.placeholder.com/120x180" alt="Livro 1">
     </div>
   </div>
 
@@ -146,39 +159,28 @@
     <div class="modal-right">
       <h3 id="modal-title"></h3>
       <p id="modal-synopsis"></p>
+      <div class="modal-actions">
+        <button>Marcar como Lido</button>
+        <button>Adicionar à Coleção</button>
+        <button>Compartilhar</button>
+      </div>
     </div>
   </div>
 
-  <!-- Script -->
   <script>
     function abrirModal(titulo, autor, editora, colecao, status, sinopse, imagem) {
       document.getElementById('modal-title').innerText = titulo;
       document.getElementById('modal-author').innerText = autor;
       document.getElementById('modal-editora').innerText = editora;
       document.getElementById('modal-colecao').innerText = colecao;
-
-      const statusElement = document.getElementById('modal-status');
-      statusElement.innerText = status;
-      statusElement.className = 'status-badge ' + getStatusClass(status);
-
-      document.getElementById('modal-synopsis').innerText = sinopse;
+      document.getElementById('modal-status').innerText = status;
       document.getElementById('modal-image').src = imagem;
-
-      document.getElementById('modal').style.display = 'flex';
+      document.getElementById('modal').classList.add('show');
       document.getElementById('overlay').style.display = 'block';
     }
 
-    function getStatusClass(status) {
-      return {
-        "Lido": "status-lido",
-        "Quero Ler": "status-quero-ler",
-        "Lendo": "status-lendo",
-        "Não Desejado": "status-nao-desejado"
-      }[status];
-    }
-
     function fecharModal() {
-      document.getElementById('modal').style.display = 'none';
+      document.getElementById('modal').classList.remove('show');
       document.getElementById('overlay').style.display = 'none';
     }
   </script>
