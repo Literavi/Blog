@@ -3,45 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Biblioteca Pessoal</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <script src="https://kit.fontawesome.com/c56d4d4542.js" crossorigin="anonymous"></script>
+  <title>Book Review Modal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Roboto', sans-serif;
+      font-family: 'Roboto Mono', monospace;
       margin: 0;
-      background-color: #f9f9f9;
-    }
-    .container {
-      padding: 20px;
-      text-align: center;
+      background-color: #f4e8d8;
+      color: #5a4631;
     }
 
-    /* Cards */
-    .book-card {
-      position: relative;
-      display: inline-block;
-      width: 120px;
-      margin: 10px;
-      background: white;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
-      overflow: hidden;
-      transition: transform 0.3s;
-      cursor: pointer;
-    }
-    .book-card:hover {
-      transform: scale(1.05);
-    }
-    .book-card img { width: 100%; }
-    .status-icon {
-      position: absolute;
-      top: -5px;
-      right: 8px;
-      font-size: 26px;
-    }
-
-    /* Modal */
+    /* Overlay */
     .overlay {
       display: none;
       position: fixed;
@@ -50,117 +22,111 @@
       background: rgba(0, 0, 0, 0.5);
       z-index: 999;
     }
+
+    /* Modal */
     .modal {
       display: none;
       position: fixed;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
       width: 90%; max-width: 600px;
-      background: #fff;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      background: #f4e8d8;
+      border: 2px dashed #5a4631;
+      padding: 20px;
       border-radius: 8px;
-      overflow: hidden;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
       z-index: 1000;
     }
-    .modal-header {
-      background-color: #007BFF;
-      color: white;
+
+    /* Seções */
+    .modal h3 {
       text-align: center;
+      margin: 10px 0;
+      font-size: 20px;
+    }
+    .section {
+      border: 1px dashed #5a4631;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    .book-details p, .quotes p, .review p {
+      margin: 5px 0;
+    }
+
+    .quote-box {
+      background: #d8c7b6;
       padding: 15px;
-      font-size: 18px;
-      font-weight: bold;
+      border: 1px dashed #5a4631;
+      border-radius: 4px;
     }
-    .modal-content {
-      display: flex;
-      padding: 20px;
-    }
-    .modal-left {
-      flex: 1;
-      text-align: center;
-    }
-    .modal-left img {
-      width: 150px;
-      border-radius: 8px;
-      margin-bottom: 10px;
-    }
-    .modal-left p {
+    .lines {
+      border-top: 1px dashed #5a4631;
       margin: 5px 0;
-      font-size: 14px;
-      color: #333;
     }
-    .modal-right {
-      flex: 2;
-      padding-left: 20px;
-      text-align: left;
+
+    .stars {
+      margin: 10px 0;
+      font-size: 20px;
+      color: #ffcc00;
     }
-    .modal-right p {
-      margin: 5px 0;
-      font-size: 16px;
-      line-height: 1.5;
-      color: #444;
-    }
+
+    /* Botão de Fechar */
     .close-modal {
       position: absolute;
-      top: 10px;
-      right: 15px;
-      font-size: 20px;
-      color: white;
+      top: 10px; right: 15px;
       cursor: pointer;
+      font-size: 18px;
     }
-    .highlight { font-weight: bold; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h2>Minha Biblioteca</h2>
+  <h2 style="text-align: center; margin-top: 30px;">Book Review</h2>
+  <button onclick="abrirModal()">Abrir Modal</button>
 
-    <!-- Cards de Livros -->
-    <div id="book-container">
-      <div class="book-card" onclick="abrirModal('Livro 1', 'Autor A', 'Tenho', 'Lido', 'Sinopse incrível do Livro 1', 'https://via.placeholder.com/150')">
-        <i class="fa-solid fa-bookmark status-icon" style="color: green;"></i>
-        <img src="https://via.placeholder.com/120x180" alt="Livro 1">
-      </div>
-
-      <div class="book-card" onclick="abrirModal('Livro 2', 'Autor B', 'Desejado', 'Quero Ler', 'Sinopse envolvente do Livro 2', 'https://via.placeholder.com/150')">
-        <i class="fa-solid fa-bookmark status-icon" style="color: orange;"></i>
-        <img src="https://via.placeholder.com/120x180" alt="Livro 2">
-      </div>
-    </div>
-  </div>
+  <!-- Overlay -->
+  <div class="overlay" id="overlay" onclick="fecharModal()"></div>
 
   <!-- Modal -->
-  <div class="overlay" id="overlay" onclick="fecharModal()"></div>
   <div class="modal" id="modal">
-    <div class="modal-header">
-      <span id="modal-title">Detalhes do Livro</span>
-      <span class="close-modal" onclick="fecharModal()">&times;</span>
+    <span class="close-modal" onclick="fecharModal()">&times;</span>
+    <h3>Book Review</h3>
+
+    <!-- Book Details -->
+    <div class="section book-details">
+      <p><strong>Title:</strong> Nome do Livro</p>
+      <p><strong>Author:</strong> Autor Exemplo</p>
+      <p><strong>Genre:</strong> Ficção</p>
+      <p><strong>Date started:</strong> 01/12/2024</p>
+      <p><strong>Date finished:</strong> 10/12/2024</p>
     </div>
-    <div class="modal-content">
-      <!-- Lado Esquerdo -->
-      <div class="modal-left">
-        <img id="modal-image" src="" alt="Capa do Livro">
-        <p><span class="highlight">Autor:</span> <span id="modal-author"></span></p>
-        <p><span class="highlight">Coleção:</span> <span id="modal-collection"></span></p>
-        <p><span class="highlight">Status:</span> <span id="modal-status"></span></p>
-      </div>
-      <!-- Lado Direito -->
-      <div class="modal-right">
-        <p><span class="highlight">Sinopse:</span></p>
-        <p id="modal-synopsis"></p>
-      </div>
+
+    <!-- Favorite Quotes -->
+    <div class="section quotes">
+      <p><strong>Favorite Quotes:</strong></p>
+      <div class="quote-box">"Aqui vai uma citação favorita do livro!"</div>
+    </div>
+
+    <!-- Book Review -->
+    <div class="section review">
+      <p><strong>Book Review:</strong></p>
+      <div class="lines"></div>
+      <div class="lines"></div>
+      <div class="lines"></div>
+      <div class="lines"></div>
+    </div>
+
+    <!-- Notes and Rating -->
+    <div class="section">
+      <p><strong>Notes:</strong></p>
+      <div class="lines"></div>
+      <div class="lines"></div>
+      <p class="stars">★★★★★</p>
     </div>
   </div>
 
-  <!-- Script -->
   <script>
-    function abrirModal(titulo, autor, colecao, status, sinopse, imagem) {
-      document.getElementById('modal-title').innerText = titulo;
-      document.getElementById('modal-author').innerText = autor;
-      document.getElementById('modal-collection').innerText = colecao;
-      document.getElementById('modal-status').innerText = status;
-      document.getElementById('modal-synopsis').innerText = sinopse;
-      document.getElementById('modal-image').src = imagem;
-
+    function abrirModal() {
       document.getElementById('modal').style.display = 'block';
       document.getElementById('overlay').style.display = 'block';
     }
