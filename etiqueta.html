@@ -25,7 +25,7 @@
     .filter-button {
       width: 30px;
       height: 30px;
-      border-radius: 5px;
+      border-radius: 50%;
       cursor: pointer;
     }
     .status-lido { background-color: green; }
@@ -48,14 +48,24 @@
       height: auto;
       display: block;
     }
+
+    /* Novo formato de etiqueta circular */
     .status-marker {
       position: absolute;
-      top: 0;
-      right: 0;
-      width: 20px;
-      height: 30px;
-      clip-path: polygon(0 0, 100% 0, 100% 75%, 50% 100%, 0 75%);
+      bottom: 8px;
+      right: 8px;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      background-color: #ffcc00;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      border: 2px solid white;
     }
+
+    .status-lido { background-color: green; }
+    .status-quero-ler { background-color: orange; }
+    .status-lendo { background-color: blue; }
+    .status-nao-desejado { background-color: pink; }
   </style>
 </head>
 <body>
