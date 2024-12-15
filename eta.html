@@ -9,24 +9,15 @@
   <style>
     body {
       font-family: 'Roboto', sans-serif;
-      margin: 0;
+      margin: 0; padding: 0;
       background-color: #f9f9f9;
     }
-    .container {
-      padding: 20px;
-      text-align: center;
-    }
+    .container { padding: 20px; text-align: center; }
     .filter-buttons {
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      margin-bottom: 20px;
+      display: flex; justify-content: center; gap: 15px; margin-bottom: 20px;
     }
     .filter-button {
-      cursor: pointer;
-      font-size: 30px;
-      color: gray;
-      transition: transform 0.2s, color 0.2s;
+      cursor: pointer; font-size: 30px; color: gray; transition: transform 0.2s, color 0.2s;
     }
     .filter-button:hover { transform: scale(1.2); color: black; }
     .status-lido { color: green; }
@@ -34,61 +25,54 @@
     .status-lendo { color: blue; }
     .status-nao-desejado { color: pink; }
 
-    .book-card {
-      position: relative;
-      display: inline-block;
-      width: 120px;
-      margin: 10px;
-      background: white;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      border-radius: 8px;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      cursor: pointer;
-    }
-    .book-card img { width: 100%; height: auto; }
-    .status-icon {
-      position: absolute;
-      top: -5px; right: 8px;
-      font-size: 26px;
+    .search-container input, select, button {
+      margin: 5px; padding: 8px; font-size: 14px;
     }
 
-    /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 80%; max-width: 400px;
-      background: white;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-      padding: 20px;
-      z-index: 1000;
-      border-radius: 8px;
-    }
-    .overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 999;
-    }
-    .modal h3 { margin-top: 0; }
-    .close-modal {
-      position: absolute;
-      top: 10px; right: 15px;
-      font-size: 20px;
+    /* Cards */
+    .book-card {
+      position: relative; display: inline-block; width: 120px; margin: 10px;
+      background: white; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border-radius: 8px;
+      transition: transform 0.3s ease;
       cursor: pointer;
     }
+    .book-card:hover { transform: scale(1.05); }
+    .book-card img { width: 100%; height: auto; }
+    .status-icon {
+      position: absolute; top: -5px; right: 8px; font-size: 26px;
+    }
+    /* Modal */
+    .modal, .overlay {
+      display: none; position: fixed; z-index: 1000; top: 50%; left: 50%;
+      transform: translate(-50%, -50%); width: 80%; max-width: 400px;
+      background: white; padding: 20px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); border-radius: 8px;
+    }
+    .overlay {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5); z-index: 999;
+    }
+    .modal h3 { margin-top: 0; }
+    .close-modal { position: absolute; top: 10px; right: 15px; font-size: 20px; cursor: pointer; }
   </style>
 </head>
 <body>
   <div class="container">
     <h2>Minha Biblioteca</h2>
 
-    <!-- Campo de Pesquisa -->
-    <input type="text" id="search" placeholder="Pesquisar livros..." oninput="pesquisarLivros()" style="margin-bottom: 20px; padding: 5px; font-size: 16px;">
+    <!-- Barra de Pesquisa -->
+    <div class="search-container">
+      <input type="text" id="author-name" placeholder="Nome do autor ou título">
+      <input type="text" id="publisher" placeholder="Editora">
+      <select id="status">
+        <option value="">Selecione o status</option>
+        <option value="Lido">Lido</option>
+        <option value="Quero Ler">Quero Ler</option>
+        <option value="Lendo">Lendo</option>
+        <option value="Não Desejado">Não Desejado</option>
+      </select>
+      <button onclick="buscarLivros()">Pesquisar</button>
+      <button onclick="resetarFiltros()">Resetar</button>
+    </div>
 
     <!-- Bandeirinhas de Filtro -->
     <div class="filter-buttons">
@@ -101,11 +85,8 @@
     <!-- Contador de Livros -->
     <p id="contador-livros">Total de livros: 0</p>
 
-    <!-- Botão para Resetar Filtros -->
-    <button onclick="filtrarLivros('')" style="padding: 5px 10px; font-size: 14px;">Mostrar Todos</button>
-
-    <!-- Cards de Livros -->
-    <div id="book-container"></div>
+    <!-- Cards dos Livros -->
+    <div id="book-list"></div>
   </div>
 
   <!-- Modal -->
@@ -118,52 +99,75 @@
 
   <!-- Script -->
   <script>
-    const livros = [
-      { titulo: "Livro 1", status: "Lendo", autor: "Autor A", sinopse: "Sinopse do Livro 1" },
-      { titulo: "Livro 2", status: "Quero Ler", autor: "Autor B", sinopse: "Sinopse do Livro 2" },
-      { titulo: "Livro 3", status: "Lido", autor: "Autor C", sinopse: "Sinopse do Livro 3" }
-    ];
+    let livros = []; // Dados da API
+
+    const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc/values/Biblioteca_Pessoal?key=AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs`;
 
     function carregarLivros() {
-      const container = document.getElementById("book-container");
+      fetch(googleSheetsApiUrl)
+        .then(res => res.json())
+        .then(data => {
+          const rows = data.values;
+          const headers = rows[0];
+          livros = rows.slice(1).map(row => {
+            let livro = {};
+            headers.forEach((header, index) => livro[header] = row[index] || "");
+            return livro;
+          });
+          buscarLivros();
+        });
+    }
+
+    function buscarLivros() {
+      const nome = document.getElementById("author-name").value.toLowerCase();
+      const editora = document.getElementById("publisher").value.toLowerCase();
+      const status = document.getElementById("status").value;
+
+      const resultados = livros.filter(livro => 
+        (livro["Nome"].toLowerCase().includes(nome) || livro["Autor"].toLowerCase().includes(nome)) &&
+        livro["Editora"].toLowerCase().includes(editora) &&
+        (status === "" || livro["Status"] === status)
+      );
+
+      renderizarLivros(resultados);
+    }
+
+    function filtrarLivros(status) {
+      const filtrados = livros.filter(livro => livro["Status"] === status);
+      renderizarLivros(filtrados);
+    }
+
+    function resetarFiltros() {
+      document.getElementById("author-name").value = "";
+      document.getElementById("publisher").value = "";
+      document.getElementById("status").value = "";
+      buscarLivros();
+    }
+
+    function renderizarLivros(lista) {
+      const container = document.getElementById("book-list");
       container.innerHTML = "";
-      livros.forEach((livro, index) => {
+      lista.forEach(livro => {
         container.innerHTML += `
-          <div class="book-card" data-status="${livro.status}" onclick="abrirModal('${livro.titulo}', '${livro.autor}', '${livro.sinopse}')">
-            <i class="fa-solid fa-bookmark status-icon ${getStatusClass(livro.status)}"></i>
-            <img src="https://via.placeholder.com/120x180" alt="${livro.titulo}">
-          </div>
-        `;
+          <div class="book-card" onclick="abrirModal('${livro["Nome"]}', '${livro["Autor"]}', '${livro["Sinopse"]}')">
+            <i class="fa-solid fa-bookmark status-icon ${getStatusClass(livro["Status"])}"></i>
+            <img src="https://via.placeholder.com/120x180" alt="${livro["Nome"]}">
+          </div>`;
       });
-      atualizarContador();
+      document.getElementById("contador-livros").innerText = `Total de livros: ${lista.length}`;
     }
 
     function getStatusClass(status) {
       return {
-        "Lendo": "status-lendo",
-        "Quero Ler": "status-quero-ler",
         "Lido": "status-lido",
+        "Quero Ler": "status-quero-ler",
+        "Lendo": "status-lendo",
         "Não Desejado": "status-nao-desejado"
       }[status];
     }
 
-    function filtrarLivros(status) {
-      document.querySelectorAll(".book-card").forEach(card => {
-        card.style.display = card.getAttribute("data-status") === status || status === "" ? "inline-block" : "none";
-      });
-      atualizarContador();
-    }
-
-    function pesquisarLivros() {
-      const termo = document.getElementById("search").value.toLowerCase();
-      document.querySelectorAll(".book-card").forEach(card => {
-        card.style.display = card.innerHTML.toLowerCase().includes(termo) ? "inline-block" : "none";
-      });
-      atualizarContador();
-    }
-
-    function abrirModal(titulo, autor, sinopse) {
-      document.getElementById("modal-title").innerText = titulo;
+    function abrirModal(nome, autor, sinopse) {
+      document.getElementById("modal-title").innerText = nome;
       document.getElementById("modal-content").innerText = `Autor: ${autor}\n\n${sinopse}`;
       document.getElementById("modal").style.display = "block";
       document.getElementById("overlay").style.display = "block";
@@ -172,11 +176,6 @@
     function fecharModal() {
       document.getElementById("modal").style.display = "none";
       document.getElementById("overlay").style.display = "none";
-    }
-
-    function atualizarContador() {
-      const total = document.querySelectorAll(".book-card[style*='inline-block']").length;
-      document.getElementById("contador-livros").innerText = `Total de livros: ${total}`;
     }
 
     carregarLivros();
