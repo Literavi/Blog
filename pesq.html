@@ -9,26 +9,53 @@
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
   <style>
-    .status-label {
-      display: inline-block;
-      padding: 4px 8px;
-      border-radius: 12px;
-      font-size: 12px;
-      color: white;
-      font-weight: bold;
-      margin-top: 4px;
+    .modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1000;
+      background-color: white;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      max-width: 80%;
+      max-height: 80%;
+      overflow-y: auto;
     }
-    .status-lido {
-      background-color: green;
+
+    .modal-content {
+      text-align: left;
     }
-    .status-quero-ler {
-      background-color: orange;
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    .status-lendo {
-      background-color: blue;
+
+    .modal-header h4 {
+      margin: 0;
     }
-    .status-nao-desejado {
-      background-color: pink;
+
+    .close {
+      font-size: 20px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: #333;
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
     }
   </style>
 </head>
@@ -63,11 +90,14 @@
     <p id="error-message"></p>
   </div>
 
-  <!-- Modal para exibir a sinopse -->
+  <!-- Modal e Overlay -->
+  <div class="overlay" id="overlay"></div>
   <div id="synopsis-modal" class="modal">
     <div class="modal-content">
-      <span class="close" onclick="fecharModal()">&times;</span>
-      <h4 id="modal-title"></h4>
+      <div class="modal-header">
+        <h4 id="modal-title"></h4>
+        <button class="close" onclick="fecharModal()">&times;</button>
+      </div>
       <p id="modal-synopsis"></p>
     </div>
   </div>
@@ -140,17 +170,11 @@
             ? `https://github.com/Literavi/Blog/raw/main/imagens/${livro["ImageFile"]}`
             : "https://via.placeholder.com/150";
 
-          const statusClass = livro["Status"] === "Lido" ? "status-lido" :
-                              livro["Status"] === "Quero Ler" ? "status-quero-ler" :
-                              livro["Status"] === "Lendo" ? "status-lendo" : 
-                              "status-nao-desejado";
-
           card.innerHTML = `
             <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}')">
             <h4>${livro["Nome"]}</h4>
             <p><strong>Autor:</strong> ${livro["Autor"]}</p>
             <p><strong>Editora:</strong> ${livro["Editora"]}</p>
-            <p><span class="status-label ${statusClass}">${livro["Status"]}</span></p>
           `;
           lista.appendChild(card);
         });
@@ -162,10 +186,12 @@
     function abrirModal(nome, sinopse) {
       document.getElementById("modal-title").textContent = nome;
       document.getElementById("modal-synopsis").textContent = sinopse;
+      document.getElementById("overlay").style.display = "block";
       document.getElementById("synopsis-modal").style.display = "block";
     }
 
     function fecharModal() {
+      document.getElementById("overlay").style.display = "none";
       document.getElementById("synopsis-modal").style.display = "none";
     }
 
