@@ -16,6 +16,23 @@
       padding: 20px;
       text-align: center;
     }
+    .filter-buttons {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    .filter-button {
+      width: 30px;
+      height: 30px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .status-lido { background-color: green; }
+    .status-quero-ler { background-color: orange; }
+    .status-lendo { background-color: blue; }
+    .status-nao-desejado { background-color: pink; }
+
     .book-card {
       position: relative;
       display: inline-block;
@@ -31,27 +48,13 @@
       height: auto;
       display: block;
     }
-    /* Estilo do marcador */
     .status-marker {
       position: absolute;
       top: 0;
-      left: 0;
+      right: 0;
       width: 20px;
       height: 30px;
-      background-color: #ffcc00;
       clip-path: polygon(0 0, 100% 0, 100% 75%, 50% 100%, 0 75%);
-    }
-    .status-lido {
-      background-color: green;
-    }
-    .status-quero-ler {
-      background-color: orange;
-    }
-    .status-lendo {
-      background-color: blue;
-    }
-    .status-nao-desejado {
-      background-color: pink;
     }
   </style>
 </head>
@@ -59,26 +62,48 @@
   <div class="container">
     <h2>Minha Biblioteca</h2>
 
-    <!-- Exemplo de Card com Marcador -->
-    <div class="book-card">
-      <div class="status-marker status-lido"></div>
-      <img src="https://via.placeholder.com/120x180" alt="Capa do Livro">
+    <!-- Filtros -->
+    <div class="filter-buttons">
+      <div class="filter-button status-lendo" onclick="filtrarLivros('Lendo')"></div>
+      <div class="filter-button status-quero-ler" onclick="filtrarLivros('Quero Ler')"></div>
+      <div class="filter-button status-lido" onclick="filtrarLivros('Lido')"></div>
+      <div class="filter-button status-nao-desejado" onclick="filtrarLivros('Não Desejado')"></div>
     </div>
 
-    <div class="book-card">
-      <div class="status-marker status-quero-ler"></div>
-      <img src="https://via.placeholder.com/120x180" alt="Capa do Livro">
-    </div>
-
-    <div class="book-card">
-      <div class="status-marker status-lendo"></div>
-      <img src="https://via.placeholder.com/120x180" alt="Capa do Livro">
-    </div>
-
-    <div class="book-card">
-      <div class="status-marker status-nao-desejado"></div>
-      <img src="https://via.placeholder.com/120x180" alt="Capa do Livro">
+    <!-- Cards de Livros -->
+    <div id="book-container">
+      <div class="book-card" data-status="Lido">
+        <div class="status-marker status-lido"></div>
+        <img src="https://via.placeholder.com/120x180" alt="Livro 1">
+      </div>
+      <div class="book-card" data-status="Quero Ler">
+        <div class="status-marker status-quero-ler"></div>
+        <img src="https://via.placeholder.com/120x180" alt="Livro 2">
+      </div>
+      <div class="book-card" data-status="Lendo">
+        <div class="status-marker status-lendo"></div>
+        <img src="https://via.placeholder.com/120x180" alt="Livro 3">
+      </div>
+      <div class="book-card" data-status="Não Desejado">
+        <div class="status-marker status-nao-desejado"></div>
+        <img src="https://via.placeholder.com/120x180" alt="Livro 4">
+      </div>
     </div>
   </div>
+
+  <!-- JavaScript para Filtrar Livros -->
+  <script>
+    function filtrarLivros(status) {
+      const cards = document.querySelectorAll('.book-card');
+      cards.forEach(card => {
+        const cardStatus = card.getAttribute('data-status');
+        if (status === cardStatus || !status) {
+          card.style.display = 'inline-block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
 </body>
 </html>
