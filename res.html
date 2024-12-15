@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca Pessoal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/c56d4d4542.js" crossorigin="anonymous"></script>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      background-color: #f9f9f9;
+    }
+    .container {
+      padding: 20px;
+      text-align: center;
+    }
+
+    /* Cards */
+    .book-card {
+      position: relative;
+      display: inline-block;
+      width: 120px;
+      margin: 10px;
+      background: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.3s;
+      cursor: pointer;
+    }
+    .book-card:hover { transform: scale(1.05); }
+    .book-card img { width: 100%; }
+    .status-icon {
+      position: absolute;
+      top: -5px;
+      right: 8px;
+      font-size: 26px;
+    }
+
+    /* Modal */
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%; max-width: 600px;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: row;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-left {
+      padding: 20px;
+      width: 30%;
+      text-align: left;
+      border-right: 1px solid #ddd;
+      background-color: #f1f1f1;
+    }
+    .modal-left img {
+      width: 120px;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+    .modal-left p {
+      margin: 8px 0;
+      font-size: 14px;
+      color: #333;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 12px;
+      color: white;
+    }
+    .status-lido { background-color: green; }
+    .status-quero-ler { background-color: orange; }
+    .status-lendo { background-color: blue; }
+    .status-nao-desejado { background-color: pink; color: black; }
+
+    .modal-right {
+      position: relative;
+      padding: 20px;
+      width: 70%;
+    }
+    .modal-right h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      border-bottom: 2px solid #007BFF;
+      display: inline-block;
+      padding-bottom: 5px;
+    }
+    .modal-right p {
+      margin: 10px 0;
+      font-size: 14px;
+      color: #333;
+      text-align: justify;
+    }
+
+    .custom-button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      margin-top: 10px;
+    }
+    .custom-button:hover { background-color: #0056b3; }
+    .custom-button i { margin-right: 5px; }
+
+    .progress-container {
+      margin-top: 15px;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background: #ddd;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .progress {
+      height: 100%;
+      background: #007BFF;
+      transition: width 0.5s ease-in-out;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 20px;
+      color: #555;
+      cursor: pointer;
+      z-index: 1001;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Minha Biblioteca</h2>
+    <div class="book-card" onclick="abrirModal('Livro 1', 'Autor A', 'Editora X', 'Tenho', 'Lido', 'Sinopse incrível do Livro 1', 'Resenha detalhada do Livro 1', 70, 'https://via.placeholder.com/150')">
+      <i class="fa-solid fa-bookmark status-icon" style="color: green;"></i>
+      <img src="https://via.placeholder.com/120x180" alt="Livro 1">
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="overlay" id="overlay" onclick="fecharModal()"></div>
+  <div class="modal" id="modal">
+    <span class="close-modal" onclick="fecharModal()">&times;</span>
+    <div class="modal-left">
+      <img id="modal-image" src="" alt="Capa do Livro">
+      <p><i class="fa-solid fa-user"></i> <strong>Autor:</strong> <span id="modal-author"></span></p>
+      <p><i class="fa-solid fa-building"></i> <strong>Editora:</strong> <span id="modal-editora"></span></p>
+      <p><i class="fa-solid fa-layer-group"></i> <strong>Coleção:</strong> <span id="modal-colecao"></span></p>
+      <p><i class="fa-solid fa-bookmark"></i> <strong>Status:</strong> <span id="modal-status" class="status-badge"></span></p>
+    </div>
+    <div class="modal-right">
+      <h3 id="modal-title"></h3>
+      <p id="modal-content"></p>
+      <div class="progress-container">
+        <label>Progresso de Leitura</label>
+        <div class="progress-bar">
+          <div id="progress" class="progress"></div>
+        </div>
+      </div>
+      <button class="custom-button" onclick="alternarConteudo()">
+        <i class="fa-solid fa-book-open"></i> Alternar para Resenha
+      </button>
+    </div>
+  </div>
+
+  <!-- Script -->
+  <script>
+    let mostrandoSinopse = true;
+
+    function abrirModal(titulo, autor, editora, colecao, status, sinopse, resenha, progresso, imagem) {
+      document.getElementById('modal-title').innerText = titulo;
+      document.getElementById('modal-author').innerText = autor;
+      document.getElementById('modal-editora').innerText = editora;
+      document.getElementById('modal-colecao').innerText = colecao;
+      document.getElementById('modal-status').innerText = status;
+      document.getElementById('modal-content').innerText = sinopse;
+      document.getElementById('progress').style.width = progresso + '%';
+      document.getElementById('modal-image').src = imagem;
+
+      document.getElementById('modal').style.display = 'flex';
+      document.getElementById('overlay').style.display = 'block';
+
+      mostrandoSinopse = true;
+      window.sinopse = sinopse;
+      window.resenha = resenha;
+    }
+
+    function alternarConteudo() {
+      const content = document.getElementById('modal-content');
+      content.innerText = mostrandoSinopse ? window.resenha : window.sinopse;
+      mostrandoSinopse = !mostrandoSinopse;
+    }
+
+    function fecharModal() {
+      document.getElementById('modal').style.display = 'none';
+      document.getElementById('overlay').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
