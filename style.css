@@ -101,67 +101,6 @@ h2, h3 {
   color: #666;
 }
 
-/* Estilo do modal */
-.modal {
-  display: none; /* Inicialmente oculto */
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 90%;
-  max-width: 600px;
-  background: white;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-  border-radius: 10px;
-  z-index: 1000;
-  flex-direction: row;
-  overflow: hidden;
-}
-.overlay {
-  display: none; /* Inicialmente oculto */
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 999;
-}
-
-.modal-content {
-  background-color: #fff;
-  border-radius: 10px;
-  width: 80%;
-  max-width: 600px;
-  padding: 20px;
-  text-align: center;
-  position: relative;
-}
-
-.modal-content h4 {
-  margin-bottom: 10px;
-  font-size: 20px;
-  color: #00297c;
-}
-
-.modal-content p {
-  font-size: 16px;
-  color: #333;
-}
-
-.close {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 20px;
-  color: #666;
-  cursor: pointer;
-}
-
-.close:hover {
-  color: #00297c;
-}
-
 /* Tooltip */
 #tooltip {
   position: absolute;
