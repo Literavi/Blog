@@ -21,6 +21,52 @@
       text-align: center;
     }
 
+    .search-container {
+      margin-bottom: 20px;
+    }
+
+    .search-box {
+      padding: 10px;
+      margin: 5px;
+      width: 200px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .dropdown {
+      padding: 10px;
+      margin: 5px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .button {
+      padding: 10px 20px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      background-color: #0056b3;
+    }
+
+    .reset-button {
+      margin-top: 10px;
+      background-color: #f4f4f4;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .reset-button:hover {
+      background-color: #e0e0e0;
+    }
+
     .book-card {
       position: relative;
       display: inline-block;
@@ -33,10 +79,12 @@
       transition: transform 0.3s, box-shadow 0.3s;
       cursor: pointer;
     }
+
     .book-card:hover {
       transform: scale(1.05);
       box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
     }
+
     .book-card img {
       width: 100%;
     }
@@ -83,6 +131,7 @@
       background-color: #f8f9fa;
       border-right: 1px solid #ddd;
     }
+
     .modal-left img {
       width: 80%;
       max-width: 120px;
@@ -100,27 +149,43 @@
       border-radius: 4px;
       text-align: center;
     }
-    .status-lido { background-color: green; }
-    .status-quero-ler { background-color: orange; }
-    .status-lendo { background-color: blue; }
-    .status-nao-desejado { background-color: pink; color: black; }
+
+    .status-lido {
+      background-color: green;
+    }
+
+    .status-quero-ler {
+      background-color: orange;
+    }
+
+    .status-lendo {
+      background-color: blue;
+    }
+
+    .status-nao-desejado {
+      background-color: pink;
+      color: black;
+    }
 
     .modal-right {
       position: relative;
       padding: 20px;
       width: 65%;
     }
+
     .modal-right h3 {
       font-size: 22px;
       margin-bottom: 10px;
       color: #333;
     }
+
     .modal-right h4 {
       font-size: 16px;
       margin: 10px 0;
       color: #007BFF;
       font-weight: bold;
     }
+
     .modal-right p {
       font-size: 14px;
       color: #555;
@@ -138,6 +203,7 @@
       cursor: pointer;
       transition: transform 0.3s, color 0.3s;
     }
+
     .arrow-button:hover {
       transform: translateY(-50%) scale(1.2);
       color: #0056b3;
@@ -152,6 +218,7 @@
       cursor: pointer;
       transition: color 0.3s;
     }
+
     .close-modal:hover {
       color: #333;
     }
@@ -159,11 +226,27 @@
 </head>
 <body>
   <div id="menu-container"></div>
+
   <div class="container">
-    <h2>Minha Biblioteca</h2>
-    <div id="book-container">
-      <!-- Cards serão inseridos dinamicamente -->
+    <h2>Pesquisar Livros</h2>
+    <div class="search-container">
+      <input type="text" id="search-input" class="search-box" placeholder="Digite o nome, título ou editora">
+      <select id="collection" class="dropdown">
+        <option value="">Selecione a coleção</option>
+        <option value="Tenho">Tenho</option>
+        <option value="Desejado">Desejado</option>
+        <option value="Não Desejado">Não Desejado</option>
+      </select>
+      <select id="status" class="dropdown">
+        <option value="">Selecione o status</option>
+        <option value="Lendo">Lendo</option>
+        <option value="Quero Ler">Quero Ler</option>
+        <option value="Lido">Lido</option>
+      </select>
+      <button class="button" onclick="buscarLivros()">Pesquisar</button>
+      <button class="reset-button" onclick="resetarCampos()">Limpar</button>
     </div>
+
     <div id="book-list"></div>
     <p id="error-message"></p>
   </div>
@@ -236,9 +319,14 @@
       document.getElementById('overlay').style.display = 'none';
     }
 
-    fetch("menu.html")
-      .then(response => response.text())
-      .then(data => document.getElementById("menu-container").innerHTML = data);
-  </script>
-</body>
-</html>
+    function resetarCampos() {
+      document.getElementById("search-input").value = "";
+      document.getElementById("collection").value = "";
+      document.getElementById("status").value = "";
+      exibirLivros();
+    }
+
+    function buscarLivros() {
+      const query = document.getElementById("search-input").value.toLowerCase();
+      const colecaoSelecionada = document.getElementById("collection").value;
+      const statusSelecionado
