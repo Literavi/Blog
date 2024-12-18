@@ -66,6 +66,30 @@
       })
       .then(data => {
         document.getElementById("menu-container").innerHTML = data;
+
+        // Ativa elementos interativos do menu, se existirem
+        const toggleBtn = document.getElementById('toggle-btn');
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        if (toggleBtn) {
+          toggleBtn.addEventListener('click', () => {
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) sidebar.classList.toggle('active');
+          });
+        }
+
+        if (themeToggle) {
+          themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const isDark = currentTheme === 'dark';
+            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+
+            const icon = themeToggle.querySelector('ion-icon');
+            icon.setAttribute('name', isDark ? 'moon-outline' : 'sunny-outline');
+            themeToggle.querySelector('span').textContent = isDark ? 'Dark Mode' : 'Light Mode';
+          });
+        }
       })
       .catch(error => {
         console.error("Erro ao carregar menu:", error);
