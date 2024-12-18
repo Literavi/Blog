@@ -190,7 +190,7 @@
     <span class="close-modal" onclick="fecharModal()">&times;</span>
     <div class="modal-left">
       <img id="modal-image" src="" alt="Capa do Livro">
-      <p><strong>Autor:</strong> <span id="modal-author"></span></p>
+      <p><strong>Autor:</strong> <span id="modal-autor"></span></p>
       <p><strong>Editora:</strong> <span id="modal-editora"></span></p>
       <p><strong>Coleção:</strong> <span id="modal-colecao"></span></p>
       <p><strong>Status:</strong> <span id="modal-status" class="status-badge"></span></p>
@@ -310,11 +310,11 @@
 
       const resultados = livros.filter(livro => {
         const autorMatch = livro["Autor"] && livro["Autor"].toLowerCase().includes(query);
-        const tituloMatch = livro["Nome"] && livro["Nome"].toLowerCase().includes(query);
+        const nomeMatch = livro["Nome"] && livro["Nome"].toLowerCase().includes(query);
         const editoraMatch = livro["Editora"] && livro["Editora"].toLowerCase().includes(query);
         const colecaoMatch = livro["Coleção"] === colecaoSelecionada || colecaoSelecionada === "";
         const statusMatch = livro["Status"] === statusSelecionado || statusSelecionado === "";
-        return (autorMatch || tituloMatch || editoraMatch) && colecaoMatch && statusMatch;
+        return (autorMatch || nomeMatch || editoraMatch) && colecaoMatch && statusMatch;
       });
 
       resultados.sort((a, b) => a["Nome"].localeCompare(b["Nome"]));
@@ -354,9 +354,9 @@
 
      let mostrandoSinopse = true;
 
-    function abrirModal(titulo, autor, editora, colecao, status, sinopse, resenha, imagem) {
-      document.getElementById('modal-title').innerText = titulo;
-      document.getElementById('modal-author').innerText = autor;
+    function abrirModal(nome, autor, editora, colecao, status, sinopse, resenha, imagem) {
+      document.getElementById('modal-nome').innerText = nome;
+      document.getElementById('modal-autor').innerText = autor;
       document.getElementById('modal-editora').innerText = editora;
       document.getElementById('modal-colecao').innerText = colecao;
 
