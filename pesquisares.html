@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca Pessoal - Pesquisar Livros</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+  <style>
+    /* Estilos adicionais para garantir a responsividade do menu */
+    nav {
+      background-color: #f4f4f4;
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      gap: 15px;
+    }
+
+    nav ul li {
+      display: inline;
+    }
+
+    nav ul li a {
+      text-decoration: none;
+      color: #333;
+      font-weight: bold;
+    }
+
+    nav ul li a:hover {
+      color: #007BFF;
+    }
+  </style>
+</head>
+<body>
+  <!-- Menu dinâmico será carregado aqui -->
+  <div id="menu-container"></div>
+
+  <!-- Conteúdo Principal -->
+  <div class="container">
+    <h2>Pesquisar Livros</h2>
+    <div class="search-container">
+      <input type="text" id="author-name" class="search-box" placeholder="Digite o nome do autor ou título">
+      <input type="text" id="publisher" class="search-box" placeholder="Digite o nome da editora">
+      <select id="collection" class="dropdown">
+        <option value="">Selecione a coleção</option>
+        <option value="Tenho">Tenho</option>
+        <option value="Desejado">Desejado</option>
+        <option value="Não Desejado">Não Desejado</option>
+      </select>
+      <select id="status" class="dropdown">
+        <option value="">Selecione o status</option>
+        <option value="Lendo">Lendo</option>
+        <option value="Quero Ler">Quero Ler</option>
+        <option value="Lido">Lido</option>
+      </select>
+      <button class="button" onclick="buscarLivros()">Pesquisar</button>
+    </div>
+
+    <h3>Resultados da Pesquisa</h3>
+    <div id="book-list"></div>
+    <p id="error-message"></p>
+  </div>
+
+  <!-- Script para carregar o menu -->
+  <script>
+    // Carrega o menu dinâmico
+    fetch("menu.html")
+      .then(response => {
+        if (!response.ok) throw new Error("Erro ao carregar menu");
+        return response.text();
+      })
+      .then(data => {
+        document.getElementById("menu-container").innerHTML = data;
+      })
+      .catch(error => {
+        console.error("Erro ao carregar menu:", error);
+        document.getElementById("menu-container").innerHTML = "<p>Menu não disponível.</p>";
+      });
+
+    // Exemplo de teste do menu dinâmico
+    function toggleMenu() {
+      alert("Menu clicado!");
+    }
+
+    // Exemplo de menu para fallback
+    document.getElementById("menu-container").innerHTML = `
+      <nav>
+        <ul>
+          <li><a href="index.html">Início</a></li>
+          <li><a href="livros.html">Livros</a></li>
+          <li><a href="configuracoes.html">Configurações</a></li>
+        </ul>
+      </nav>`;
+  </script>
+</body>
+</html>
