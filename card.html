@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resumo Geral</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .card {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      width: 200px;
+      padding: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .card h4 {
+      margin: 10px 0 5px;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .card p {
+      margin: 0;
+      font-size: 14px;
+      color: #777;
+    }
+
+    /* Modal */
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal {
+      background: #fff;
+      border-radius: 8px;
+      width: 80%;
+      max-width: 800px;
+      display: flex;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal img {
+      width: 40%;
+      height: auto;
+      object-fit: cover;
+    }
+
+    .modal-content {
+      padding: 20px;
+      width: 60%;
+      position: relative;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h4 {
+      margin: 0;
+      font-size: 20px;
+      color: #333;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #555;
+    }
+
+    .close-btn:hover {
+      color: #000;
+    }
+
+    .modal-body {
+      margin-top: 20px;
+    }
+
+    .modal-body p {
+      font-size: 16px;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .toggle-btn {
+      background: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 20px;
+      display: inline-block;
+    }
+
+    .toggle-btn:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card" onclick="openModal('Livro 1', 'Autor Exemplo', 'Editora Exemplo', 'Coleção Exemplo', 'Lido', 'Sinopse do Livro 1', 'Resenha do Livro 1', 'https://via.placeholder.com/400x600')">
+      <img src="https://via.placeholder.com/400x600" alt="Livro 1">
+      <h4>Livro 1</h4>
+      <p>Status: Lido</p>
+    </div>
+
+    <div class="card" onclick="openModal('Livro 2', 'Autor Exemplo 2', 'Editora Exemplo 2', 'Coleção Exemplo 2', 'Quero Ler', 'Sinopse do Livro 2', 'Resenha do Livro 2', 'https://via.placeholder.com/400x600')">
+      <img src="https://via.placeholder.com/400x600" alt="Livro 2">
+      <h4>Livro 2</h4>
+      <p>Status: Quero Ler</p>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <img id="modal-img" src="" alt="Capa do Livro">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 id="modal-title"></h4>
+          <button class="close-btn" onclick="closeModal()">×</button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Autor:</strong> <span id="modal-author"></span></p>
+          <p><strong>Editora:</strong> <span id="modal-publisher"></span></p>
+          <p><strong>Coleção:</strong> <span id="modal-collection"></span></p>
+          <p><strong>Status:</strong> <span id="modal-status"></span></p>
+          <p id="modal-text"></p>
+          <button class="toggle-btn" onclick="toggleText()">Alternar para Resenha</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let showingSynopsis = true;
+
+    function openModal(title, author, publisher, collection, status, synopsis, review, imgUrl) {
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-author').textContent = author;
+      document.getElementById('modal-publisher').textContent = publisher;
+      document.getElementById('modal-collection').textContent = collection;
+      document.getElementById('modal-status').textContent = status;
+      document.getElementById('modal-text').textContent = synopsis;
+      document.getElementById('modal-img').src = imgUrl;
+
+      document.getElementById('overlay').style.display = 'flex';
+      showingSynopsis = true;
+      document.querySelector('.toggle-btn').textContent = 'Alternar para Resenha';
+    }
+
+    function closeModal() {
+      document.getElementById('overlay').style.display = 'none';
+    }
+
+    function toggleText() {
+      const modalText = document.getElementById('modal-text');
+      const toggleButton = document.querySelector('.toggle-btn');
+
+      if (showingSynopsis) {
+        modalText.textContent = 'Resenha do Livro';
+        toggleButton.textContent = 'Alternar para Sinopse';
+      } else {
+        modalText.textContent = 'Sinopse do Livro';
+        toggleButton.textContent = 'Alternar para Resenha';
+      }
+
+      showingSynopsis = !showingSynopsis;
+    }
+  </script>
+</body>
+</html>
