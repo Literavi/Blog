@@ -37,6 +37,20 @@
     nav ul li a:hover {
       color: #007BFF;
     }
+
+    .reset-button {
+      margin-top: 10px;
+      background-color: #f4f4f4;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .reset-button:hover {
+      background-color: #e0e0e0;
+    }
   </style>
 </head>
 <body>
@@ -47,8 +61,7 @@
   <div class="container">
     <h2>Pesquisar Livros</h2>
     <div class="search-container">
-      <input type="text" id="author-name" class="search-box" placeholder="Digite o nome do autor ou título">
-      <input type="text" id="publisher" class="search-box" placeholder="Digite o nome da editora">
+      <input type="text" id="search-input" class="search-box" placeholder="Digite o nome, título ou editora">
       <select id="collection" class="dropdown">
         <option value="">Selecione a coleção</option>
         <option value="Tenho">Tenho</option>
@@ -62,6 +75,7 @@
         <option value="Lido">Lido</option>
       </select>
       <button class="button" onclick="buscarLivros()">Pesquisar</button>
+      <button class="reset-button" onclick="resetarCampos()">Limpar</button>
     </div>
 
     <h3>Resultados da Pesquisa</h3>
@@ -80,15 +94,15 @@
       .then(data => {
         document.getElementById("menu-container").innerHTML = data;
 
-        // Adicionando interatividade ao menu dinâmico
-        const sidebar = document.querySelector('.sidebar');
+        // Ativa elementos interativos do menu, se existirem
         const toggleBtn = document.getElementById('toggle-btn');
         const themeToggle = document.getElementById('theme-toggle');
         const body = document.body;
 
         if (toggleBtn) {
           toggleBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) sidebar.classList.toggle('active');
           });
         }
 
@@ -168,22 +182,17 @@
     }
 
     function buscarLivros() {
-      const nomeAutorOuTitulo = document.getElementById("author-name").value.toLowerCase();
-      const editora = document.getElementById("publisher").value.toLowerCase();
+      const query = document.getElementById("search-input").value.toLowerCase();
       const colecaoSelecionada = document.getElementById("collection").value;
       const statusSelecionado = document.getElementById("status").value;
 
       const resultados = livros.filter(livro => {
-        const autorMatch = livro["Autor"] && livro["Autor"].toLowerCase().includes(nomeAutorOuTitulo);
-        const tituloMatch = livro["Nome"] && livro["Nome"].toLowerCase().includes(nomeAutorOuTitulo);
-        const editoraMatch = livro["Editora"] && livro["Editora"].toLowerCase().includes(editora);
-        const colecaoMatch = livro["Coleção"] && livro["Coleção"] === colecaoSelecionada;
-        const statusMatch = livro["Status"] && livro["Status"] === statusSelecionado;
-        return (
-          (autorMatch || tituloMatch || editoraMatch) &&
-          (colecaoSelecionada === "" || colecaoMatch) &&
-          (statusSelecionado === "" || statusMatch)
-        );
+        const autorMatch = livro["Autor"] && livro["Autor"].toLowerCase().includes(query);
+        const tituloMatch = livro["Nome"] && livro["Nome"].toLowerCase().includes(query);
+        const editoraMatch = livro["Editora"] && livro["Editora"].toLowerCase().includes(query);
+        const colecaoMatch = livro["Coleção"] === colecaoSelecionada || colecaoSelecionada === "";
+        const statusMatch = livro["Status"] === statusSelecionado || statusSelecionado === "";
+        return (autorMatch || tituloMatch || editoraMatch) && colecaoMatch && statusMatch;
       });
 
       resultados.sort((a, b) => a["Nome"].localeCompare(b["Nome"]));
@@ -212,6 +221,13 @@
       } else {
         lista.innerHTML = '<p>Nenhum livro encontrado com os critérios selecionados.</p>';
       }
+    }
+
+    function resetarCampos() {
+      document.getElementById("search-input").value = "";
+      document.getElementById("collection").value = "";
+      document.getElementById("status").value = "";
+      exibirLivros();
     }
 
     function abrirModal(nome, sinopse) {
