@@ -48,6 +48,18 @@
     <h2>Pesquisar Livros</h2>
     <div class="search-container">
       <input type="text" id="search-input" class="search-box" placeholder="Digite o nome, título ou editora">
+      <select id="collection" class="dropdown">
+        <option value="">Selecione a coleção</option>
+        <option value="Tenho">Tenho</option>
+        <option value="Desejado">Desejado</option>
+        <option value="Não Desejado">Não Desejado</option>
+      </select>
+      <select id="status" class="dropdown">
+        <option value="">Selecione o status</option>
+        <option value="Lendo">Lendo</option>
+        <option value="Quero Ler">Quero Ler</option>
+        <option value="Lido">Lido</option>
+      </select>
       <button class="button" onclick="buscarLivros()">Pesquisar</button>
     </div>
 
@@ -156,12 +168,16 @@
 
     function buscarLivros() {
       const query = document.getElementById("search-input").value.toLowerCase();
+      const colecaoSelecionada = document.getElementById("collection").value;
+      const statusSelecionado = document.getElementById("status").value;
 
       const resultados = livros.filter(livro => {
         const autorMatch = livro["Autor"] && livro["Autor"].toLowerCase().includes(query);
         const tituloMatch = livro["Nome"] && livro["Nome"].toLowerCase().includes(query);
         const editoraMatch = livro["Editora"] && livro["Editora"].toLowerCase().includes(query);
-        return autorMatch || tituloMatch || editoraMatch;
+        const colecaoMatch = livro["Coleção"] === colecaoSelecionada || colecaoSelecionada === "";
+        const statusMatch = livro["Status"] === statusSelecionado || statusSelecionado === "";
+        return (autorMatch || tituloMatch || editoraMatch) && colecaoMatch && statusMatch;
       });
 
       resultados.sort((a, b) => a["Nome"].localeCompare(b["Nome"]));
