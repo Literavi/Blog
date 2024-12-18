@@ -79,16 +79,35 @@
       })
       .then(data => {
         document.getElementById("menu-container").innerHTML = data;
+
+        // Adicionando interatividade ao menu dinâmico
+        const sidebar = document.querySelector('.sidebar');
+        const toggleBtn = document.getElementById('toggle-btn');
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+
+        if (toggleBtn) {
+          toggleBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+          });
+        }
+
+        if (themeToggle) {
+          themeToggle.addEventListener('click', () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const isDark = currentTheme === 'dark';
+            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+
+            const icon = themeToggle.querySelector('ion-icon');
+            icon.setAttribute('name', isDark ? 'moon-outline' : 'sunny-outline');
+            themeToggle.querySelector('span').textContent = isDark ? 'Dark Mode' : 'Light Mode';
+          });
+        }
       })
       .catch(error => {
         console.error("Erro ao carregar menu:", error);
         document.getElementById("menu-container").innerHTML = "<p>Menu não disponível.</p>";
       });
-
-    // Exemplo de teste do menu dinâmico
-    function toggleMenu() {
-      alert("Menu clicado!");
-    }
 
     // Exemplo de menu para fallback
     document.getElementById("menu-container").innerHTML = `
