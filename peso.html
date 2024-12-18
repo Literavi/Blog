@@ -47,20 +47,7 @@
   <div class="container">
     <h2>Pesquisar Livros</h2>
     <div class="search-container">
-      <input type="text" id="author-name" class="search-box" placeholder="Digite o nome do autor ou título">
-      <input type="text" id="publisher" class="search-box" placeholder="Digite o nome da editora">
-      <select id="collection" class="dropdown">
-        <option value="">Selecione a coleção</option>
-        <option value="Tenho">Tenho</option>
-        <option value="Desejado">Desejado</option>
-        <option value="Não Desejado">Não Desejado</option>
-      </select>
-      <select id="status" class="dropdown">
-        <option value="">Selecione o status</option>
-        <option value="Lendo">Lendo</option>
-        <option value="Quero Ler">Quero Ler</option>
-        <option value="Lido">Lido</option>
-      </select>
+      <input type="text" id="search-input" class="search-box" placeholder="Digite o nome, título ou editora">
       <button class="button" onclick="buscarLivros()">Pesquisar</button>
     </div>
 
@@ -79,30 +66,6 @@
       })
       .then(data => {
         document.getElementById("menu-container").innerHTML = data;
-
-        // Adicionando interatividade ao menu dinâmico
-        const sidebar = document.querySelector('.sidebar');
-        const toggleBtn = document.getElementById('toggle-btn');
-        const themeToggle = document.getElementById('theme-toggle');
-        const body = document.body;
-
-        if (toggleBtn) {
-          toggleBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-          });
-        }
-
-        if (themeToggle) {
-          themeToggle.addEventListener('click', () => {
-            const currentTheme = body.getAttribute('data-theme');
-            const isDark = currentTheme === 'dark';
-            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-
-            const icon = themeToggle.querySelector('ion-icon');
-            icon.setAttribute('name', isDark ? 'moon-outline' : 'sunny-outline');
-            themeToggle.querySelector('span').textContent = isDark ? 'Dark Mode' : 'Light Mode';
-          });
-        }
       })
       .catch(error => {
         console.error("Erro ao carregar menu:", error);
@@ -146,42 +109,35 @@
 
       if (livros.length > 0) {
         livros.forEach(livro => {
-          const card = document.createElement("div");
+          if (livro["Nome"] && livro["Autor"]) { // Apenas livros com nome e autor serão exibidos
+            const card = document.createElement("div");
 
-          const imagePath = livro["ImageFile"]
-            ? `https://github.com/Literavi/Blog/raw/main/imagens/${livro["ImageFile"]}`
-            : "https://via.placeholder.com/150";
+            const imagePath = livro["ImageFile"]
+              ? `https://github.com/Literavi/Blog/raw/main/imagens/${livro["ImageFile"]}`
+              : "https://via.placeholder.com/150";
 
-          card.innerHTML = `
-            <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}')">
-            <h4>${livro["Nome"]}</h4>
-            <p><strong>Autor:</strong> ${livro["Autor"]}</p>
-            <p><strong>Editora:</strong> ${livro["Editora"]}</p>
-          `;
-          lista.appendChild(card);
+            card.innerHTML = `
+              <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}')">
+              <h4>${livro["Nome"]}</h4>
+              <p><strong>Autor:</strong> ${livro["Autor"]}</p>
+              <p><strong>Editora:</strong> ${livro["Editora"]}</p>
+            `;
+            lista.appendChild(card);
+          }
         });
       } else {
-        lista.innerHTML = '<p>Nenhum livro encontrado.</p>';
+        lista.innerHTML = '<p>Nenhum livro disponível no momento.</p>';
       }
     }
 
     function buscarLivros() {
-      const nomeAutorOuTitulo = document.getElementById("author-name").value.toLowerCase();
-      const editora = document.getElementById("publisher").value.toLowerCase();
-      const colecaoSelecionada = document.getElementById("collection").value;
-      const statusSelecionado = document.getElementById("status").value;
+      const query = document.getElementById("search-input").value.toLowerCase();
 
       const resultados = livros.filter(livro => {
-        const autorMatch = livro["Autor"] && livro["Autor"].toLowerCase().includes(nomeAutorOuTitulo);
-        const tituloMatch = livro["Nome"] && livro["Nome"].toLowerCase().includes(nomeAutorOuTitulo);
-        const editoraMatch = livro["Editora"] && livro["Editora"].toLowerCase().includes(nomeAutorOuTitulo);
-        const colecaoMatch = livro["Coleção"] && livro["Coleção"] === colecaoSelecionada;
-        const statusMatch = livro["Status"] && livro["Status"] === statusSelecionado;
-        return (
-          (autorMatch || tituloMatch || editoraMatch) &&
-          (colecaoSelecionada === "" || colecaoMatch) &&
-          (statusSelecionado === "" || statusMatch)
-        );
+        const autorMatch = livro["Autor"] && livro["Autor"].toLowerCase().includes(query);
+        const tituloMatch = livro["Nome"] && livro["Nome"].toLowerCase().includes(query);
+        const editoraMatch = livro["Editora"] && livro["Editora"].toLowerCase().includes(query);
+        return autorMatch || tituloMatch || editoraMatch;
       });
 
       resultados.sort((a, b) => a["Nome"].localeCompare(b["Nome"]));
@@ -191,19 +147,21 @@
 
       if (resultados.length > 0) {
         resultados.forEach(livro => {
-          const card = document.createElement("div");
+          if (livro["Nome"] && livro["Autor"]) { // Apenas livros com nome e autor serão exibidos
+            const card = document.createElement("div");
 
-          const imagePath = livro["ImageFile"]
-            ? `https://github.com/Literavi/Blog/raw/main/imagens/${livro["ImageFile"]}`
-            : "https://via.placeholder.com/150";
+            const imagePath = livro["ImageFile"]
+              ? `https://github.com/Literavi/Blog/raw/main/imagens/${livro["ImageFile"]}`
+              : "https://via.placeholder.com/150";
 
-          card.innerHTML = `
-            <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}')">
-            <h4>${livro["Nome"]}</h4>
-            <p><strong>Autor:</strong> ${livro["Autor"]}</p>
-            <p><strong>Editora:</strong> ${livro["Editora"]}</p>
-          `;
-          lista.appendChild(card);
+            card.innerHTML = `
+              <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}')">
+              <h4>${livro["Nome"]}</h4>
+              <p><strong>Autor:</strong> ${livro["Autor"]}</p>
+              <p><strong>Editora:</strong> ${livro["Editora"]}</p>
+            `;
+            lista.appendChild(card);
+          }
         });
       } else {
         lista.innerHTML = '<p>Nenhum livro encontrado com os critérios selecionados.</p>';
