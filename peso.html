@@ -8,36 +8,6 @@
   <link rel="stylesheet" href="style.css">
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-  <style>
-    /* Estilos adicionais para garantir a responsividade do menu */
-    nav {
-      background-color: #f4f4f4;
-      padding: 10px;
-      border-bottom: 1px solid #ddd;
-    }
-
-    nav ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      gap: 15px;
-    }
-
-    nav ul li {
-      display: inline;
-    }
-
-    nav ul li a {
-      text-decoration: none;
-      color: #333;
-      font-weight: bold;
-    }
-
-    nav ul li a:hover {
-      color: #007BFF;
-    }
-  </style>
 </head>
 <body>
   <!-- Menu dinâmico será carregado aqui -->
@@ -69,46 +39,8 @@
     <p id="error-message"></p>
   </div>
 
-  <!-- Script para carregar o menu -->
+  <!-- Script para carregar os livros -->
   <script>
-    // Carrega o menu dinâmico
-    fetch("menu.html")
-      .then(response => {
-        if (!response.ok) throw new Error("Erro ao carregar menu");
-        return response.text();
-      })
-      .then(data => {
-        document.getElementById("menu-container").innerHTML = data;
-
-        // Adicionando interatividade ao menu dinâmico
-        const sidebar = document.querySelector('.sidebar');
-        const toggleBtn = document.getElementById('toggle-btn');
-        const themeToggle = document.getElementById('theme-toggle');
-        const body = document.body;
-
-        if (toggleBtn) {
-          toggleBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-          });
-        }
-
-        if (themeToggle) {
-          themeToggle.addEventListener('click', () => {
-            const currentTheme = body.getAttribute('data-theme');
-            const isDark = currentTheme === 'dark';
-            body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-
-            const icon = themeToggle.querySelector('ion-icon');
-            icon.setAttribute('name', isDark ? 'moon-outline' : 'sunny-outline');
-            themeToggle.querySelector('span').textContent = isDark ? 'Dark Mode' : 'Light Mode';
-          });
-        }
-      })
-      .catch(error => {
-        console.error("Erro ao carregar menu:", error);
-        document.getElementById("menu-container").innerHTML = "<p>Menu não disponível.</p>";
-      });
-
     const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc";
     const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs";
     const sheetName = "Biblioteca_Pessoal";
@@ -130,7 +62,7 @@
             return livro;
           });
 
-          // Ordenar livros em ordem alfabética antes de exibir
+          // Ordenar livros em ordem alfabética e exibir
           livros.sort((a, b) => a["Nome"].localeCompare(b["Nome"]));
           exibirLivros();
         })
@@ -185,41 +117,11 @@
       });
 
       resultados.sort((a, b) => a["Nome"].localeCompare(b["Nome"]));
-
-      const lista = document.getElementById("book-list");
-      lista.innerHTML = '';
-
-      if (resultados.length > 0) {
-        resultados.forEach(livro => {
-          const card = document.createElement("div");
-
-          const imagePath = livro["ImageFile"]
-            ? `https://github.com/Literavi/Blog/raw/main/imagens/${livro["ImageFile"]}`
-            : "https://via.placeholder.com/150";
-
-          card.innerHTML = `
-            <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}')">
-            <h4>${livro["Nome"]}</h4>
-            <p><strong>Autor:</strong> ${livro["Autor"]}</p>
-            <p><strong>Editora:</strong> ${livro["Editora"]}</p>
-          `;
-          lista.appendChild(card);
-        });
-      } else {
-        lista.innerHTML = '<p>Nenhum livro encontrado com os critérios selecionados.</p>';
-      }
+      exibirLivros(resultados);
     }
 
     function abrirModal(nome, sinopse) {
-      document.getElementById("modal-title").textContent = nome;
-      document.getElementById("modal-synopsis").textContent = sinopse;
-      document.getElementById("overlay").style.display = "block";
-      document.getElementById("synopsis-modal").style.display = "block";
-    }
-
-    function fecharModal() {
-      document.getElementById("overlay").style.display = "none";
-      document.getElementById("synopsis-modal").style.display = "none";
+      alert(`Título: ${nome}\nSinopse: ${sinopse}`);
     }
 
     function mostrarMensagem(tipo, mensagem) {
