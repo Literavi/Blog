@@ -290,11 +290,13 @@
               : "https://via.placeholder.com/150";
 
             card.innerHTML = `
-              <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}')">
-              <h4>${livro["Nome"]}</h4>
-              <p><strong>Autor:</strong> ${livro["Autor"]}</p>
-              <p><strong>Editora:</strong> ${livro["Editora"]}</p>
-            `;
+  <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" 
+    onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}', '${livro["Resenha"]}', '${imagePath}', '${livro["Autor"]}', '${livro["Editora"]}', '${livro["Coleção"]}', '${livro["Status"]}')">
+  <h4>${livro["Nome"]}</h4>
+  <p><strong>Autor:</strong> ${livro["Autor"]}</p>
+  <p><strong>Editora:</strong> ${livro["Editora"]}</p>
+`;
+
             lista.appendChild(card);
           }
         });
@@ -354,27 +356,23 @@
 
      let mostrandoSinopse = true;
 
-    function abrirModal(nome, autor, editora, colecao, status, sinopse, resenha, imagem) {
-      document.getElementById('modal-nome').innerText = nome;
-      document.getElementById('modal-autor').innerText = autor;
-      document.getElementById('modal-editora').innerText = editora;
-      document.getElementById('modal-colecao').innerText = colecao;
+  
+    function abrirModal(nome, sinopse, resenha, imagem, autor, editora, colecao, status) {
+  document.getElementById('modal-title').innerText = nome;
+  document.getElementById('modal-content').innerText = sinopse || "Sem sinopse disponível.";
+  document.getElementById('modal-image').src = imagem || "https://via.placeholder.com/150";
+  document.getElementById('modal-autor').innerText = autor || "Autor desconhecido";
+  document.getElementById('modal-editora').innerText = editora || "Editora desconhecida";
+  document.getElementById('modal-colecao').innerText = colecao || "Sem coleção";
+  
+  const statusElement = document.getElementById('modal-status');
+  statusElement.innerText = status || "Sem status";
+  statusElement.className = 'status-badge ' + getStatusClass(status);
 
-      const statusElement = document.getElementById('modal-status');
-      statusElement.innerText = status;
-      statusElement.className = 'status-badge ' + getStatusClass(status);
+  document.getElementById('modal').style.display = 'flex';
+  document.getElementById('overlay').style.display = 'block';
+}
 
-      document.getElementById('modal-content').innerText = sinopse;
-      document.getElementById('modal-section-title').innerText = "Sinopse";
-      document.getElementById('modal-image').src = imagem;
-
-      document.getElementById('modal').style.display = 'flex';
-      document.getElementById('overlay').style.display = 'block';
-
-      mostrandoSinopse = true;
-      window.sinopse = sinopse;
-      window.resenha = resenha;
-    }
 
     function alternarConteudo() {
       const content = document.getElementById('modal-content');
