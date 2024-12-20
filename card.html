@@ -157,6 +157,22 @@
   right: 8px;
   font-size: 26px;
 }
+/* Container de informações (autor, editora e marcador) */
+.info-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f4f4f4; /* Cor de fundo do retângulo */
+  padding: 10px; /* Espaçamento interno */
+  border-radius: 8px; /* Bordas arredondadas */
+  margin-top: 10px; /* Espaçamento em relação à imagem */
+}
+
+/* Ícone do marcador */
+.status-icon {
+  font-size: 20px; /* Tamanho do ícone */
+  color: green; /* Cor padrão (alterada dinamicamente no JS) */
+}
 
 
 
@@ -294,16 +310,20 @@
           : "https://via.placeholder.com/150";
 
         card.innerHTML = `
-  <div class="book-card" onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}', '${livro["Resenha"]}', '${imagePath}', '${livro["Autor"]}', '${livro["Editora"]}', '${livro["Coleção"]}', '${livro["Status"]}')">
-    <div class="status-icon-container">
-      <i class="fa-solid fa-bookmark status-icon" style="color: ${getStatusColor(livro["Status"])};"></i>
+  <div style="position: relative; width: 100%; border-radius: 8px;">
+    <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" 
+      onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}', '${livro["Resenha"]}', '${imagePath}', '${livro["Autor"]}', '${livro["Editora"]}', '${livro["Coleção"]}', '${livro["Status"]}')">
+  </div>
+  <h4>${livro["Nome"]}</h4>
+  <div class="info-container">
+    <div>
+      <p><strong>Autor:</strong> ${livro["Autor"]}</p>
+      <p><strong>Editora:</strong> ${livro["Editora"]}</p>
     </div>
-    <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px;">
-    <h4>${livro["Nome"]}</h4>
-    <p><strong>Autor:</strong> ${livro["Autor"]}</p>
-    <p><strong>Editora:</strong> ${livro["Editora"]}</p>
+    <i class="fa-solid fa-bookmark status-icon" style="color: ${getStatusColor(livro["Status"])};"></i>
   </div>
 `;
+
 
         lista.appendChild(card);
       }
@@ -344,16 +364,20 @@
           : "https://via.placeholder.com/150";
 
         card.innerHTML = `
-  <div class="book-card" onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}', '${livro["Resenha"]}', '${imagePath}', '${livro["Autor"]}', '${livro["Editora"]}', '${livro["Coleção"]}', '${livro["Status"]}')">
-    <div class="status-icon-container">
-      <i class="fa-solid fa-bookmark status-icon" style="color: ${getStatusColor(livro["Status"])};"></i>
+  <div style="position: relative; width: 100%; border-radius: 8px;">
+    <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" 
+      onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}', '${livro["Resenha"]}', '${imagePath}', '${livro["Autor"]}', '${livro["Editora"]}', '${livro["Coleção"]}', '${livro["Status"]}')">
+  </div>
+  <h4>${livro["Nome"]}</h4>
+  <div class="info-container">
+    <div>
+      <p><strong>Autor:</strong> ${livro["Autor"]}</p>
+      <p><strong>Editora:</strong> ${livro["Editora"]}</p>
     </div>
-    <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px;">
-    <h4>${livro["Nome"]}</h4>
-    <p><strong>Autor:</strong> ${livro["Autor"]}</p>
-    <p><strong>Editora:</strong> ${livro["Editora"]}</p>
+    <i class="fa-solid fa-bookmark status-icon" style="color: ${getStatusColor(livro["Status"])};"></i>
   </div>
 `;
+
 
         lista.appendChild(card);
       }
