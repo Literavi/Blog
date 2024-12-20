@@ -50,6 +50,107 @@
 
     .reset-button:hover {
       background-color: #e0e0e0;
+    
+    /* Modal */
+    .modal {
+      display: none; /* Inicialmente oculto */
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 90%;
+      max-width: 600px;
+      background: white;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+      z-index: 1000;
+      flex-direction: row;
+      overflow: hidden;
+    }
+
+    .overlay {
+      display: none; /* Inicialmente oculto */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 999;
+    }
+
+    .modal-left {
+      padding: 20px;
+      width: 30%;
+      text-align: left;
+      border-right: 1px solid #ddd;
+      background-color: #f1f1f1;
+    }
+    .modal-left img {
+      width: 120px;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+    .modal-left p {
+      margin: 8px 0;
+      font-size: 14px;
+      color: #333;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 12px;
+      color: white;
+      text-align: center;
+    }
+    .status-lido { background-color: green; }
+    .status-quero-ler { background-color: orange; }
+    .status-lendo { background-color: blue; }
+    .status-nao-desejado { background-color: pink; color: black; }
+
+    .modal-right {
+      position: relative;
+      padding: 20px;
+      width: 70%;
+    }
+    .modal-right h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+      color: #007BFF;
+    }
+    .modal-right h4 {
+      margin: 10px 0;
+      font-size: 16px;
+      color: #555;
+      font-weight: bold;
+    }
+    .modal-right p {
+      margin: 10px 0;
+      font-size: 14px;
+      color: #333;
+      text-align: justify;
+    }
+
+    .arrow-button {
+      position: absolute;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      font-size: 24px;
+      cursor: pointer;
+      color: #007BFF;
+    }
+    .close-modal {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 20px;
+      color: #555;
+      cursor: pointer;
+      z-index: 1001;
     }
   </style>
 </head>
@@ -81,6 +182,27 @@
     <h3>Resultados da Pesquisa</h3>
     <div id="book-list"></div>
     <p id="error-message"></p>
+  </div>
+
+  <!-- Modal -->
+  <div class="overlay" id="overlay" onclick="fecharModal()"></div>
+  <div class="modal" id="modal">
+    <span class="close-modal" onclick="fecharModal()">&times;</span>
+    <div class="modal-left">
+      <img id="modal-image" src="" alt="Capa do Livro">
+      <p><strong>Autor:</strong> <span id="modal-autor"></span></p>
+      <p><strong>Editora:</strong> <span id="modal-editora"></span></p>
+      <p><strong>Coleção:</strong> <span id="modal-colecao"></span></p>
+      <p><strong>Status:</strong> <span id="modal-status" class="status-badge"></span></p>
+    </div>
+    <div class="modal-right">
+      <h3 id="modal-title"></h3>
+      <h4 id="modal-section-title">Sinopse</h4>
+      <p id="modal-content"></p>
+      <span class="arrow-button" onclick="alternarConteudo()">
+        <i class="fa-solid fa-caret-right"></i>
+      </span>
+    </div>
   </div>
 
   <!-- Script para carregar o menu -->
@@ -155,31 +277,34 @@
     }
 
     function exibirLivros() {
-      const lista = document.getElementById("book-list");
-      lista.innerHTML = '';
+  const lista = document.getElementById("book-list");
+  lista.innerHTML = '';
 
-      if (livros.length > 0) {
-        livros.forEach(livro => {
-          if (livro["Nome"] && livro["Autor"]) { // Apenas livros com nome e autor serão exibidos
-            const card = document.createElement("div");
+  if (livros.length > 0) {
+    livros.forEach(livro => {
+      if (livro["Nome"] && livro["Autor"]) {
+        const card = document.createElement("div");
 
-            const imagePath = livro["ImageFile"]
-              ? `https://github.com/Literavi/Blog/raw/main/imagens/${livro["ImageFile"]}`
-              : "https://via.placeholder.com/150";
+        const imagePath = livro["ImageFile"]
+          ? `https://github.com/Literavi/Blog/raw/main/imagens/${livro["ImageFile"]}`
+          : "https://via.placeholder.com/150";
 
-            card.innerHTML = `
-              <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}')">
-              <h4>${livro["Nome"]}</h4>
-              <p><strong>Autor:</strong> ${livro["Autor"]}</p>
-              <p><strong>Editora:</strong> ${livro["Editora"]}</p>
-            `;
-            lista.appendChild(card);
-          }
-        });
-      } else {
-        lista.innerHTML = '<p>Nenhum livro disponível no momento.</p>';
+        card.innerHTML = `
+          <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" 
+            onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}', '${livro["Resenha"]}', '${imagePath}', '${livro["Autor"]}', '${livro["Editora"]}', '${livro["Coleção"]}', '${livro["Status"]}')">
+          <h4>${livro["Nome"]}</h4>
+          <p><strong>Autor:</strong> ${livro["Autor"]}</p>
+          <p><strong>Editora:</strong> ${livro["Editora"]}</p>
+          <span class="status-badge ${getStatusClass(livro["Status"])}">${livro["Status"]}</span>
+        `;
+        lista.appendChild(card);
       }
-    }
+    });
+  } else {
+    lista.innerHTML = '<p>Nenhum livro disponível no momento.</p>';
+  }
+}
+
 
     function buscarLivros() {
       const query = document.getElementById("search-input").value.toLowerCase();
@@ -188,11 +313,11 @@
 
       const resultados = livros.filter(livro => {
         const autorMatch = livro["Autor"] && livro["Autor"].toLowerCase().includes(query);
-        const tituloMatch = livro["Nome"] && livro["Nome"].toLowerCase().includes(query);
+        const nomeMatch = livro["Nome"] && livro["Nome"].toLowerCase().includes(query);
         const editoraMatch = livro["Editora"] && livro["Editora"].toLowerCase().includes(query);
         const colecaoMatch = livro["Coleção"] === colecaoSelecionada || colecaoSelecionada === "";
         const statusMatch = livro["Status"] === statusSelecionado || statusSelecionado === "";
-        return (autorMatch || tituloMatch || editoraMatch) && colecaoMatch && statusMatch;
+        return (autorMatch || nomeMatch || editoraMatch) && colecaoMatch && statusMatch;
       });
 
       resultados.sort((a, b) => a["Nome"].localeCompare(b["Nome"]));
@@ -230,16 +355,53 @@
       exibirLivros();
     }
 
-    function abrirModal(nome, sinopse) {
-      document.getElementById("modal-title").textContent = nome;
-      document.getElementById("modal-synopsis").textContent = sinopse;
-      document.getElementById("overlay").style.display = "block";
-      document.getElementById("synopsis-modal").style.display = "block";
+     let mostrandoSinopse = true;
+
+  
+    function abrirModal(nome, sinopse, resenha, imagem, autor, editora, colecao, status) {
+  document.getElementById('modal-title').innerText = nome;
+  document.getElementById('modal-content').innerText = sinopse || "Sem sinopse disponível.";
+  document.getElementById('modal-image').src = imagem || "https://via.placeholder.com/150";
+  document.getElementById('modal-autor').innerText = autor || "Autor desconhecido";
+  document.getElementById('modal-editora').innerText = editora || "Editora desconhecida";
+  document.getElementById('modal-colecao').innerText = colecao || "Sem coleção";
+  
+  const statusElement = document.getElementById('modal-status');
+  statusElement.innerText = status || "Sem status";
+  statusElement.className = 'status-badge ' + getStatusClass(status);
+
+  document.getElementById('modal').style.display = 'flex';
+  document.getElementById('overlay').style.display = 'block';
+}
+
+
+    function alternarConteudo() {
+      const content = document.getElementById('modal-content');
+      const sectionTitle = document.getElementById('modal-section-title');
+
+      if (mostrandoSinopse) {
+        content.innerText = window.resenha;
+        sectionTitle.innerText = "Resenha";
+      } else {
+        content.innerText = window.sinopse;
+        sectionTitle.innerText = "Sinopse";
+      }
+      mostrandoSinopse = !mostrandoSinopse;
     }
 
+  function getStatusClass(status) {
+  return {
+    "Lido": "status-lido",
+    "Quero Ler": "status-quero-ler",
+    "Lendo": "status-lendo",
+    "Não Desejado": "status-nao-desejado"
+  }[status] || "";
+}
+
+
     function fecharModal() {
-      document.getElementById("overlay").style.display = "none";
-      document.getElementById("synopsis-modal").style.display = "none";
+      document.getElementById('modal').style.display = 'none';
+      document.getElementById('overlay').style.display = 'none';
     }
 
     function mostrarMensagem(tipo, mensagem) {
