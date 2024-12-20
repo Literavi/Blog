@@ -175,7 +175,7 @@ h2, h3 {
       z-index: 1001;
     }
 
-/* Estilo da lista de resultados 
+/* Estilo da lista de resultados */
 #book-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -209,6 +209,6 @@ h2, h3 {
   margin: 0;
   color: #666;
 }
-*/
+
 </style>
 
