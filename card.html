@@ -153,6 +153,17 @@
       cursor: pointer;
       z-index: 1001;
     }
+      /* Ícone de marcador no canto superior direito */
+.status-icon-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.status-icon {
+  font-size: 18px;
+}
+
   </style>
 </head>
 <body>
@@ -292,8 +303,8 @@
           : "https://via.placeholder.com/150";
 
         card.innerHTML = `
-          <div style="position: absolute; top: 10px; right: 10px;">
-            <i class="fa-solid fa-bookmark" style="color: ${getStatusColor(livro["Status"])}; font-size: 18px;"></i>
+          <div class="status-icon-container">
+            <i class="fa-solid fa-bookmark status-icon" style="color: ${getStatusColor(livro["Status"])};"></i>
           </div>
           <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" 
             onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}', '${livro["Resenha"]}', '${imagePath}', '${livro["Autor"]}', '${livro["Editora"]}', '${livro["Coleção"]}', '${livro["Status"]}')">
@@ -308,6 +319,7 @@
     lista.innerHTML = '<p>Nenhum livro disponível no momento.</p>';
   }
 }
+
 
 
     function buscarLivros() {
@@ -340,8 +352,8 @@
           : "https://via.placeholder.com/150";
 
         card.innerHTML = `
-          <div style="position: absolute; top: 10px; right: 10px;">
-            <i class="fa-solid fa-bookmark" style="color: ${getStatusColor(livro["Status"])}; font-size: 18px;"></i>
+          <div class="status-icon-container">
+            <i class="fa-solid fa-bookmark status-icon" style="color: ${getStatusColor(livro["Status"])};"></i>
           </div>
           <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" 
             onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}', '${livro["Resenha"]}', '${imagePath}', '${livro["Autor"]}', '${livro["Editora"]}', '${livro["Coleção"]}', '${livro["Status"]}')">
@@ -356,6 +368,7 @@
     lista.innerHTML = '<p>Nenhum livro encontrado com os critérios selecionados.</p>';
   }
 }
+
 
 
     function resetarCampos() {
