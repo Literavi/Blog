@@ -99,7 +99,7 @@
          color: white;
          text-align: center;
          }*/
-         .status-lido { background-color: green; }
+         /*.status-lido { background-color: green; }
          .status-quero-ler { background-color: orange; }
          .status-lendo { background-color: blue; }
          .status-nao-desejado { background-color: pink; color: black; }
@@ -107,7 +107,7 @@
          position: relative;
          padding: 20px;
          width: 70%;
-         }
+         }*/
          .modal-right h3 {
          margin: 0 0 10px;
          font-size: 20px;
@@ -146,19 +146,22 @@
    
 
 
+/* Container do marcador */
 .status-icon-container {
-  position: absolute; /* Posiciona em relação ao contêiner pai */
-  top: 10px; /* Define a distância do topo */
-  right: 10px; /* Define a distância da borda direita */
-  z-index: 10; /* Garante que o ícone fique acima da capa */
-  background: rgba(255, 255, 255, 0.8); /* Fundo branco semi-transparente (opcional) */
-  border-radius: 50%; /* Deixa o contêiner redondo (opcional) */
-  padding: 5px; /* Adiciona espaço interno ao ícone (opcional) */
+  display: flex;
+  justify-content: center; /* Centraliza o ícone no retângulo */
+  align-items: center;
+  margin-top: 10px; /* Espaçamento em relação ao texto acima */
+  background-color: #f1f1f1; /* Cor de fundo do retângulo */
+  border-radius: 4px;
+  height: 30px; /* Altura do retângulo do marcador */
 }
+
+/* Ícone do marcador */
 .status-icon {
-  font-size: 18px; /* Ajusta o tamanho do ícone */
-  color: inherit; /* Usa a cor definida pelo JavaScript */
+  font-size: 18px; /* Tamanho do ícone */
 }
+
 
 
 /* Container de informações (autor, editora e marcador) */
@@ -173,13 +176,13 @@
 }
 
 /* Ícone do marcador */
-.status-icon {
-  font-size: 20px; /* Tamanho do ícone */
-  color: green; /* Cor padrão (alterada dinamicamente no JS) */
-}
+/*.status-icon {
+  font-size: 20px; 
+  color: green; 
+}*/
 
 /* Estilo da lista de resultados */
-#book-list {
+/*#book-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 20px;
@@ -211,7 +214,7 @@
   font-size: 14px;
   margin: 0;
   color: #666;
-}
+}*/
 
       </style>
    </head>
