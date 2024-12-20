@@ -146,6 +146,19 @@
    
 
 
+.status-icon-container {
+  position: absolute; /* Posiciona em relação ao contêiner pai */
+  top: 10px; /* Define a distância do topo */
+  right: 10px; /* Define a distância da borda direita */
+  z-index: 10; /* Garante que o ícone fique acima da capa */
+  background: rgba(255, 255, 255, 0.8); /* Fundo branco semi-transparente (opcional) */
+  border-radius: 50%; /* Deixa o contêiner redondo (opcional) */
+  padding: 5px; /* Adiciona espaço interno ao ícone (opcional) */
+}
+.status-icon {
+  font-size: 18px; /* Ajusta o tamanho do ícone */
+  color: inherit; /* Usa a cor definida pelo JavaScript */
+}
 
 
 /* Container de informações (autor, editora e marcador) */
