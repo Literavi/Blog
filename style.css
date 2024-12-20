@@ -118,6 +118,7 @@ h2, h3 {
       font-size: 14px;
       color: #333;
     }
+/*
     .status-badge {
       display: inline-block;
       padding: 3px 8px;
@@ -131,7 +132,7 @@ h2, h3 {
     .status-quero-ler { background-color: orange; }
     .status-lendo { background-color: blue; }
     .status-nao-desejado { background-color: pink; color: black; }
-
+*/
     .modal-right {
       position: relative;
       padding: 20px;
@@ -174,7 +175,7 @@ h2, h3 {
       z-index: 1001;
     }
 
-/* Estilo da lista de resultados */
+/* Estilo da lista de resultados 
 #book-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -208,5 +209,6 @@ h2, h3 {
   margin: 0;
   color: #666;
 }
+*/
 </style>
 
