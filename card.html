@@ -142,20 +142,17 @@
          cursor: pointer;
          z-index: 1001;
          }
-         .status-icon-container {
-  position: absolute; /* Posiciona em relação ao contêiner pai */
-  top: 10px; /* Define a distância do topo */
-  right: 10px; /* Define a distância da borda direita */
-  z-index: 10; /* Garante que o ícone fique acima da capa */
-  background: rgba(255, 255, 255, 0.8); /* Fundo branco semi-transparente (opcional) */
-  border-radius: 50%; /* Deixa o contêiner redondo (opcional) */
-  padding: 5px; /* Adiciona espaço interno ao ícone (opcional) */
+      /* Ícone de marcador no canto superior direito */
+.status-icon-container {
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 
 .status-icon {
-  font-size: 18px; /* Ajusta o tamanho do ícone */
-  color: inherit; /* Usa a cor definida pelo JavaScript */
+  font-size: 18px;
 }
+
 
 
       </style>
@@ -411,15 +408,14 @@
            document.getElementById("overlay").style.display = "none";
          }
          function getStatusColor(status) {
-           return (
-             {
-               Lido: "green",
-               "Quero Ler": "orange",
-               Lendo: "blue",
-               "Não Desejado": "pink",
-             }[status] || "gray"
-           ); // Retorna "gray" como cor padrão
-         }
+  return {
+    "Lido": "green",
+    "Quero Ler": "orange",
+    "Lendo": "blue",
+    "Não Desejado": "pink"
+  }[status] || "gray";
+}
+
          
          function mostrarMensagem(tipo, mensagem) {
            const errorMessage = document.getElementById("error-message");
