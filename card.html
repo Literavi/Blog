@@ -142,17 +142,38 @@
          cursor: pointer;
          z-index: 1001;
          }
-         /* Container do marcador */
-         .status-icon-container {
-         position: absolute;
-         top: 10px; /* Posiciona dentro da imagem */
-         right: 10px;
-         }
-         /* Ícone do marcador */
-         .status-icon {
-         font-size: 24px; /* Ajuste do tamanho do ícone */
-         color: green; /* Será alterado dinamicamente no JS */
-         }
+         /* Garantir estilos básicos */
+#book-list img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+  margin: 0; /* Remove margens adicionais */
+}
+
+/* Estilo do Card */
+#book-list div {
+  position: relative; /* Necessário para o marcador */
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Container do Marcador */
+.status-icon-container {
+  position: absolute; /* Garante posicionamento em relação ao card */
+  top: 10px;         /* Espaçamento do topo */
+  right: 10px;       /* Espaçamento à direita */
+  z-index: 10;       /* Certifica-se de que está acima da imagem */
+}
+
+/* Ícone do Marcador */
+.status-icon {
+  font-size: 24px;
+  color: green; /* Ajustado dinamicamente pelo JS */
+}
+
       </style>
    </head>
    <body>
