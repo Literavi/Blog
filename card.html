@@ -153,11 +153,6 @@
       cursor: pointer;
       z-index: 1001;
     }
-      .status-icon {
-  margin-right: 5px;
-  font-size: 14px;
-}
-
   </style>
 </head>
 <body>
@@ -301,11 +296,7 @@
   <h4>${livro["Nome"]}</h4>
   <p><strong>Autor:</strong> ${livro["Autor"]}</p>
   <p><strong>Editora:</strong> ${livro["Editora"]}</p>
-  <span class="status-badge ${getStatusClass(livro["Status"])}">
-    <i class="fa-solid fa-bookmark status-icon" style="color: green;"></i> ${livro["Status"]}
-  </span>
 `;
-
 
             lista.appendChild(card);
           }
@@ -343,17 +334,12 @@
               ? `https://github.com/Literavi/Blog/raw/main/imagens/${livro["ImageFile"]}`
               : "https://via.placeholder.com/150";
 
-            ccard.innerHTML = `
-  <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" 
-    onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}', '${livro["Resenha"]}', '${imagePath}', '${livro["Autor"]}', '${livro["Editora"]}', '${livro["Coleção"]}', '${livro["Status"]}')">
-  <h4>${livro["Nome"]}</h4>
-  <p><strong>Autor:</strong> ${livro["Autor"]}</p>
-  <p><strong>Editora:</strong> ${livro["Editora"]}</p>
-  <span class="status-badge ${getStatusClass(livro["Status"])}">
-    <i class="fa-solid fa-bookmark status-icon" style="color: green;"></i> ${livro["Status"]}
-  </span>
-`;
-
+            card.innerHTML = `
+              <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}')">
+              <h4>${livro["Nome"]}</h4>
+              <p><strong>Autor:</strong> ${livro["Autor"]}</p>
+              <p><strong>Editora:</strong> ${livro["Editora"]}</p>
+            `;
             lista.appendChild(card);
           }
         });
@@ -379,11 +365,6 @@
   document.getElementById('modal-autor').innerText = autor || "Autor desconhecido";
   document.getElementById('modal-editora').innerText = editora || "Editora desconhecida";
   document.getElementById('modal-colecao').innerText = colecao || "Sem coleção";
-      const statusElement = document.getElementById('modal-status');
-statusElement.innerHTML = `
-  <i class="fa-solid fa-bookmark status-icon" style="color: green;"></i> ${status || "Sem status"}
-`;
-
   
   const statusElement = document.getElementById('modal-status');
   statusElement.innerText = status || "Sem status";
