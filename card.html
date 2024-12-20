@@ -1,45 +1,40 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
- <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Biblioteca Pessoal - Pesquisar Livros</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
-  <script src="https://kit.fontawesome.com/c56d4d4542.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="style.css" />
-  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
-  <style>
-       /* Estilos adicionais para garantir a responsividade do menu */
-       nav {
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Biblioteca Pessoal - Pesquisar Livros</title>
+      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+      <script src="https://kit.fontawesome.com/c56d4d4542.js" crossorigin="anonymous"></script>
+      <link rel="stylesheet" href="style.css" />
+      <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+      <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+      <style>
+         /* Estilos adicionais para garantir a responsividade do menu */
+         nav {
          background-color: #f4f4f4;
          padding: 10px;
          border-bottom: 1px solid #ddd;
-       }
-
-       nav ul {
+         }
+         nav ul {
          list-style: none;
          padding: 0;
          margin: 0;
          display: flex;
          gap: 15px;
-       }
-
-       nav ul li {
+         }
+         nav ul li {
          display: inline;
-       }
-
-       nav ul li a {
+         }
+         nav ul li a {
          text-decoration: none;
          color: #333;
          font-weight: bold;
-       }
-
-       nav ul li a:hover {
+         }
+         nav ul li a:hover {
          color: #007BFF;
-       }
-
-       .reset-button {
+         }
+         .reset-button {
          margin-top: 10px;
          background-color: #f4f4f4;
          border: 1px solid #ddd;
@@ -47,13 +42,11 @@
          padding: 5px 10px;
          cursor: pointer;
          font-size: 14px;
-       }
-
-       .reset-button:hover {
+         }
+         .reset-button:hover {
          background-color: #e0e0e0;
-
-       /* Modal */
-       .modal {
+         /* Modal */
+         .modal {
          display: none; /* Inicialmente oculto */
          position: fixed;
          top: 50%;
@@ -67,9 +60,8 @@
          z-index: 1000;
          flex-direction: row;
          overflow: hidden;
-       }
-
-       .overlay {
+         }
+         .overlay {
          display: none; /* Inicialmente oculto */
          position: fixed;
          top: 0;
@@ -78,27 +70,26 @@
          height: 100%;
          background: rgba(0, 0, 0, 0.6);
          z-index: 999;
-       }
-
-       .modal-left {
+         }
+         .modal-left {
          padding: 20px;
          width: 30%;
          text-align: left;
          border-right: 1px solid #ddd;
          background-color: #f1f1f1;
-       }
-       .modal-left img {
+         }
+         .modal-left img {
          width: 120px;
          height: auto;
          border-radius: 8px;
          margin-bottom: 15px;
-       }
-       .modal-left p {
+         }
+         .modal-left p {
          margin: 8px 0;
          font-size: 14px;
          color: #333;
-       }
-       .status-badge {
+         }
+         .status-badge {
          display: inline-block;
          padding: 3px 8px;
          border-radius: 4px;
@@ -106,36 +97,34 @@
          font-size: 12px;
          color: white;
          text-align: center;
-       }
-       .status-lido { background-color: green; }
-       .status-quero-ler { background-color: orange; }
-       .status-lendo { background-color: blue; }
-       .status-nao-desejado { background-color: pink; color: black; }
-
-       .modal-right {
+         }
+         .status-lido { background-color: green; }
+         .status-quero-ler { background-color: orange; }
+         .status-lendo { background-color: blue; }
+         .status-nao-desejado { background-color: pink; color: black; }
+         .modal-right {
          position: relative;
          padding: 20px;
          width: 70%;
-       }
-       .modal-right h3 {
+         }
+         .modal-right h3 {
          margin: 0 0 10px;
          font-size: 20px;
          color: #007BFF;
-       }
-       .modal-right h4 {
+         }
+         .modal-right h4 {
          margin: 10px 0;
          font-size: 16px;
          color: #555;
          font-weight: bold;
-       }
-       .modal-right p {
+         }
+         .modal-right p {
          margin: 10px 0;
          font-size: 14px;
          color: #333;
          text-align: justify;
-       }
-
-       .arrow-button {
+         }
+         .arrow-button {
          position: absolute;
          top: 50%;
          right: 10px;
@@ -143,8 +132,8 @@
          font-size: 24px;
          cursor: pointer;
          color: #007BFF;
-       }
-       .close-modal {
+         }
+         .close-modal {
          position: absolute;
          top: 10px;
          right: 15px;
@@ -152,295 +141,294 @@
          color: #555;
          cursor: pointer;
          z-index: 1001;
-       }
-    /* Container do marcador */
-   .status-icon-container {
-     position: absolute;
-     top: 10px;
-     right: 10px;
-     font-size: 20px; /* Ajusta o tamanho do ícone */
-   }
-
-   /* Estilo do ícone */
-   .status-icon {
-     color: green; /* A cor será definida dinamicamente pelo JavaScript */
-   }
-  </style>
- </head>
- <body>
-  <!-- Menu dinâmico será carregado aqui -->
-  <div id="menu-container"></div>
-
-  <!-- Conteúdo Principal -->
-  <div class="container">
-   <h2>Pesquisar Livros</h2>
-   <div class="search-container">
-    <input type="text" id="search-input" class="search-box" placeholder="Digite o nome, título ou editora" />
-    <select id="collection" class="dropdown">
-     <option value="">Selecione a coleção</option>
-     <option value="Tenho">Tenho</option>
-     <option value="Desejado">Desejado</option>
-     <option value="Não Desejado">Não Desejado</option>
-    </select>
-    <select id="status" class="dropdown">
-     <option value="">Selecione o status</option>
-     <option value="Lendo">Lendo</option>
-     <option value="Quero Ler">Quero Ler</option>
-     <option value="Lido">Lido</option>
-    </select>
-    <button class="button" onclick="buscarLivros()">Pesquisar</button>
-    <button class="reset-button" onclick="resetarCampos()">Limpar</button>
-   </div>
-
-   <h3>Resultados da Pesquisa</h3>
-   <div id="book-list"></div>
-   <p id="error-message"></p>
-  </div>
-
-  <!-- Modal -->
-  <div class="overlay" id="overlay" onclick="fecharModal()"></div>
-  <div class="modal" id="modal">
-   <span class="close-modal" onclick="fecharModal()">&times;</span>
-   <div class="modal-left">
-    <img id="modal-image" src="" alt="Capa do Livro" />
-    <p><strong>Autor:</strong> <span id="modal-autor"></span></p>
-    <p><strong>Editora:</strong> <span id="modal-editora"></span></p>
-    <p><strong>Coleção:</strong> <span id="modal-colecao"></span></p>
-    <p><strong>Status:</strong> <span id="modal-status" class="status-badge"></span></p>
-   </div>
-   <div class="modal-right">
-    <h3 id="modal-title"></h3>
-    <h4 id="modal-section-title">Sinopse</h4>
-    <p id="modal-content"></p>
-    <span class="arrow-button" onclick="alternarConteudo()">
-     <i class="fa-solid fa-caret-right"></i>
-    </span>
-   </div>
-  </div>
-
-  <!-- Script para carregar o menu -->
-  <script>
-   // Carrega o menu dinâmico
-   fetch("menu.html")
-    .then((response) => {
-     if (!response.ok) throw new Error("Erro ao carregar menu");
-     return response.text();
-    })
-    .then((data) => {
-     document.getElementById("menu-container").innerHTML = data;
-
-     // Ativa elementos interativos do menu, se existirem
-     const toggleBtn = document.getElementById("toggle-btn");
-     const themeToggle = document.getElementById("theme-toggle");
-     const body = document.body;
-
-     if (toggleBtn) {
-      toggleBtn.addEventListener("click", () => {
-       const sidebar = document.querySelector(".sidebar");
-       if (sidebar) sidebar.classList.toggle("active");
-      });
-     }
-
-     if (themeToggle) {
-      themeToggle.addEventListener("click", () => {
-       const currentTheme = body.getAttribute("data-theme");
-       const isDark = currentTheme === "dark";
-       body.setAttribute("data-theme", isDark ? "light" : "dark");
-
-       const icon = themeToggle.querySelector("ion-icon");
-       icon.setAttribute("name", isDark ? "moon-outline" : "sunny-outline");
-       themeToggle.querySelector("span").textContent = isDark ? "Dark Mode" : "Light Mode";
-      });
-     }
-    })
-    .catch((error) => {
-     console.error("Erro ao carregar menu:", error);
-     document.getElementById("menu-container").innerHTML = "<p>Menu não disponível.</p>";
-    });
-
-   const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc";
-   const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs";
-   const sheetName = "Biblioteca_Pessoal";
-
-   const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
-   let livros = [];
-
-   function carregarLivros() {
-    fetch(googleSheetsApiUrl)
-     .then((response) => response.json())
-     .then((data) => {
-      const rows = data.values;
-      const headers = rows[0];
-      livros = rows.slice(1).map((row) => {
-       let livro = {};
-       headers.forEach((header, index) => {
-        livro[header] = row[index] || "";
-       });
-       return livro;
-      });
-
-      // Ordenar livros em ordem alfabética antes de exibir
-      livros.sort((a, b) => a["Nome"].localeCompare(b["Nome"]));
-      exibirLivros();
-     })
-     .catch((error) => {
-      console.error("Erro ao carregar dados da API do Google Sheets:", error);
-      mostrarMensagem("erro", "Erro ao carregar dados da API do Google Sheets.");
-     });
-   }
-
-   function exibirLivros() {
-    const lista = document.getElementById("book-list");
-    lista.innerHTML = "";
-
-    if (livros.length > 0) {
-     livros.forEach((livro) => {
-      if (livro["Nome"] && livro["Autor"]) {
-       const card = document.createElement("div");
-       card.style.position = "relative"; // Para posicionar o ícone no canto
-
-       const imagePath = livro["ImageFile"] ? `https://github.com/Literavi/Blog/raw/main/imagens/${livro["ImageFile"]}` : "https://via.placeholder.com/150";
-
-       card.innerHTML = `
-  <div class="status-icon-container">
-    <i class="fa-solid fa-bookmark status-icon" style="color: ${getStatusColor(livro["Status"])};"></i>
-  </div>
-  <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" 
-    onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}', '${livro["Resenha"]}', '${imagePath}', '${livro["Autor"]}', '${livro["Editora"]}', '${livro["Coleção"]}', '${livro["Status"]}')">
-  <h4>${livro["Nome"]}</h4>
-  <p><strong>Autor:</strong> ${livro["Autor"]}</p>
-  <p><strong>Editora:</strong> ${livro["Editora"]}</p>
-`;
-
-       lista.appendChild(card);
-      }
-     });
-    } else {
-     lista.innerHTML = "<p>Nenhum livro disponível no momento.</p>";
-    }
-   }
-
-   function buscarLivros() {
-    const query = document.getElementById("search-input").value.toLowerCase();
-    const colecaoSelecionada = document.getElementById("collection").value;
-    const statusSelecionado = document.getElementById("status").value;
-
-    const resultados = livros.filter((livro) => {
-     const autorMatch = livro["Autor"] && livro["Autor"].toLowerCase().includes(query);
-     const nomeMatch = livro["Nome"] && livro["Nome"].toLowerCase().includes(query);
-     const editoraMatch = livro["Editora"] && livro["Editora"].toLowerCase().includes(query);
-     const colecaoMatch = livro["Coleção"] === colecaoSelecionada || colecaoSelecionada === "";
-     const statusMatch = livro["Status"] === statusSelecionado || statusSelecionado === "";
-     return (autorMatch || nomeMatch || editoraMatch) && colecaoMatch && statusMatch;
-    });
-
-    resultados.sort((a, b) => a["Nome"].localeCompare(b["Nome"]));
-
-    const lista = document.getElementById("book-list");
-    lista.innerHTML = "";
-
-    if (resultados.length > 0) {
-     resultados.forEach((livro) => {
-      if (livro["Nome"] && livro["Autor"]) {
-       const card = document.createElement("div");
-       card.style.position = "relative"; // Para posicionar o ícone no canto
-
-       const imagePath = livro["ImageFile"] ? `https://github.com/Literavi/Blog/raw/main/imagens/${livro["ImageFile"]}` : "https://via.placeholder.com/150";
-
-       card.innerHTML = `
-  <div class="status-icon-container">
-    <i class="fa-solid fa-bookmark status-icon" style="color: ${getStatusColor(livro["Status"])};"></i>
-  </div>
-  <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" 
-    onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}', '${livro["Resenha"]}', '${imagePath}', '${livro["Autor"]}', '${livro["Editora"]}', '${livro["Coleção"]}', '${livro["Status"]}')">
-  <h4>${livro["Nome"]}</h4>
-  <p><strong>Autor:</strong> ${livro["Autor"]}</p>
-  <p><strong>Editora:</strong> ${livro["Editora"]}</p>
-`;
-
-       lista.appendChild(card);
-      }
-     });
-    } else {
-     lista.innerHTML = "<p>Nenhum livro encontrado com os critérios selecionados.</p>";
-    }
-   }
-
-   function resetarCampos() {
-    document.getElementById("search-input").value = "";
-    document.getElementById("collection").value = "";
-    document.getElementById("status").value = "";
-    exibirLivros();
-   }
-
-   let mostrandoSinopse = true;
-
-   function abrirModal(nome, sinopse, resenha, imagem, autor, editora, colecao, status) {
-    document.getElementById("modal-title").innerText = nome;
-    document.getElementById("modal-content").innerText = sinopse || "Sem sinopse disponível.";
-    document.getElementById("modal-image").src = imagem || "https://via.placeholder.com/150";
-    document.getElementById("modal-autor").innerText = autor || "Autor desconhecido";
-    document.getElementById("modal-editora").innerText = editora || "Editora desconhecida";
-    document.getElementById("modal-colecao").innerText = colecao || "Sem coleção";
-
-    const statusElement = document.getElementById("modal-status");
-    statusElement.innerText = status || "Sem status";
-    statusElement.className = "status-badge " + getStatusClass(status);
-
-    document.getElementById("modal").style.display = "flex";
-    document.getElementById("overlay").style.display = "block";
-   }
-
-   function alternarConteudo() {
-    const content = document.getElementById("modal-content");
-    const sectionTitle = document.getElementById("modal-section-title");
-
-    if (mostrandoSinopse) {
-     content.innerText = window.resenha;
-     sectionTitle.innerText = "Resenha";
-    } else {
-     content.innerText = window.sinopse;
-     sectionTitle.innerText = "Sinopse";
-    }
-    mostrandoSinopse = !mostrandoSinopse;
-   }
-
-   function getStatusClass(status) {
-    return {
-     Lido: "status-lido",
-     "Quero Ler": "status-quero-ler",
-     Lendo: "status-lendo",
-     "Não Desejado": "status-nao-desejado",
-    }[status];
-   }
-
-   function fecharModal() {
-    document.getElementById("modal").style.display = "none";
-    document.getElementById("overlay").style.display = "none";
-   }
-   function getStatusColor(status) {
-    return (
-     {
-      Lido: "green",
-      "Quero Ler": "orange",
-      Lendo: "blue",
-      "Não Desejado": "pink",
-     }[status] || "gray"
-    ); // Retorna "gray" como cor padrão
-   }
-
-   function mostrarMensagem(tipo, mensagem) {
-    const errorMessage = document.getElementById("error-message");
-    errorMessage.textContent = mensagem;
-    errorMessage.style.color = tipo === "sucesso" ? "green" : "red";
-    errorMessage.style.display = "block";
-
-    setTimeout(() => {
-     errorMessage.style.display = "none";
-    }, 5000);
-   }
-
-   carregarLivros();
-  </script>
- </body>
+         }
+         /* Container do marcador */
+         .status-icon-container {
+         position: absolute;
+         top: 10px; /* Posiciona dentro da imagem */
+         right: 10px;
+         }
+         /* Ícone do marcador */
+         .status-icon {
+         font-size: 24px; /* Ajuste do tamanho do ícone */
+         color: green; /* Será alterado dinamicamente no JS */
+         }
+      </style>
+   </head>
+   <body>
+      <!-- Menu dinâmico será carregado aqui -->
+      <div id="menu-container"></div>
+      <!-- Conteúdo Principal -->
+      <div class="container">
+         <h2>Pesquisar Livros</h2>
+         <div class="search-container">
+            <input type="text" id="search-input" class="search-box" placeholder="Digite o nome, título ou editora" />
+            <select id="collection" class="dropdown">
+               <option value="">Selecione a coleção</option>
+               <option value="Tenho">Tenho</option>
+               <option value="Desejado">Desejado</option>
+               <option value="Não Desejado">Não Desejado</option>
+            </select>
+            <select id="status" class="dropdown">
+               <option value="">Selecione o status</option>
+               <option value="Lendo">Lendo</option>
+               <option value="Quero Ler">Quero Ler</option>
+               <option value="Lido">Lido</option>
+            </select>
+            <button class="button" onclick="buscarLivros()">Pesquisar</button>
+            <button class="reset-button" onclick="resetarCampos()">Limpar</button>
+         </div>
+         <h3>Resultados da Pesquisa</h3>
+         <div id="book-list"></div>
+         <p id="error-message"></p>
+      </div>
+      <!-- Modal -->
+      <div class="overlay" id="overlay" onclick="fecharModal()"></div>
+      <div class="modal" id="modal">
+         <span class="close-modal" onclick="fecharModal()">&times;</span>
+         <div class="modal-left">
+            <img id="modal-image" src="" alt="Capa do Livro" />
+            <p><strong>Autor:</strong> <span id="modal-autor"></span></p>
+            <p><strong>Editora:</strong> <span id="modal-editora"></span></p>
+            <p><strong>Coleção:</strong> <span id="modal-colecao"></span></p>
+            <p><strong>Status:</strong> <span id="modal-status" class="status-badge"></span></p>
+         </div>
+         <div class="modal-right">
+            <h3 id="modal-title"></h3>
+            <h4 id="modal-section-title">Sinopse</h4>
+            <p id="modal-content"></p>
+            <span class="arrow-button" onclick="alternarConteudo()">
+            <i class="fa-solid fa-caret-right"></i>
+            </span>
+         </div>
+      </div>
+      <!-- Script para carregar o menu -->
+      <script>
+         // Carrega o menu dinâmico
+         fetch("menu.html")
+           .then((response) => {
+             if (!response.ok) throw new Error("Erro ao carregar menu");
+             return response.text();
+           })
+           .then((data) => {
+             document.getElementById("menu-container").innerHTML = data;
+         
+             // Ativa elementos interativos do menu, se existirem
+             const toggleBtn = document.getElementById("toggle-btn");
+             const themeToggle = document.getElementById("theme-toggle");
+             const body = document.body;
+         
+             if (toggleBtn) {
+               toggleBtn.addEventListener("click", () => {
+                 const sidebar = document.querySelector(".sidebar");
+                 if (sidebar) sidebar.classList.toggle("active");
+               });
+             }
+         
+             if (themeToggle) {
+               themeToggle.addEventListener("click", () => {
+                 const currentTheme = body.getAttribute("data-theme");
+                 const isDark = currentTheme === "dark";
+                 body.setAttribute("data-theme", isDark ? "light" : "dark");
+         
+                 const icon = themeToggle.querySelector("ion-icon");
+                 icon.setAttribute("name", isDark ? "moon-outline" : "sunny-outline");
+                 themeToggle.querySelector("span").textContent = isDark ? "Dark Mode" : "Light Mode";
+               });
+             }
+           })
+           .catch((error) => {
+             console.error("Erro ao carregar menu:", error);
+             document.getElementById("menu-container").innerHTML = "<p>Menu não disponível.</p>";
+           });
+         
+         const spreadsheetId = "11Rowjfar9c6yeLdr1Qirt4RWfDMUHg1ZX3MB4FHzHyc";
+         const apiKey = "AIzaSyBFBF48H0WgkPAh5QRyPSctsrH8GAM7OTs";
+         const sheetName = "Biblioteca_Pessoal";
+         
+         const googleSheetsApiUrl = `https://sheets.googleapis.com/v4/spreadsheets/${spreadsheetId}/values/${sheetName}?key=${apiKey}`;
+         let livros = [];
+         
+         function carregarLivros() {
+           fetch(googleSheetsApiUrl)
+             .then((response) => response.json())
+             .then((data) => {
+               const rows = data.values;
+               const headers = rows[0];
+               livros = rows.slice(1).map((row) => {
+                 let livro = {};
+                 headers.forEach((header, index) => {
+                   livro[header] = row[index] || "";
+                 });
+                 return livro;
+               });
+         
+               // Ordenar livros em ordem alfabética antes de exibir
+               livros.sort((a, b) => a["Nome"].localeCompare(b["Nome"]));
+               exibirLivros();
+             })
+             .catch((error) => {
+               console.error("Erro ao carregar dados da API do Google Sheets:", error);
+               mostrarMensagem("erro", "Erro ao carregar dados da API do Google Sheets.");
+             });
+         }
+         
+         function exibirLivros() {
+           const lista = document.getElementById("book-list");
+           lista.innerHTML = "";
+         
+           if (livros.length > 0) {
+             livros.forEach((livro) => {
+               if (livro["Nome"] && livro["Autor"]) {
+                 const card = document.createElement("div");
+                 card.style.position = "relative"; // Para posicionar o ícone no canto
+         
+                 const imagePath = livro["ImageFile"] ? `https://github.com/Literavi/Blog/raw/main/imagens/${livro["ImageFile"]}` : "https://via.placeholder.com/150";
+         
+                 card.innerHTML = `
+         <div style="position: relative; width: 100%; border-radius: 8px;">
+         <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" 
+         onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}', '${livro["Resenha"]}', '${imagePath}', '${livro["Autor"]}', '${livro["Editora"]}', '${livro["Coleção"]}', '${livro["Status"]}')">
+         <div class="status-icon-container">
+         <i class="fa-solid fa-bookmark status-icon" style="color: ${getStatusColor(livro["Status"])};"></i>
+         </div>
+         </div>
+         <h4>${livro["Nome"]}</h4>
+         <p><strong>Autor:</strong> ${livro["Autor"]}</p>
+         <p><strong>Editora:</strong> ${livro["Editora"]}</p>
+         `;
+         
+                 lista.appendChild(card);
+               }
+             });
+           } else {
+             lista.innerHTML = "<p>Nenhum livro disponível no momento.</p>";
+           }
+         }
+         
+         function buscarLivros() {
+           const query = document.getElementById("search-input").value.toLowerCase();
+           const colecaoSelecionada = document.getElementById("collection").value;
+           const statusSelecionado = document.getElementById("status").value;
+         
+           const resultados = livros.filter((livro) => {
+             const autorMatch = livro["Autor"] && livro["Autor"].toLowerCase().includes(query);
+             const nomeMatch = livro["Nome"] && livro["Nome"].toLowerCase().includes(query);
+             const editoraMatch = livro["Editora"] && livro["Editora"].toLowerCase().includes(query);
+             const colecaoMatch = livro["Coleção"] === colecaoSelecionada || colecaoSelecionada === "";
+             const statusMatch = livro["Status"] === statusSelecionado || statusSelecionado === "";
+             return (autorMatch || nomeMatch || editoraMatch) && colecaoMatch && statusMatch;
+           });
+         
+           resultados.sort((a, b) => a["Nome"].localeCompare(b["Nome"]));
+         
+           const lista = document.getElementById("book-list");
+           lista.innerHTML = "";
+         
+           if (resultados.length > 0) {
+             resultados.forEach((livro) => {
+               if (livro["Nome"] && livro["Autor"]) {
+                 const card = document.createElement("div");
+                 card.style.position = "relative"; // Para posicionar o ícone no canto
+         
+                 const imagePath = livro["ImageFile"] ? `https://github.com/Literavi/Blog/raw/main/imagens/${livro["ImageFile"]}` : "https://via.placeholder.com/150";
+         
+                 card.innerHTML = `
+         <div style="position: relative; width: 100%; border-radius: 8px;">
+         <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" 
+         onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}', '${livro["Resenha"]}', '${imagePath}', '${livro["Autor"]}', '${livro["Editora"]}', '${livro["Coleção"]}', '${livro["Status"]}')">
+         <div class="status-icon-container">
+         <i class="fa-solid fa-bookmark status-icon" style="color: ${getStatusColor(livro["Status"])};"></i>
+         </div>
+         </div>
+         <h4>${livro["Nome"]}</h4>
+         <p><strong>Autor:</strong> ${livro["Autor"]}</p>
+         <p><strong>Editora:</strong> ${livro["Editora"]}</p>
+         `;
+         
+                 lista.appendChild(card);
+               }
+             });
+           } else {
+             lista.innerHTML = "<p>Nenhum livro encontrado com os critérios selecionados.</p>";
+           }
+         }
+         
+         function resetarCampos() {
+           document.getElementById("search-input").value = "";
+           document.getElementById("collection").value = "";
+           document.getElementById("status").value = "";
+           exibirLivros();
+         }
+         
+         let mostrandoSinopse = true;
+         
+         function abrirModal(nome, sinopse, resenha, imagem, autor, editora, colecao, status) {
+           document.getElementById("modal-title").innerText = nome;
+           document.getElementById("modal-content").innerText = sinopse || "Sem sinopse disponível.";
+           document.getElementById("modal-image").src = imagem || "https://via.placeholder.com/150";
+           document.getElementById("modal-autor").innerText = autor || "Autor desconhecido";
+           document.getElementById("modal-editora").innerText = editora || "Editora desconhecida";
+           document.getElementById("modal-colecao").innerText = colecao || "Sem coleção";
+         
+           const statusElement = document.getElementById("modal-status");
+           statusElement.innerText = status || "Sem status";
+           statusElement.className = "status-badge " + getStatusClass(status);
+         
+           document.getElementById("modal").style.display = "flex";
+           document.getElementById("overlay").style.display = "block";
+         }
+         
+         function alternarConteudo() {
+           const content = document.getElementById("modal-content");
+           const sectionTitle = document.getElementById("modal-section-title");
+         
+           if (mostrandoSinopse) {
+             content.innerText = window.resenha;
+             sectionTitle.innerText = "Resenha";
+           } else {
+             content.innerText = window.sinopse;
+             sectionTitle.innerText = "Sinopse";
+           }
+           mostrandoSinopse = !mostrandoSinopse;
+         }
+         
+         function getStatusClass(status) {
+           return {
+             Lido: "status-lido",
+             "Quero Ler": "status-quero-ler",
+             Lendo: "status-lendo",
+             "Não Desejado": "status-nao-desejado",
+           }[status];
+         }
+         
+         function fecharModal() {
+           document.getElementById("modal").style.display = "none";
+           document.getElementById("overlay").style.display = "none";
+         }
+         function getStatusColor(status) {
+           return (
+             {
+               Lido: "green",
+               "Quero Ler": "orange",
+               Lendo: "blue",
+               "Não Desejado": "pink",
+             }[status] || "gray"
+           ); // Retorna "gray" como cor padrão
+         }
+         
+         function mostrarMensagem(tipo, mensagem) {
+           const errorMessage = document.getElementById("error-message");
+           errorMessage.textContent = mensagem;
+           errorMessage.style.color = tipo === "sucesso" ? "green" : "red";
+           errorMessage.style.display = "block";
+         
+           setTimeout(() => {
+             errorMessage.style.display = "none";
+           }, 5000);
+         }
+         
+         carregarLivros();
+      </script>
+   </body>
 </html>
