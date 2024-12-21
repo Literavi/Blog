@@ -12,6 +12,19 @@
       <style>
          /* Estilos adicionais para garantir a responsividade do menu */
          /* Menu fixado no topo */
+         #menu-container {
+    position: sticky; /* Ou fixed */
+    top: 0;
+    z-index: 1000; /* Garante que o menu fique acima dos livros */
+    background-color: #f4f4f4; /* Define o fundo */
+    width: 100%; /* Garante que ocupe toda a largura */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adiciona uma sombra para destaque */
+}
+
+.container {
+    margin-top: 80px; /* Ajuste para evitar sobreposição do conteúdo com o menu */
+}
+
         nav {
   position: fixed; /* Já está correto */
   top: 0;
