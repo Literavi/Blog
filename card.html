@@ -205,10 +205,17 @@
     gap: 5px; /* Espaçamento entre os ícones */
 }
 
+
 .fa-star {
     font-size: 16px; /* Ajusta o tamanho do ícone da estrela */
-    color: gold; /* Cor dourada para destaque */
+    color: gold;
 }
+
+.fa-heart {
+    font-size: 16px; /* Ajusta o tamanho do ícone do coração */
+    color: red; /* Cor vermelha para o coração */
+}
+
 
          /* Ícone do marcador */
          /*.status-icon {
@@ -382,9 +389,12 @@
                     ? `https://github.com/Literavi/Blog/raw/main/imagens/${livro["ImageFile"]}`
                     : "https://via.placeholder.com/150";
 
-                // Verifica se a coleção é "Desejado" para adicionar o ícone de estrela
+                // Verifica as coleções para adicionar ícones
                 const starIcon = livro["Coleção"] === "Desejado" 
                     ? `<i class="fa-solid fa-star" style="color: gold; margin-left: 5px;"></i>` 
+                    : "";
+                const heartIcon = livro["Coleção"] === "Tenho" 
+                    ? `<i class="fa-solid fa-heart" style="color: red; margin-left: 5px;"></i>` 
                     : "";
 
                 card.innerHTML = `
@@ -394,6 +404,7 @@
                         <div class="status-icon-container">
                             <i class="fa-solid fa-bookmark status-icon" style="color: ${getStatusColor(livro["Status"])};"></i>
                             ${starIcon}
+                            ${heartIcon}
                         </div>
                     </div>
                     <h4>${livro["Nome"]}</h4>
@@ -409,17 +420,6 @@
     }
 }
 
-         
-         
-         
-         
-         lista.appendChild(card);
-         }
-         });
-         } else {
-         lista.innerHTML = '<p>Nenhum livro disponível no momento.</p>';
-         }
-         }
          
          
          function buscarLivros() {
