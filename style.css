@@ -210,5 +210,17 @@ h2, h3 {
   color: #666;
 }
 
+
+.menu-container {
+  position: relative;
+  z-index: 1000; /* Certifique-se de que o menu está em um nível superior */
+}
+
+.content-container {
+  position: relative;
+  z-index: 1; /* Os livros ficam em um nível inferior */
+}
+
+
 </style>
 
