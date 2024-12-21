@@ -12,17 +12,16 @@
       <style>
          /* Estilos adicionais para garantir a responsividade do menu */
          /* Menu fixado no topo */
-nav {
-  position: fixed; /* Garante que o menu esteja sempre fixo na tela */
-  top: 0;
-  left: 0;
-  width: 100%;
-  background-color: #f4f4f4;
-  padding: 10px;
-  z-index: 1000; /* Hierarquia alta para aparecer sobre os livros */
-  border-bottom: 1px solid #ddd;
-}
-
+         nav {
+         position: fixed; /* Garante que o menu esteja sempre fixo na tela */
+         top: 0;
+         left: 0;
+         width: 100%;
+         background-color: #f4f4f4;
+         padding: 10px;
+         z-index: 1000; /* Hierarquia alta para aparecer sobre os livros */
+         border-bottom: 1px solid #ddd;
+         }
          nav ul {
          list-style: none;
          padding: 0;
@@ -97,7 +96,7 @@ nav {
          color: #333;
          }
          /*
-            .status-badge {
+         .status-badge {
          display: inline-block;
          padding: 3px 8px;
          border-radius: 4px;
@@ -150,85 +149,74 @@ nav {
          cursor: pointer;
          z-index: 1001;
          }
-   
-/* Container dos cards */
-.book-card {
-  position: relative; /* Necessário para o ícone do marcador */
-  z-index: 1; /* Hierarquia baixa para não sobrepor o menu */
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-
-            /* Container do marcador */
-.status-icon-container {
-  position: absolute;
-  top: 10px; /* Posiciona dentro da imagem */
-  right: 10px;
-}
-
-/* Ícone do marcador */
-.status-icon {
-  font-size: 24px; /* Ajuste do tamanho do ícone */
-  color: green; /* Será alterado dinamicamente no JS */
-}
-
-
-
-
-/* Container de informações (autor, editora e marcador) */
-.info-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #f4f4f4; /* Cor de fundo do retângulo */
-  padding: 10px; /* Espaçamento interno */
-  border-radius: 8px; /* Bordas arredondadas */
-  margin-top: 10px; /* Espaçamento em relação à imagem */
-}
-
-/* Ícone do marcador */
-/*.status-icon {
-  font-size: 20px; 
-  color: green; 
-}*/
-
-/* Estilo da lista de resultados */
-/*#book-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-}
-#book-list div {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 15px;
-  text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-#book-list div:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-}
-#book-list img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 5px;
-  margin-bottom: 10px;
-}
-#book-list h4 {
-  margin: 10px 0 5px;
-  font-size: 18px;
-  color: #00297c;
-}
-#book-list p {
-  font-size: 14px;
-  margin: 0;
-  color: #666;
-}*/
-
+         /* Container dos cards */
+         .book-card {
+         position: relative; /* Necessário para o ícone do marcador */
+         z-index: 1; /* Hierarquia baixa para não sobrepor o menu */
+         background: white;
+         border-radius: 8px;
+         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+         }
+         /* Container do marcador */
+         .status-icon-container {
+         position: absolute;
+         top: 10px; /* Posiciona dentro da imagem */
+         right: 10px;
+         }
+         /* Ícone do marcador */
+         .status-icon {
+         font-size: 24px; /* Ajuste do tamanho do ícone */
+         color: green; /* Será alterado dinamicamente no JS */
+         }
+         /* Container de informações (autor, editora e marcador) */
+         .info-container {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         background: #f4f4f4; /* Cor de fundo do retângulo */
+         padding: 10px; /* Espaçamento interno */
+         border-radius: 8px; /* Bordas arredondadas */
+         margin-top: 10px; /* Espaçamento em relação à imagem */
+         }
+         /* Ícone do marcador */
+         /*.status-icon {
+         font-size: 20px; 
+         color: green; 
+         }*/
+         /* Estilo da lista de resultados */
+         /*#book-list {
+         display: grid;
+         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+         gap: 20px;
+         }
+         #book-list div {
+         background-color: #fff;
+         border-radius: 8px;
+         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+         padding: 15px;
+         text-align: center;
+         transition: transform 0.3s ease, box-shadow 0.3s ease;
+         }
+         #book-list div:hover {
+         transform: translateY(-5px);
+         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+         }
+         #book-list img {
+         max-width: 100%;
+         height: auto;
+         border-radius: 5px;
+         margin-bottom: 10px;
+         }
+         #book-list h4 {
+         margin: 10px 0 5px;
+         font-size: 18px;
+         color: #00297c;
+         }
+         #book-list p {
+         font-size: 14px;
+         margin: 0;
+         color: #666;
+         }*/
       </style>
    </head>
    <body>
@@ -349,96 +337,96 @@ nav {
              });
          }
          function exibirLivros() {
-  const lista = document.getElementById("book-list");
-  lista.innerHTML = '';
-
-  if (livros.length > 0) {
-    livros.forEach(livro => {
-      if (livro["Nome"] && livro["Autor"]) {
-        const card = document.createElement("div");
-        card.style.position = "relative"; // Para posicionar o ícone no canto
-
-        const imagePath = livro["ImageFile"]
-          ? `https://github.com/Literavi/Blog/raw/main/imagens/${livro["ImageFile"]}`
-          : "https://via.placeholder.com/150";
-
- card.innerHTML = `
-  <div style="position: relative; width: 100%; border-radius: 8px;">
-    <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" 
-      onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}', '${livro["Resenha"]}', '${imagePath}', '${livro["Autor"]}', '${livro["Editora"]}', '${livro["Coleção"]}', '${livro["Status"]}')">
-    <div class="status-icon-container">
-      <i class="fa-solid fa-bookmark status-icon" style="color: ${getStatusColor(livro["Status"])};"></i>
-    </div>
-  </div>
-  <h4>${livro["Nome"]}</h4>
-  <p><strong>Autor:</strong> ${livro["Autor"]}</p>
-  <p><strong>Editora:</strong> ${livro["Editora"]}</p>
-`;
-
-
-
-
-        lista.appendChild(card);
-      }
-    });
-  } else {
-    lista.innerHTML = '<p>Nenhum livro disponível no momento.</p>';
-  }
-}
-
+         const lista = document.getElementById("book-list");
+         lista.innerHTML = '';
          
-        function buscarLivros() {
-  const query = document.getElementById("search-input").value.toLowerCase();
-  const colecaoSelecionada = document.getElementById("collection").value;
-  const statusSelecionado = document.getElementById("status").value;
-
-  const resultados = livros.filter(livro => {
-    const autorMatch = livro["Autor"] && livro["Autor"].toLowerCase().includes(query);
-    const nomeMatch = livro["Nome"] && livro["Nome"].toLowerCase().includes(query);
-    const editoraMatch = livro["Editora"] && livro["Editora"].toLowerCase().includes(query);
-    const colecaoMatch = livro["Coleção"] === colecaoSelecionada || colecaoSelecionada === "";
-    const statusMatch = livro["Status"] === statusSelecionado || statusSelecionado === "";
-    return (autorMatch || nomeMatch || editoraMatch) && colecaoMatch && statusMatch;
-  });
-
-  resultados.sort((a, b) => a["Nome"].localeCompare(b["Nome"]));
-
-  const lista = document.getElementById("book-list");
-  lista.innerHTML = '';
-
-  if (resultados.length > 0) {
-    resultados.forEach(livro => {
-      if (livro["Nome"] && livro["Autor"]) {
-        const card = document.createElement("div");
-        card.style.position = "relative"; // Para posicionar o ícone no canto
-
-        const imagePath = livro["ImageFile"]
+         if (livros.length > 0) {
+         livros.forEach(livro => {
+         if (livro["Nome"] && livro["Autor"]) {
+         const card = document.createElement("div");
+         card.style.position = "relative"; // Para posicionar o ícone no canto
+         
+         const imagePath = livro["ImageFile"]
           ? `https://github.com/Literavi/Blog/raw/main/imagens/${livro["ImageFile"]}`
           : "https://via.placeholder.com/150";
-
-       card.innerHTML = `
-  <div style="position: relative; width: 100%; border-radius: 8px;">
-    <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" 
-      onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}', '${livro["Resenha"]}', '${imagePath}', '${livro["Autor"]}', '${livro["Editora"]}', '${livro["Coleção"]}', '${livro["Status"]}')">
-    <div class="status-icon-container">
-      <i class="fa-solid fa-bookmark status-icon" style="color: ${getStatusColor(livro["Status"])};"></i>
-    </div>
-  </div>
-  <h4>${livro["Nome"]}</h4>
-  <p><strong>Autor:</strong> ${livro["Autor"]}</p>
-  <p><strong>Editora:</strong> ${livro["Editora"]}</p>
-`;
-
-
-
-        lista.appendChild(card);
-      }
-    });
-  } else {
-    lista.innerHTML = '<p>Nenhum livro encontrado com os critérios selecionados.</p>';
-  }
-}
-
+         
+         card.innerHTML = `
+         <div style="position: relative; width: 100%; border-radius: 8px;">
+         <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" 
+         onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}', '${livro["Resenha"]}', '${imagePath}', '${livro["Autor"]}', '${livro["Editora"]}', '${livro["Coleção"]}', '${livro["Status"]}')">
+         <div class="status-icon-container">
+         <i class="fa-solid fa-bookmark status-icon" style="color: ${getStatusColor(livro["Status"])};"></i>
+         </div>
+         </div>
+         <h4>${livro["Nome"]}</h4>
+         <p><strong>Autor:</strong> ${livro["Autor"]}</p>
+         <p><strong>Editora:</strong> ${livro["Editora"]}</p>
+         `;
+         
+         
+         
+         
+         lista.appendChild(card);
+         }
+         });
+         } else {
+         lista.innerHTML = '<p>Nenhum livro disponível no momento.</p>';
+         }
+         }
+         
+         
+         function buscarLivros() {
+         const query = document.getElementById("search-input").value.toLowerCase();
+         const colecaoSelecionada = document.getElementById("collection").value;
+         const statusSelecionado = document.getElementById("status").value;
+         
+         const resultados = livros.filter(livro => {
+         const autorMatch = livro["Autor"] && livro["Autor"].toLowerCase().includes(query);
+         const nomeMatch = livro["Nome"] && livro["Nome"].toLowerCase().includes(query);
+         const editoraMatch = livro["Editora"] && livro["Editora"].toLowerCase().includes(query);
+         const colecaoMatch = livro["Coleção"] === colecaoSelecionada || colecaoSelecionada === "";
+         const statusMatch = livro["Status"] === statusSelecionado || statusSelecionado === "";
+         return (autorMatch || nomeMatch || editoraMatch) && colecaoMatch && statusMatch;
+         });
+         
+         resultados.sort((a, b) => a["Nome"].localeCompare(b["Nome"]));
+         
+         const lista = document.getElementById("book-list");
+         lista.innerHTML = '';
+         
+         if (resultados.length > 0) {
+         resultados.forEach(livro => {
+         if (livro["Nome"] && livro["Autor"]) {
+         const card = document.createElement("div");
+         card.style.position = "relative"; // Para posicionar o ícone no canto
+         
+         const imagePath = livro["ImageFile"]
+          ? `https://github.com/Literavi/Blog/raw/main/imagens/${livro["ImageFile"]}`
+          : "https://via.placeholder.com/150";
+         
+         card.innerHTML = `
+         <div style="position: relative; width: 100%; border-radius: 8px;">
+         <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" 
+         onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}', '${livro["Resenha"]}', '${imagePath}', '${livro["Autor"]}', '${livro["Editora"]}', '${livro["Coleção"]}', '${livro["Status"]}')">
+         <div class="status-icon-container">
+         <i class="fa-solid fa-bookmark status-icon" style="color: ${getStatusColor(livro["Status"])};"></i>
+         </div>
+         </div>
+         <h4>${livro["Nome"]}</h4>
+         <p><strong>Autor:</strong> ${livro["Autor"]}</p>
+         <p><strong>Editora:</strong> ${livro["Editora"]}</p>
+         `;
+         
+         
+         
+         lista.appendChild(card);
+         }
+         });
+         } else {
+         lista.innerHTML = '<p>Nenhum livro encontrado com os critérios selecionados.</p>';
+         }
+         }
+         
          
          function resetarCampos() {
            document.getElementById("search-input").value = "";
@@ -493,14 +481,14 @@ nav {
            document.getElementById("overlay").style.display = "none";
          }
          function getStatusColor(status) {
-  return {
-    "Lido": "green",
-    "Quero Ler": "orange",
-    "Lendo": "blue",
-    "Não Desejado": "pink"
-  }[status] || "gray";
-}
-
+         return {
+         "Lido": "green",
+         "Quero Ler": "orange",
+         "Lendo": "blue",
+         "Não Desejado": "pink"
+         }[status] || "gray";
+         }
+         
          
          function mostrarMensagem(tipo, mensagem) {
            const errorMessage = document.getElementById("error-message");
