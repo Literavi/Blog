@@ -1,5 +1,61 @@
 <style>
 /* Estilo geral */
+.menu-container {
+  position: fixed; /* Fixa o menu no topo */
+  top: 0;
+  left: 0;
+  width: 100%; /* Garante que ocupe a largura completa */
+  background-color: #f4f4f4;
+  z-index: 1000; /* Hierarquia mais alta */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Adiciona um leve destaque */
+}
+
+.content-container {
+  margin-top: 60px; /* Adiciona espaço abaixo do menu */
+  position: relative;
+  z-index: 1; /* Mantém o conteúdo abaixo do menu */
+}
+
+#book-list div {
+  position: relative;
+  z-index: 1; /* Garante que os livros não sobreponham o menu */
+}
+/* Estilo da lista de resultados */
+#book-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+#book-list div {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+#book-list div:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+#book-list img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+#book-list h4 {
+  margin: 10px 0 5px;
+  font-size: 18px;
+  color: #00297c;
+}
+#book-list p {
+  font-size: 14px;
+  margin: 0;
+  color: #666;
+}
+
+
 
 body {
   font-family: 'Roboto', sans-serif;
@@ -13,15 +69,7 @@ body {
   padding: 20px;
   margin-left: 60px; /* EspaÃ§o para o menu lateral */
 }
-.menu-container {
-  position: relative;
-  z-index: 1000; /* Certifique-se de que o menu está em um nível superior */
-}
 
-.content-container {
-  position: relative;
-  z-index: 1; /* Os livros ficam em um nível inferior */
-}
 h2, h3 {
   margin-bottom: 20px;
   color: #00297c;
@@ -184,40 +232,6 @@ h2, h3 {
       z-index: 1001;
     }
 
-/* Estilo da lista de resultados */
-#book-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-}
-#book-list div {
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 15px;
-  text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-#book-list div:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-}
-#book-list img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 5px;
-  margin-bottom: 10px;
-}
-#book-list h4 {
-  margin: 10px 0 5px;
-  font-size: 18px;
-  color: #00297c;
-}
-#book-list p {
-  font-size: 14px;
-  margin: 0;
-  color: #666;
-}
 
 
 
