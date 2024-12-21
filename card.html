@@ -12,16 +12,22 @@
       <style>
          /* Estilos adicionais para garantir a responsividade do menu */
          /* Menu fixado no topo */
-         nav {
-         position: fixed; /* Garante que o menu esteja sempre fixo na tela */
-         top: 0;
-         left: 0;
-         width: 100%;
-         background-color: #f4f4f4;
-         padding: 10px;
-         z-index: 1000; /* Hierarquia alta para aparecer sobre os livros */
-         border-bottom: 1px solid #ddd;
-         }
+        nav {
+  position: fixed; /* Já está correto */
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f4f4f4;
+  padding: 10px;
+  z-index: 1000; /* Certifique-se de que é maior que os outros elementos */
+  border-bottom: 1px solid #ddd;
+}
+
+.book-card {
+  position: relative;
+  z-index: 1; /* Garante que o menu terá precedência */
+}
+
          nav ul {
          list-style: none;
          padding: 0;
@@ -149,14 +155,7 @@
          cursor: pointer;
          z-index: 1001;
          }
-         /* Container dos cards */
-         .book-card {
-         position: relative; /* Necessário para o ícone do marcador */
-         z-index: 1; /* Hierarquia baixa para não sobrepor o menu */
-         background: white;
-         border-radius: 8px;
-         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-         }
+       
          /* Container do marcador */
          .status-icon-container {
          position: absolute;
