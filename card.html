@@ -358,32 +358,45 @@
              });
          }
          function exibirLivros() {
-         const lista = document.getElementById("book-list");
-         lista.innerHTML = '';
-         
-         if (livros.length > 0) {
-         livros.forEach(livro => {
-         if (livro["Nome"] && livro["Autor"]) {
-         const card = document.createElement("div");
-         card.style.position = "relative"; // Para posicionar o ícone no canto
-         
-         const imagePath = livro["ImageFile"]
-          ? `https://github.com/Literavi/Blog/raw/main/imagens/${livro["ImageFile"]}`
-          : "https://via.placeholder.com/150";
-         
-         card.innerHTML = `
-    <div style="position: relative; width: 100%; border-radius: 8px; z-index: 1;"> <!-- Certifique-se de que o z-index não é maior que o do menu -->
-        <img src="${imagePath}" alt="${livro["Nome"]}" 
-             style="width:100%; border-radius: 8px; cursor: pointer;" 
-             onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}', '${livro["Resenha"]}', '${imagePath}', '${livro["Autor"]}', '${livro["Editora"]}', '${livro["Coleção"]}', '${livro["Status"]}')">
-        <div class="status-icon-container">
-            <i class="fa-solid fa-bookmark status-icon" style="color: ${getStatusColor(livro["Status"])};"></i>
-        </div>
-    </div>
-    <h4>${livro["Nome"]}</h4>
-    <p><strong>Autor:</strong> ${livro["Autor"]}</p>
-    <p><strong>Editora:</strong> ${livro["Editora"]}</p>
-`;
+    const lista = document.getElementById("book-list");
+    lista.innerHTML = "";
+
+    if (livros.length > 0) {
+        livros.forEach((livro) => {
+            if (livro["Nome"] && livro["Autor"]) {
+                const card = document.createElement("div");
+                card.style.position = "relative"; // Para posicionar o ícone no canto
+
+                const imagePath = livro["ImageFile"]
+                    ? `https://github.com/Literavi/Blog/raw/main/imagens/${livro["ImageFile"]}`
+                    : "https://via.placeholder.com/150";
+
+                // Verifica se a coleção é "Desejado" para adicionar o ícone de estrela
+                const starIcon = livro["Coleção"] === "Desejado" 
+                    ? `<i class="fa-solid fa-star" style="color: gold; margin-left: 5px;"></i>` 
+                    : "";
+
+                card.innerHTML = `
+                    <div style="position: relative; width: 100%; border-radius: 8px;">
+                        <img src="${imagePath}" alt="${livro["Nome"]}" style="width:100%; border-radius: 8px; cursor: pointer;" 
+                        onclick="abrirModal('${livro["Nome"]}', '${livro["Sinopse"]}', '${livro["Resenha"]}', '${imagePath}', '${livro["Autor"]}', '${livro["Editora"]}', '${livro["Coleção"]}', '${livro["Status"]}')">
+                        <div class="status-icon-container">
+                            <i class="fa-solid fa-bookmark status-icon" style="color: ${getStatusColor(livro["Status"])};"></i>
+                            ${starIcon}
+                        </div>
+                    </div>
+                    <h4>${livro["Nome"]}</h4>
+                    <p><strong>Autor:</strong> ${livro["Autor"]}</p>
+                    <p><strong>Editora:</strong> ${livro["Editora"]}</p>
+                `;
+
+                lista.appendChild(card);
+            }
+        });
+    } else {
+        lista.innerHTML = "<p>Nenhum livro disponível no momento.</p>";
+    }
+}
 
          
          
