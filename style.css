@@ -1,5 +1,6 @@
 <style>
 /* Estilo geral */
+
 body {
   font-family: 'Roboto', sans-serif;
   margin: 0;
@@ -12,7 +13,15 @@ body {
   padding: 20px;
   margin-left: 60px; /* EspaÃ§o para o menu lateral */
 }
+.menu-container {
+  position: relative;
+  z-index: 1000; /* Certifique-se de que o menu está em um nível superior */
+}
 
+.content-container {
+  position: relative;
+  z-index: 1; /* Os livros ficam em um nível inferior */
+}
 h2, h3 {
   margin-bottom: 20px;
   color: #00297c;
@@ -211,15 +220,7 @@ h2, h3 {
 }
 
 
-.menu-container {
-  position: relative;
-  z-index: 1000; /* Certifique-se de que o menu está em um nível superior */
-}
 
-.content-container {
-  position: relative;
-  z-index: 1; /* Os livros ficam em um nível inferior */
-}
 
 
 </style>
